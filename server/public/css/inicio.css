@@ -1,0 +1,143 @@
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-image: url('../../../images/bg-verificador-precios-V4_edicion1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+}
+
+.container-login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.541);
+    width: 42vw;
+    height: 55vh;
+    border-radius: 0.5em;
+    box-shadow: 1px 1px 10px #9e9e9e;
+}
+
+.container-login h3 {
+    font-family: auto;
+    font-size: -webkit-xxx-large;
+    color: aliceblue;
+    padding: 8% 7%;
+    margin: 0% !important;
+    text-align: center;
+    padding-top: 0%;
+}
+
+.container-form-login {
+    display: flex;
+    flex-direction: column;
+    width: 35vw;
+    height: 20vh;
+    justify-content: space-around;
+    align-items: inherit;
+    padding: 5%;
+}
+
+.container-input {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0px;
+}
+
+.container-input label {
+    color: aliceblue;
+}
+
+.container-input select {
+    width: 62%;
+    background-color: rgba(0, 255, 255, 0);
+    color: aliceblue;
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+}
+
+.container-input select:focus {
+    outline: none;
+}
+
+.optionUser {
+    background-color: #3131317c;
+    color: aliceblue;
+}
+
+.container-input input {
+    width: 60%;
+    background-color: rgba(0, 255, 255, 0) !important;
+    color: aliceblue !important;
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+}
+
+.container-input input:focus {
+    outline: none;
+}
+
+.container-btn-form {
+    align-self: center;
+    padding-top: 6%;
+}
+
+.container-input-idioma {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    padding: 10px 0px;
+}
+
+.container-input-idioma label {
+    color: aliceblue !important;
+}
+
+.languagesLogin {
+    display: inline-block;
+    width: 62%;
+    text-align: center;
+}
+
+.btn-lang-login {
+    font-family: auto;
+    font-style: oblique;
+    font-size: 0.83em;
+    font-weight: bold;
+    color: aliceblue;
+    background-color: #5296ab00;
+    border: none !important;
+    outline: none !important;
+    margin-right: 2px;
+}
+
+.btn-lang-login strong:focus {
+    border: none !important;
+    outline: none !important;
+}
+
+.btn-lang-login strong:hover {
+    color: #0099ff;
+    /*font-size: 1.3em;*/
+}
+
+.btn-lang-login-active {
+    color: #00ff21;
+    /*font-size: 1.3em;*/
+}

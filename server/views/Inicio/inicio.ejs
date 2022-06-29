@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuora Neo</title>
+    <link rel=icon href='../../public/images/imgWaitSpinner.gif' sizes="32x32" type="image/ico">
+    <link rel="stylesheet" type="text/css" href="/css/inicio.css">
+</head>
+
+<body>
+<div class="login">
+    <div class="container-login">
+        <h3>Bienvenido</h3>
+        <form class='container-form-login' method="POST">
+            <div class="container-input-idioma">
+                <label for="idioma">Idioma</label>
+                <div class='languagesLogin'>
+                    <button class='btn-lang-login' onClick="changeLanguage('es')"><strong id='es'>ES</strong></button>
+                    <button class='btn-lang-login' onClick="changeLanguage('br')"><strong id='br'>BR</strong></button>
+                    <button class='btn-lang-login' onClick="changeLanguage('en')"><strong id='en'>EN</strong></button>
+                </div>
+            </div>
+            <div class='container-input'>
+                <label for="usuario">Usuario</label>
+                <select class="form-control" name="movil" required>
+                    <% if (data) { %>
+                        <% data.usuarios.map(e => { %>
+                            <option class="optionUser">
+                                <%=e.username%>
+                            </option>
+                        <% }) %>
+                    <% } %>
+                </select>
+            </div>
+            <div class='container-input'>
+                <label for="contraseña">Contraseña</label>
+                <input type="password" id='pass' name="contraseña" placeholder=Contraseña
+                    class='input-form-login' autoComplete="off"  required/>
+            </div>
+            <br />
+            <div class='container-btn-form'>
+                <button type='submit' class='btn-form'>Ingresar</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
