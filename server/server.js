@@ -16,6 +16,6 @@ app.use(cors({origin: '*'}));
 app.use('/', router);
 */
 // Puerto de escucha servidor
-app.listen(4006, () => {
-    console.log("server is running in port " + 4006);
+app.listen(4007, () => {
+    console.log("server is running in port " + 4007);
 })

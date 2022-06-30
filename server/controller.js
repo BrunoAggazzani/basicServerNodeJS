@@ -1,11 +1,11 @@
 const controller = {};
-import { query } from './DB/connect.js';
+import  pool  from './DB/connect.js';
 import http from "http";
 
 
 controller.inicio = async(req, res) => {
     try {
-        req = await query(`SELECT username FROM public.tb_user`);
+        req = await pool(`SELECT username FROM public.tb_user`);
         if (req.rows.length > 0) {
             console.log('');
             console.log('Mostrando registros encontrados...');

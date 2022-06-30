@@ -1,4 +1,4 @@
-const {Client} = require('pg');
+import { Client } from 'pg';
 
 const configDB = {
     user: 'postgres',
@@ -9,7 +9,7 @@ const configDB = {
     statement_timeout: 20000        
 }
 
-const pool = new Client(configDB);
+export const pool = new Client(configDB);
 pool
     .connect()
     .then(() => console.log('DB connected!!!'))
@@ -17,7 +17,7 @@ pool
 
 
 
-module.exports = pool;
+
 
 
 
