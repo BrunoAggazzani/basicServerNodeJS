@@ -1,11 +1,11 @@
 const controller = {};
-const pool = require('./DB/connect.js');
-const http = require("http");
+import { query } from './DB/connect.js';
+import http from "http";
 
 
 controller.inicio = async(req, res) => {
     try {
-        req = await pool.query(`SELECT username FROM public.tb_user`);
+        req = await query(`SELECT username FROM public.tb_user`);
         if (req.rows.length > 0) {
             console.log('');
             console.log('Mostrando registros encontrados...');
@@ -35,4 +35,4 @@ controller.queEsSaft = async(req, res) => {
     res.render('queessaft');
 };
 
-module.exports = controller;
+export default controller;
