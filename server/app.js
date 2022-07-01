@@ -1,6 +1,7 @@
 import express from "express";
 import path from 'path';
 import morgan from "morgan";
+import cors from 'cors';
 
 // import rutas
 import productsRoutes from './routes/product.routes';
@@ -14,11 +15,12 @@ app.set('views', path.join(__dirname, './views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // middlewares
-app.use(express.json());
+app.use(express.json({limit: "100mb"}));
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
+app.use(cors({origin: '*'}));
 
-// rutas
+// rutas principales
 app.use('/api/products', productsRoutes);
 app.use('/api/signin', authRoutes);
 
