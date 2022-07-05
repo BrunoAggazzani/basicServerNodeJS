@@ -77,8 +77,12 @@ body {
 }
 
 .optionUser {
-    background-color: #3131317c;
+    background-color: #222222af;
     color: aliceblue;
+}
+
+.optionUser:hover,:focus{
+    background-color: black;
 }
 
 .container-input input {
@@ -95,49 +99,40 @@ body {
 
 .container-btn-form {
     align-self: center;
-    padding-top: 6%;
+    padding-top: 3%;
 }
 
-.container-input-idioma {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    padding: 10px 0px;
-}
 
-.container-input-idioma label {
-    color: aliceblue !important;
-}
 
-.languagesLogin {
-    display: inline-block;
-    width: 62%;
-    text-align: center;
-}
 
-.btn-lang-login {
-    font-family: auto;
-    font-style: oblique;
-    font-size: 0.83em;
-    font-weight: bold;
+.btn-form {
     color: aliceblue;
-    background-color: #5296ab00;
-    border: none !important;
-    outline: none !important;
-    margin-right: 2px;
-}
-
-.btn-lang-login strong:focus {
-    border: none !important;
-    outline: none !important;
-}
-
-.btn-lang-login strong:hover {
-    color: #0099ff;
-    /*font-size: 1.3em;*/
-}
-
-.btn-lang-login-active {
-    color: #00ff21;
-    /*font-size: 1.3em;*/
-}
+    background-color: rgba(13, 98, 226, 0.596);    
+    padding: 8px 8px;
+    align-items: center;
+    appearance: none;  
+    border-radius: 0px;
+    border-width: 0;
+    box-shadow: rgba(90, 89, 93, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#4d4f57 0 0 0 inset;
+    box-sizing: border-box;  
+    cursor: pointer;
+    display: inline-flex;    
+    justify-content: center;  
+    list-style: none;
+    overflow: hidden;  
+    position: relative;  
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;  
+  }
+  
+  .btn-form:hover {
+    color: #b5f4ff;
+    box-shadow: rgb(66, 173, 206) 4px 2px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -2px, rgb(66, 173, 206) 0 -2px 0 inset;
+    transform: translateY(-3px) translateX(-2px);
+  }
+  

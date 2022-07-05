@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 
-<%- include("../templates/head", {tituloWeb: "Cuora Neo Web"}) %> 
+<%- include('../templates/head', {tituloWeb: 'Cuora Neo Web'}) %> 
 
 <body>
-<div class="login">
-    <div class="container-login">
-        <h3><%=__("Bienvenido")%></h3>
-        <form class='container-form-login' method="POST">
+<div class='login'>
+    <div class='container-login'>
+        <h3><%=__('Bienvenido')%></h3>
+        <form class='container-form-login' method='POST' action='/api/products/'>
             <!--
             <div class="container-input-idioma">
                 <label for="idioma">Idioma</label>
@@ -19,16 +19,16 @@
             </div>
             -->
             <div class='container-input'>
-                <label for="usuario">Usuario</label>
-                <select class="form-control" name="user" required>
+                <label for='usuario'>Usuario</label>
+                <select class='form-control' name='user' required>
                     <% if (data) { %>
                         <% data.usuarios.map(e => { %>
                             <% if (e.username === 'Supervisor') { %>
-                                <option class="optionUser" selected>
+                                <option class='ptionUser' selected>
                                     <%= e.username %>
                                 </option> 
                             <% } else { %>
-                                <option class="optionUser">
+                                <option class='optionUser'>
                                     <%= e.username %>
                                 </option>
                             <% } %>                            
@@ -37,13 +37,13 @@
                 </select>
             </div>
             <div class='container-input'>
-                <label for="contraseña">Contraseña</label>
-                <input type="password" id='pass' name="contraseña" placeholder=Contraseña
-                    class='input-form-login' autoComplete="off"  required/>
+                <label for='contraseña'>Contraseña</label>
+                <input type="password" id='pass' name='pass' placeholder='Contraseña'
+                    class='input-form-login' autoComplete='off'  required/>
             </div>
             <br />
             <div class='container-btn-form'>
-                <button type='submit' class='btn-form'>Ingresar</button>
+                <button type='submit' class='btn-form'>ACEPTAR</button>
             </div>
         </form>
     </div>

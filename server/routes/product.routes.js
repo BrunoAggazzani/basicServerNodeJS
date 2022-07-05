@@ -2,6 +2,6 @@ import { Router } from "express";
 import * as prodControll from "../controllers/product.controllers";
 const router = Router();
 
-router.get('/', prodControll.getProduct);
+router.post('/', prodControll.getAbm);
 
 export default router;
