@@ -5,5 +5,7 @@ export const getAbm = (req, res)=>{
     const pass = data.pass;
     if (pass == '1234'){
         res.json('Puto el que lee!');
-    }    
+    } else {
+        res.json('Puto y burro el que lee!');
+    }   
 }
