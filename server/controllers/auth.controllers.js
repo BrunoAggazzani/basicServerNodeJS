@@ -9,7 +9,9 @@ export const signin = async(req, res)=>{
                 console.log('');
                 console.log('Ejemplo de un resultado: '+req.rows[0].username);
                 const resultado = {usuarios: req.rows};                    
-                res.status(200).render('Inicio/inicio.ejs', {data: resultado} );
+                res
+                .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+                .status(200).render('Inicio/inicio.ejs', {data: resultado} );
             } else {
                 console.log('');
                 res.status(404).send({message: 'No hay registros!'});

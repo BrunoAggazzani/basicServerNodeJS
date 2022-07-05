@@ -7,7 +7,7 @@
 <div class='login'>
     <div class='container-login'>
         <h3><%=__('Bienvenido')%></h3>
-        <form class='container-form-login' method='POST' action='/api/products/'>
+        <form class='container-form-login' method='GET' action='/'>
             <!--
             <div class="container-input-idioma">
                 <label for="idioma">Idioma</label>
@@ -43,10 +43,18 @@
             </div>
             <br />
             <div class='container-btn-form'>
-                <button type='submit' class='btn-form'>ACEPTAR</button>
+                <button type='submit' class='btn-form' onclick="PlayAudio()">ACEPTAR</button>
             </div>
         </form>
     </div>
+    <audio id="player" src="./images/Bonjour.mp3" autoplay></audio>
+    <script>
+        document.getElementById('player').volume = 0.9;
+        function PlayAudio() {
+            var audio = document.getElementById("player");
+            audio.play();
+        }
+    </script>
 </body>
 
 </html>

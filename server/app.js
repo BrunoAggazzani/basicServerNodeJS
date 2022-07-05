@@ -3,6 +3,8 @@ import path from 'path';
 import morgan from "morgan";
 import cors from 'cors';
 import i18n from './i18n';
+import helmet from "helmet";
+import compression from "compression";
 // import rutas
 import productsRoutes from './routes/product.routes';
 import authRoutes from './routes/auth.routes';
@@ -20,6 +22,10 @@ app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({origin: '*'}));
 app.use(i18n);
+// middleware de seguridad
+app.use(helmet());
+// middleware de compresion http
+app.use(compression());
 
 // rutas principales
 app.use('', authRoutes);
