@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 
 <%- include("../templates/head", {tituloWeb: "Cuora Neo Web"}) %> 
 
 <body>
 <div class="login">
     <div class="container-login">
-        <h3>Bienvenido</h3>
+        <h3><%=__("Bienvenido")%></h3>
         <form class='container-form-login' method="POST">
+            <!--
             <div class="container-input-idioma">
                 <label for="idioma">Idioma</label>
                 <div class='languagesLogin'>
@@ -16,14 +17,21 @@
                     <button class='btn-lang-login' onClick="changeLanguage('en')"><strong id='en'>EN</strong></button>
                 </div>
             </div>
+            -->
             <div class='container-input'>
                 <label for="usuario">Usuario</label>
-                <select class="form-control" name="movil" required>
+                <select class="form-control" name="user" required>
                     <% if (data) { %>
                         <% data.usuarios.map(e => { %>
-                            <option class="optionUser">
-                                <%=e.username%>
-                            </option>
+                            <% if (e.username === 'Supervisor') { %>
+                                <option class="optionUser" selected>
+                                    <%= e.username %>
+                                </option> 
+                            <% } else { %>
+                                <option class="optionUser">
+                                    <%= e.username %>
+                                </option>
+                            <% } %>                            
                         <% }) %>
                     <% } %>
                 </select>
