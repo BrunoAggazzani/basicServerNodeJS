@@ -25,32 +25,41 @@ body {
 .container-login {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    position: relative;
+    justify-content: space-around;
+    align-content: space-evenly;
     background-color: rgba(0, 0, 0, 0.541);
     width: 42vw;
-    height: 55vh;
+    height: 60vh;
     border-radius: 0.5em;
     box-shadow: 1px 1px 10px #9e9e9e;
 }
 
+@media (max-width: 650px) {
+    .container-login{
+        width: 90%; 
+    }
+}
+
 .container-login h3 {
+    position: relative;
     font-family: auto;
     font-size: -webkit-xxx-large;
     color: aliceblue;
     padding: 8% 7%;
     margin: 0% !important;
     text-align: center;
-    padding-top: 0%;
 }
 
 .container-form-login {
     display: flex;
+    position: relative;
     flex-direction: column;
-    width: 35vw;
     height: 20vh;
     justify-content: space-around;
     align-items: inherit;
-    padding: 5%;
+    padding: 5% 8%;
+    padding-top: 0%;
 }
 
 .container-input {
@@ -86,7 +95,7 @@ body {
 }
 
 .container-input input {
-    width: 60%;
+    width: 61%;
     background-color: rgba(0, 255, 255, 0) !important;
     color: aliceblue !important;
     border-style: solid;
@@ -134,5 +143,21 @@ body {
     color: #b5f4ff;
     box-shadow: rgb(66, 173, 206) 4px 2px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -2px, rgb(66, 173, 206) 0 -2px 0 inset;
     transform: translateY(-3px) translateX(-2px);
+  }
+
+  .container-version {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+    position: relative;    
+  }
+
+  .container-version h6{    
+    position: relative;
+    color: aliceblue;
+    margin: 0;
+    padding-right: 2vw;
+    font-size: 0.8rem;
   }
   
