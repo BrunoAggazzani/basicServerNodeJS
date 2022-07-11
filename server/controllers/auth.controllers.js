@@ -16,13 +16,14 @@ export const signin = async(req, res)=>{
                 console.log('');
                 res.status(404).send({message: 'No hay registros!'});
                 console.log('');
-            }      
-    } catch {
+            }
+            //pool.end();      
+    } catch (e){
         console.log('');
         res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
         console.log('');
         console.log('Falló ejecución de query');
-        
+        //pool.end();
     }       
 }
 

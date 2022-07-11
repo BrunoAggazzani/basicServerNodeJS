@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 
-<%- include('../templates/head', {tituloWeb: 'Cuora Neo Web'}) %> 
+<%- include('../templates/head', {datahead: {titulo: 'Cuora Neo Web', css: '/css/inicio.css'}}) %> 
 
 <body>
 <div class='login'>
     <div class='container-login'>
         <h3><%=__('Bienvenido')%></h3>
-        <form class='container-form-login' method='GET' action='/'>
+        <form class='container-form-login' method='POST' action='/api/abmenu/'>
             <!--
             <div class="container-input-idioma">
                 <label for="idioma">Idioma</label>
@@ -43,21 +43,13 @@
             </div>
             <br />
             <div class='container-btn-form'>
-                <button type='submit' class='btn-form' onclick="PlayAudio()">ACEPTAR</button>
+                <button type='submit' class='btn-form'>ACEPTAR</button>
             </div>
         </form>
         <div class='container-version'>
             <h6>versión 6.3.98.736</h6>
         </div>
     </div>
-    <audio id="player" src="./images/Bonjour.mp3" autoplay></audio>
-    <script>
-        document.getElementById('player').volume = 0.9;
-        function PlayAudio() {
-            var audio = document.getElementById("player");
-            audio.play();
-        }
-    </script>
 </body>
 
 </html>

@@ -6,7 +6,7 @@ import i18n from './i18n';
 import helmet from "helmet";
 import compression from "compression";
 // import rutas
-import productsRoutes from './routes/product.routes';
+import abmenuRoutes from './routes/abmenu.routes';
 import authRoutes from './routes/auth.routes';
 
 const app = express();
@@ -30,7 +30,7 @@ app.use(compression());
 // rutas principales
 app.use('', authRoutes);
 app.use('/api/signin', authRoutes);
-app.use('/api/products', productsRoutes);
+app.use('/api/abmenu', abmenuRoutes);
 
 
 export default app;
