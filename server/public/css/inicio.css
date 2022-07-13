@@ -20,6 +20,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     position: absolute;
+    filter: sepia(0.5);
 }
 
 .container-login {

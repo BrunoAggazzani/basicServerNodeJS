@@ -4,15 +4,10 @@
 <%- include('../templates/head', {datahead: {titulo: 'Error!' , css: '/css/error.css' }}) %>
 
     <body>
-        <div class="containerError">
-            <div>
-                <h3>
-                    <%=dataError.mje%>
-                </h3>
-                <br>
-                <h4></h4>
-                <button type='button' class='btn-form'><a href='<%=dataError.href%>'><b>ACEPTAR</b></a></button>
-            </div>
+        <div class="containerError">            
+            <div class="image"></div>
+            <h3><%=__(dataError.mje)%></h3>
+            <button type='button' class='btn-form'><a href='<%=dataError.href%>'><b><%=__('btn_aceptar')%></b></a></button>            
         </div>
     </body>
 

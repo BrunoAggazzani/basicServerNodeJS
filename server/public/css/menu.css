@@ -1,0 +1,63 @@
+body{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-image: url('../../../images/bg-verificador-precios-V4_edicion1.png');
+    fill-opacity: 0.5;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.menu-container{
+    display: flex;
+    flex-direction: row;
+    flex-flow: wrap;
+    justify-content: flex-start;
+    position: absolute;
+    background-color: rgba(11, 70, 83, 0.6);
+    width: 100%;
+    height: 100vh;
+    filter: sepia(1);
+}
+
+.card-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    justify-items: center;
+    position: relative;
+    width: 48%;
+    height: 45%;
+    background-color: #0ecc2e0d;
+    border-style: hidden;
+    border-radius: 0.3em;
+    box-shadow: 1px 1px 7px #9e9e9e;
+    margin: 1%;
+}
+
+.card-container:hover {
+    color: #b5f4ff;
+    box-shadow: rgb(11, 29, 35) 6px 7px 8px, rgba(45, 35, 66, 0.4) 0 7px 13px -2px, rgb(21, 56, 66) 0 -2px 0 inset;
+    transform: translateY(-1.5px) translateX(-1.5px);
+    filter: blur(1px);
+}
+
+.card-container a{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    justify-items: center;
+    color: rgb(0, 0, 0);
+    font-size: 1.2rem;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
