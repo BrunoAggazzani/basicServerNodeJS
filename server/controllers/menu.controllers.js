@@ -1,6 +1,6 @@
 import {pool} from '../DB/connect';
 import CryptoJS from 'crypto-js';
-export const getAbm = async(req, res)=>{
+export const getMenu = async(req, res)=>{
     console.log('Entrando en getAbm...');
     const data = req.body;
     const user = data.user;
@@ -17,7 +17,7 @@ export const getAbm = async(req, res)=>{
                 console.log('');
                 console.log('Resultado de PASS: '+req.rows[0].password);
                 if (req.rows[0].password === pass.toString()){
-                    res.status(200).render('Abm/menu.ejs');
+                    res.status(200).render('Menu/menu.ejs');
                 } else {
                     const error = {href: "/", mje: "ContraseñaIncorrecta"};
                     res.status(200).render('Error/error.ejs', {dataError: error});
@@ -37,3 +37,12 @@ export const getAbm = async(req, res)=>{
         //pool.end();        
     }   
 }
+
+
+export const ReturnGetMenu = (req, res)=>{
+    res.status(200).render('Menu/menu.ejs');
+};
+
+export const getAbm = (req, res)=>{
+    res.status(200).render('ABM/abm.ejs');
+};
