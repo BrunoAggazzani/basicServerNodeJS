@@ -61,6 +61,7 @@ body {
     align-items: inherit;
     padding: 5% 8%;
     padding-top: 0%;
+    font-size: 1.2rem;
 }
 
 .container-input {
@@ -80,6 +81,7 @@ body {
     color: aliceblue;
     border-style: solid;
     border-width: 0px 0px 2px 0px;
+    font-size: 1rem;
 }
 
 .container-input select:focus {
@@ -101,6 +103,7 @@ body {
     color: aliceblue !important;
     border-style: solid;
     border-width: 0px 0px 2px 0px;
+    font-size: 1rem;
 }
 
 .container-input input:focus {
@@ -113,15 +116,13 @@ body {
 }
 
 
-
-
 .btn-form {
     color: aliceblue;
-    background-color: rgba(13, 98, 226, 0.596);    
+    background-color: rgba(13, 98, 226, 0.685);    
     padding: 8px 8px;
     align-items: center;
     appearance: none;  
-    border-radius: 0px;
+    border-radius: 0.3em;
     border-width: 0;
     box-shadow: rgba(90, 89, 93, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#4d4f57 0 0 0 inset;
     box-sizing: border-box;  
