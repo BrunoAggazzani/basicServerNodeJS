@@ -18,7 +18,9 @@ export const getMenu = async(req, res)=>{
                 console.log('');
                 console.log('Resultado de PASS: '+req.rows[0].password);
                 if (req.rows[0].password === pass.toString()){
-                    res.status(200).render('Menu/menu.ejs');
+                    res
+                    .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+                    .status(200).render('Menu/menu.ejs');
                 } else {
                     const error = {href: "/", mje: "ContraseñaIncorrecta"};
                     res.status(200).render('Error/error.ejs', {dataError: error});
@@ -41,6 +43,8 @@ export const getMenu = async(req, res)=>{
 
 
 export const ReturnGetMenu = (req, res)=>{
-    res.status(200).render('Menu/menu.ejs');
+    res
+    .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+    .status(200).render('Menu/menu.ejs');
 };
 

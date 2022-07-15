@@ -2,5 +2,7 @@
 //import CryptoJS from 'crypto-js';
 
 export const getReports = (req, res)=>{
-    res.status(200).render('Reports/reports.ejs');
+    res
+    .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+    .status(200).render('Reports/reports.ejs');
 };

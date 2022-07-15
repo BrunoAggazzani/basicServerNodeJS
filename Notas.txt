@@ -1,0 +1,4 @@
+// para redireccionar el trafico entrante de puerto 80 al 4007
+ sudo iptables -t nat -A PREROUTING -i eno1 -p tcp --dport 80 -j REDIRECT --to-port 4007
+
+// Para que quede permanente debe ponerse en etc/rc.local (ver despues...) 
