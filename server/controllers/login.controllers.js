@@ -11,7 +11,7 @@ export const signin = async(req, res)=>{
                 const resultado = {usuarios: req.rows};                    
                 res
                 .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-                .status(200).render('Inicio/inicio.ejs', {data: resultado} );
+                .status(200).render('Login/login.ejs', {data: resultado} );
             } else {
                 console.log('');
                 res.status(404).send({message: 'No hay registros!'});

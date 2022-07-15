@@ -4,6 +4,6 @@ const router = Router();
 
 router.get('/', menuControll.ReturnGetMenu);
 router.post('/', menuControll.getMenu);
-router.get('/abm', menuControll.getAbm);
+//router.get('/abm', menuControll.getAbm);
 
 export default router;
