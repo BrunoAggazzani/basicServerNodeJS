@@ -23,7 +23,9 @@ export const getMenu = async(req, res)=>{
                     .status(200).render('Menu/menu.ejs');
                 } else {
                     const error = {href: "/", mje: "ContraseñaIncorrecta"};
-                    res.status(200).render('Error/error.ejs', {dataError: error});
+                    res
+                    .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+                    .status(200).render('Error/error.ejs', {dataError: error});
                 }       
             } else {
                 console.log('');
