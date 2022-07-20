@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('../templates/head', {datahead: {titulo: 'Búsqueda', css: '/css/Price/price.css' }}) %>
+
+    <body>
+        <div class='busqueda'>
+            <div class='container-busqueda'>
+                <h4>
+                    Buscar...
+                </h4>
+                <form class='container-form-busqueda' method='POST' action='/api/menu/prices/table'>
+                    <div class='container-input'>
+                        <label for='usuario'>Lista de Precios</label>
+                        <select class='form-control' name='priceList_name' onchange="selectID(this.value)" required>
+                            <option class='optionUser' default></option>
+                            <% if (data) { %>
+                                <% data.priceList.map(e=> { %>                                    
+                                    <option class='optionUser'>
+                                        <%= e.name %>
+                                    </option>                                    
+                                <% }) %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div style="display: none;">
+                        <input type="text" id="hideField" name='priceList_id' value=""/>
+                    </div>
+                    <div class='container-input'>
+                        <label for='product'>Producto</label>
+                        <input type="text" id='product' name='product' class='input-form-busqueda' autoComplete='off'/>
+                    </div>
+                    <br />
+                    <div class='container-btn-form'>
+                        <button type='submit' class='btn-form'>ACEPTAR</button>
+                    </div>
+                </form>
+            </div>
+            <script>
+                function selectID(name){
+                    let parsed_data = <%-JSON.stringify(data) %>;
+                    parsed_data.priceList.map(e=>{
+                        if(e.name === name){
+                            console.log('id: '+e.id);
+                            document.getElementById('hideField').value = e.id;
+                        }
+                    });                    
+                }
+            </script>
+    </body>
+
+</html>

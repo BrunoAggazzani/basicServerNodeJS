@@ -1,0 +1,223 @@
+body{
+    padding: 0%;
+    margin: 0%;
+}
+
+.table{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-image: url('../../../images/bg-verificador-precios-V4_edicion1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    filter: sepia(0.5);
+}
+
+.container-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    height: 75vh;
+    min-width: 80%;
+    max-width: 92%;
+    overflow: auto;
+    top: -6vh;
+}
+
+.imgWait {
+    position: relative;
+    height: auto;
+    width: 45%;
+    margin-top: 9vh;
+    margin-left: 22vw;
+}
+
+.container-table table {
+    background-color: rgba(220, 220, 220, 0.3);
+    text-align: left;
+    border: 1.2px solid #1C6EA4;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.container-table table thead th {
+    font-size: 17px;
+    font-weight: bold;
+    color: #ffffff;
+    border-left: 2px solid #8a8a8a;
+    white-space: nowrap;
+    padding: 10px 10px;
+    background: linear-gradient(to bottom, rgb(16, 112, 136) 50%, rgba(45, 123, 169, 0.42) 86%, #67b7dff3 100%);
+    position: sticky;
+    top: 0;
+}
+
+.container-table table thead th:first-child {
+    border-left: none;
+}
+
+.container-table table tbody tr:nth-child(odd) {
+    background-color: #a1bccf5e;
+}
+
+.container-table table tbody tr:nth-child(even) {
+    background-color: #ffffff67;
+}
+
+.container-table table tbody td {
+    border: 1.2px solid #1C6EA4;
+    /*background-color: #EEEEEE;*/
+    font-size: 15px;
+}
+
+table td, table th {
+    border: 1px solid #AAAAAA;
+    padding: 3px 2px;
+    text-align: center;
+}
+
+.inputDisable{
+    display: inline-flex;
+    position: relative;
+    text-align: center;
+    color: black;
+    background-color: rgba(77, 79, 87, 0);
+    border: none;
+}
+
+.inputPrice{
+    display: inline-flex;
+    position: relative;
+    text-align: center;
+    color: black;
+    background-color: rgba(77, 79, 87, 0);
+    border: none;
+    outline: none;
+}
+
+.inputPrice:hover {
+    cursor: pointer;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.425);
+    border: none;
+}
+
+::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: rgb(0, 0, 0);
+}
+
+.edit {
+    display: table-cell;
+}
+
+.edit a {
+    color: #1C6EA4;
+}
+
+.noEdit {
+    display: none;
+}
+
+.container-paginacion {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    width: 80%;
+}
+
+.container-paginacion h3 {
+    display: inline-block;
+    font-size: 16px;
+    font-family: auto;
+}
+
+.container-nros-paginas {
+    width: 16%;
+    min-width: 165px;
+}
+
+.input-paginacion {
+    display: inline-block;
+    position: relative;
+    width: 25%;
+    height: 2vh;
+    margin: 0px 2px;
+}
+
+.input-paginacion:focus {
+    outline: none;
+}
+
+.container-botones-paginacion {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 20%;
+    margin-bottom: 2.5px;
+    padding: 0px 10px;
+}
+
+.botones-paginacion {
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    background-color: rgba(15, 50, 64, 0.68);
+    color: #ffffff;
+    padding: 2px 0px 4px 0px;
+    margin-left: 3px;
+    align-items: center;
+    appearance: none;
+    border-radius: 0px;
+    border-width: 0;
+    box-shadow: rgba(90, 89, 93, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #4d4f57 0 -2px 0 inset;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    list-style: none;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    transition: box-shadow .15s, transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow, transform;
+    border-radius: 0.3em;
+    outline: none;
+}
+
+.botones-paginacion:hover {
+    box-shadow: rgb(66, 173, 206) 4px 2px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -2px, rgb(66, 173, 206) 0 -2px 0 inset;
+    transform: translateY(-2px);
+}
+
+.botones-paginacion:active {
+    box-shadow: #D6D6E7 0 3px 7px inset;
+    transform: translateY(-2px);
+}
+
+.button-header {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+}
+
+.button-header:hover {
+    /*box-shadow: rgb(66, 173, 206) 0px 3px 0px;*/
+    color: rgb(2, 217, 253);
+    cursor: pointer;
+}
+
+.button-header:focus {
+    outline: none;
+}

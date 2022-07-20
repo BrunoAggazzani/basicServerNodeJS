@@ -8,7 +8,7 @@ import compression from "compression";
 // import rutas
 import menuRoutes from './routes/menu.routes';
 import loginRoutes from './routes/login.routes';
-//import menuPriceRoutes from './routes/menu.prices.routes';
+import menuPriceRoutes from './routes/menu.prices.routes';
 import menuAbmRoutes from './routes/menu.abm.routes';
 import menuReportRoutes from './routes/menu.reports.routes';
 import menuSettingRoutes from './routes/menu.settings.routes';
@@ -35,7 +35,7 @@ app.use(compression());
 app.use('', loginRoutes);
 app.use('/api/signin', loginRoutes);
 app.use('/api/menu', menuRoutes);
-//app.use('/api/menu/prices', menuPriceRoutes);
+app.use('/api/menu/prices', menuPriceRoutes);
 app.use('/api/menu/abm', menuAbmRoutes);
 app.use('/api/menu/reports', menuReportRoutes);
 app.use('/api/menu/settings', menuSettingRoutes);
