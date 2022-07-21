@@ -4,8 +4,12 @@
 <%- include('../templates/head', {datahead: {titulo: 'Lista de Precios' , css: '/css/Price/table.css' }}) %>
 
     <body>
-        <div class="table">
+        <div class="table">            
             <div class="container-table">
+                <div class="container-btns">
+                    <button class='btn'><a href="/api/menu/prices/search">Volver</a></button>
+                    <button class='btn'><a href="/api/menu/prices/search">Modificación Masiva</a></button>
+                </div>            
                 <table id='myTable'>
                     <thead>
                         <tr>
@@ -17,8 +21,9 @@
                             <% data.priceList.map((e)=>{ %>
                                 <tr>
                                     <form method="POST" action="/api/menu/prices/tableChanged">
-                                        <td><input class="inputDisable" type="text" name="id" value="<%= e.id %>" disabled></td>
-                                        <td><input class="inputDisable" type="text" name="name" value="<%= e.name %>" disabled></td>
+                                        <td><input class="inputDisable" type="text" name="id" value="<%= e.id %>" readonly></td>
+                                        <td><input class="inputDisable" type="text" name="name" value="<%= e.name %>" readonly></td>
+                                        <td style="display: none"><input class="inputDisable" type="text" name="listprice" value="<%= e.listprice %>" readonly></td>
                                         <td><input class="inputPrice" type="number" name="newPrice" value="<%= e.price %>" onclick="this.value=''" onchange="this.form.submit()"/></td> 
                                     </form>                                
                                 </tr>
