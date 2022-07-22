@@ -4,12 +4,12 @@
 <%- include('../templates/head', {datahead: {titulo: 'Lista de Precios' , css: '/css/Price/table.css' }}) %>
 
     <body>
-        <div class="table">            
-            <div class="container-table">
-                <div class="container-btns">
-                    <button class='btn'><a href="/api/menu/prices/search">Volver</a></button>
-                    <button class='btn'><a href="/api/menu/prices/search">Modificación Masiva</a></button>
-                </div>            
+        <div class="table"> 
+            <div class="container-btns">
+                <button class='btn'><a href="/api/menu/prices/search"> <h4>Volver</h4></a></button>
+                <button class='btn'><a href="/api/menu/prices/search"><h4>Modificación Masiva</h4></a></button>
+            </div>           
+            <div class="container-table">                            
                 <table id='myTable'>
                     <thead>
                         <tr>
@@ -36,7 +36,29 @@
                     </tbody>
                 </table>                                                    
             </div>
-        </div>        
+            <form class="form-pagination" action="/api/menu/prices/tableChanged" method="post">
+                <div class="page-controll">
+                    <h4>Mostrando página&nbsp</h4>
+                    <input type="number" id="inputPage" placeholder="<%=1%>">
+                    <h4> de <%=15%></h4>
+                </div>
+                <div class="page-controll">
+                    <input class="btn-pagination" type="button" id="first" onclick="setPage('first')" value="<%=__('| <')%>" >
+                    <input class="btn-pagination" type="button" id="previous" onclick="setPage('previous')" value="<%=__('<<')%>" >
+                    <input class="btn-pagination" type="button" id="next" onclick="setPage('next')" value="<%=__('>>')%>" >
+                    <input class="btn-pagination" type="button" id="last" onclick="setPage('last')" value="<%=__('> |')%>" >
+                </div>
+                <div class="page-controll">
+                    <h4><%=500%> a <%=600%> registros de <%=2000%></h4>
+                </div>
+            </form>
+        </div>
+        
+        <script>
+            function setPage(option) {
+                console.log('Opcion: '+option);
+            }
+        </script>        
     </body>
 
 </html>

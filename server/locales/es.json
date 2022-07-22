@@ -2,5 +2,9 @@
     "Bienvenido": "Bienvenido",
     "Cuora Neo Web": "Cuora Neo Web _es",
     "ContraseñaIncorrecta": "Contraseña incorrecta!!!",
-    "btn_aceptar": "ACEPTAR"
+    "btn_aceptar": "ACEPTAR",
+    "| <": "| <",
+    "<<": "<<",
+    ">>": ">>",
+    "> |": "> |"
 }

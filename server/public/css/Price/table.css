@@ -14,7 +14,7 @@ body{
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    position: absolute;
+    position: relative;
     filter: sepia(0.5);
 }
 
@@ -27,14 +27,15 @@ body{
     min-width: 80%;
     max-width: 92%;
     overflow: auto;
-    top: -6vh;
+    top: 0vh;
 }
 
 .container-btns{
     display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
+    justify-content: space-between;
+    min-width: 80%;
+    max-width: 92%;
+    height: 8vh;
 }
 
 .container-btns .btn{
@@ -52,11 +53,15 @@ body{
     background-color: rgba(10, 60, 73, 0.753);
 }
 
-.btn a{
+.btn>a{
     text-decoration: none;
     color: #ffffff;
     font-size: 1rem;
-    padding: 3vh 18vw;
+    text-align: center;
+}
+
+a>h4{
+    margin: 0%;
 }
 
 .imgWait {
@@ -144,111 +149,68 @@ table td, table th {
     color: rgb(0, 0, 0);
 }
 
-.edit {
-    display: table-cell;
-}
-
-.edit a {
-    color: #1C6EA4;
-}
-
-.noEdit {
-    display: none;
-}
-
-.container-paginacion {
+.form-pagination{
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     position: relative;
-    width: 80%;
+    min-width: 80%;
+    max-width: 92%;
+    height: 8vh;
 }
 
-.container-paginacion h3 {
-    display: inline-block;
-    font-size: 16px;
-    font-family: auto;
-}
-
-.container-nros-paginas {
-    width: 16%;
-    min-width: 165px;
-}
-
-.input-paginacion {
-    display: inline-block;
-    position: relative;
-    width: 25%;
-    height: 2vh;
-    margin: 0px 2px;
-}
-
-.input-paginacion:focus {
-    outline: none;
-}
-
-.container-botones-paginacion {
-    display: flex;
-    justify-content: space-around;
+.page-controll{
+    display: inline-flex;    
+    justify-content: space-between;
     align-items: center;
-    width: 20%;
-    margin-bottom: 2.5px;
-    padding: 0px 10px;
-}
-
-.botones-paginacion {
-    display: inline-block;
-    width: 100%;
-    height: auto;
-    background-color: rgba(15, 50, 64, 0.68);
     color: #ffffff;
-    padding: 2px 0px 4px 0px;
-    margin-left: 3px;
-    align-items: center;
-    appearance: none;
-    border-radius: 0px;
-    border-width: 0;
-    box-shadow: rgba(90, 89, 93, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #4d4f57 0 -2px 0 inset;
-    box-sizing: border-box;
-    cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    list-style: none;
-    overflow: hidden;
+}
+
+.page-controll>h4 {
+    display: inline-block;
     position: relative;
-    text-decoration: none;
-    transition: box-shadow .15s, transform .15s;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    white-space: nowrap;
-    will-change: box-shadow, transform;
-    border-radius: 0.3em;
+    flex-wrap: nowrap;
+}
+
+#inputPage {
+    display: inline-block;
+    position: relative;
+    width: 5vw;
+    text-align: center;
+    padding: 0%;
+    margin: 0%;
     outline: none;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.151);
+    text-align: end;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1rem;   
 }
 
-.botones-paginacion:hover {
-    box-shadow: rgb(66, 173, 206) 4px 2px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -2px, rgb(66, 173, 206) 0 -2px 0 inset;
-    transform: translateY(-2px);
+#inputPage:hover {
+    background-color: rgba(255, 228, 196, 0.336);
+    cursor: text;
 }
 
-.botones-paginacion:active {
-    box-shadow: #D6D6E7 0 3px 7px inset;
-    transform: translateY(-2px);
+#inputPage::placeholder{
+    color: #ffffff;
+    font-weight: bold;
 }
 
-.button-header {
-    text-decoration: none;
-    color: rgb(255, 255, 255);
-    font-size: 16px;
+.btn-pagination {
+    background-color: #1c6f71;
+    color: #ffffff;
+    border: none;
+    outline: none;
+    border-radius: 0.2em;
+    margin-right: 1px;
 }
 
-.button-header:hover {
-    /*box-shadow: rgb(66, 173, 206) 0px 3px 0px;*/
-    color: rgb(2, 217, 253);
+.btn-pagination:hover {
+    background-color: rgba(10, 60, 73, 0.753);
     cursor: pointer;
 }
 
-.button-header:focus {
+.btn-pagination:focus {
     outline: none;
 }
