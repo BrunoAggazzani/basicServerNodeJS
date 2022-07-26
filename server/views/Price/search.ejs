@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<%- include('../templates/head', {datahead: {titulo: 'Búsqueda', css: '/css/Price/price.css' }}) %>
+<%- include('../templates/head', {datahead: {titulo: 'Búsqueda', css: '/css/Price/search.css' }}) %>
 
     <body>
         <div class='busqueda'>
@@ -15,9 +15,9 @@
                         <select class='form-control' name='priceList_name' onchange="selectID(this.value)" required>
                             <option class='optionUser' default></option>
                             <% if (data) { %>
-                                <% data.priceList.map(e=> { %>                                    
+                                <% data.list_name.map(e=> { %>                                    
                                     <option class='optionUser'>
-                                        <%= e.name %>
+                                        <%= e %>
                                     </option>                                    
                                 <% }) %>
                             <% } %>
@@ -37,15 +37,24 @@
                 </form>
             </div>
             <script>
+
                 function selectID(name){
                     let parsed_data = <%-JSON.stringify(data) %>;
-                    parsed_data.priceList.map(e=>{
-                        if(e.name === name){
-                            console.log('id: '+e.id);
-                            document.getElementById('hideField').value = e.id;
+                    console.log(parsed_data);
+                    
+                    parsed_data.list_name.map(e=>{
+                        if(e == name){
+                            console.log('name: '+e);
+                            var position = parsed_data.list_name.indexOf(e);
+                            console.log('posicion: '+position);
+                            console.log('id: '+parsed_data.list_id[position]);
+                            document.getElementById('hideField').value = parsed_data.list_id[position];
                         }
                     });                    
+
+                    console.log(document.getElementById('hideField').value);                    
                 }
+                
             </script>
     </body>
 
