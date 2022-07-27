@@ -5,12 +5,12 @@ import {pool} from '../DB/connect';
 
 let datos = {
 
-    search: {
+    search: { // para la carga del formulario de búsqueda
         list_id: [],
         list_name: [],
     },
 
-    result_search: {
+    result_search: { // para la carga de la tabla cuando viene del formulario de busqueda.
         list_id: '',
         prod_like_name: '',
     },
@@ -86,6 +86,7 @@ export const getTablePriceList = async(req, res)=>{
     if (data.priceList_id) { // llaman a getTablePriceList desde el form de búsqueda.
        console.log('Cargando tabla...'); 
        datos.result_search.list_id = data.priceList_id;
+       datos.table.pagination.pagActual = 1;
        if (req.body.product) {
             datos.result_search.prod_like_name = data.product; 
        } else {
@@ -97,9 +98,8 @@ export const getTablePriceList = async(req, res)=>{
         console.log('Actualizando precio...');
         let id = data.id;
         let price = data.newPrice;
-        let listprice = data.listprice;
         try{
-            req = await pool.query("UPDATE productprice SET pricelist = "+price+", updated = NOW() WHERE product_id = '"+id+"' AND pricelist_version_id = '"+listprice+"'");                 
+            req = await pool.query("UPDATE productprice SET pricelist = "+price+", updated = NOW() WHERE product_id = '"+id+"' AND pricelist_version_id = '"+datos.result_search.list_id+"'");                 
         } catch (e){
             console.log('');
             res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
@@ -146,10 +146,10 @@ export const getTablePriceList = async(req, res)=>{
                 datos.table.pagination.forMaximo = forMax;
             }
 
-            if (datos.table.pagination.view_ALL === true){ // Aun no está en uso.
-                datos.table.product_price.prod_id = prod_ID;
-                datos.table.product_price.prod_name = prod_NAME;
-                datos.table.product_price.prod_price = prod_PRICE;
+            if (datos.table.pagination.view_ALL === true){ //######## Aun no está en uso.
+                //datos.table.product_price.prod_id = prod_ID;
+                //datos.table.product_price.prod_name = prod_NAME;
+                //datos.table.product_price.prod_price = prod_PRICE;
             } else {
                 for (let i = datos.table.pagination.forMinimo; i < datos.table.pagination.forMaximo; i++) {                                           
                     let aux_prod_ID = prod_ID[i];
@@ -160,7 +160,7 @@ export const getTablePriceList = async(req, res)=>{
                     datos.table.product_price.prod_price.push(aux_prod_PRICE);
                 }                
             }    
-            console.log('Cantidad productos: '+datos.table.product_price.prod_id.length);
+            
             // ############ Result Object #######################             
             const resultado = {
                 product: {
@@ -225,58 +225,3 @@ export const pagination = async(req, res)=>{
     }
 }
 
-
-
-//##################################################3    eliminar  #####################################################3
-/*
-export const getTableChanged = async(req, res)=>{
-    console.log('Entrando en getTableChanged...');    
-
-    const data = req.body;
-    let id = data.id;
-    let price = data.newPrice;//###################
-    let listprice = data.listprice;
-
-    try{
-        req = await pool.query("UPDATE productprice SET pricelist = "+price+", updated = NOW() WHERE product_id = '"+id+"' AND pricelist_version_id = '"+listprice+"'");                 
-    } catch (e){
-        console.log('');
-        res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
-        console.log('');
-        console.log('Falló ejecución de query');
-    }
-    
-    try{
-        if (product != ''){
-            req = await pool.query("SELECT pp.product_id as id, p.name as name, round(pp.pricelist, 2) as price,  pp.pricelist_version_id as listprice FROM public.productprice pp JOIN public.product p ON pp.product_id = p.product_id WHERE pp.pricelist_version_id = '"+listprice+"' AND p.name ILIKE '"+product+"%' ORDER BY pp.product_id");       
-            if (req.rows) {
-                const resultado = {priceList: req.rows}; 
-                res
-                .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-                .status(200).render('Price/table.ejs', {data: resultado});
-            } else {
-                console.log('');
-                res.status(404).send({message: 'No hay registros!'});
-                console.log('');
-            }
-        } else if (product == ''){
-            req = await pool.query("SELECT pp.product_id as id, p.name as name, round(pp.pricelist, 2) as price, pp.pricelist_version_id as listprice FROM public.productprice pp JOIN public.product p ON pp.product_id = p.product_id WHERE pp.pricelist_version_id = '"+pricelist_id+"' ORDER BY pp.product_id");       
-            if (req.rows) {
-                const resultado = {priceList: req.rows};               
-                res
-                .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-                .status(200).render('Price/table.ejs', {data: resultado});
-            } else {
-                console.log('');
-                res.status(404).send({message: 'No hay registros!'});
-                console.log('');
-            }
-        }      
-    } catch (e){
-        console.log('');
-        res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
-        console.log('');
-        console.log('Falló ejecución de query');
-    }   
-};
-*/

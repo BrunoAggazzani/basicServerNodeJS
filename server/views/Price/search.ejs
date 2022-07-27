@@ -40,19 +40,17 @@
 
                 function selectID(name){
                     let parsed_data = <%-JSON.stringify(data) %>;
-                    console.log(parsed_data);
+                    //console.log(parsed_data);
                     
                     parsed_data.list_name.map(e=>{
                         if(e == name){
-                            console.log('name: '+e);
                             var position = parsed_data.list_name.indexOf(e);
-                            console.log('posicion: '+position);
-                            console.log('id: '+parsed_data.list_id[position]);
+                            //console.log('posicion: '+position);
+                            //console.log('id: '+parsed_data.list_id[position]);
                             document.getElementById('hideField').value = parsed_data.list_id[position];
                         }
                     });                    
-
-                    console.log(document.getElementById('hideField').value);                    
+                    
                 }
                 
             </script>

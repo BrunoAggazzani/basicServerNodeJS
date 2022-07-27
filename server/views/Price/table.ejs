@@ -18,11 +18,11 @@
                     </thead>
                     <tbody>
                         <% if (data) { %>
-                            <% for (var i = 0; i <= data.product.pid.length;  i++ ) { %>                            
+                            <% for (var i = 0; i < data.product.pid.length;  i++ ) { %>                            
                                 <tr>
                                     <form method="POST" id="newprice" action="/api/menu/prices/updateProductPrice">                                    
                                         <td><input class="inputDisable" type="text" name="id" value="<%= data.product.pid[i] %>" readonly></td>
-                                        <td><input class="inputDisable" type="text" name="name" value="<%= data.product.pname[i] %>" readonly></td>
+                                        <td><input class="inputDisable" type="text" name="name" value="<%= data.product.pname[i] %>" readonly title="<%= data.product.pname[i] %>"></td>
                                         <td><input class="inputPrice" type="number" name="newPrice" value="<%= data.product.pprice[i] %>" onclick="this.value=''" onchange="this.form.submit()"/></td>                                    
                                     </form>                                
                                 </tr>
@@ -35,10 +35,10 @@
                     </tbody>
                 </table>                                                    
             </div>
-            <form class="form-pagination" action="/api/menu/prices/pagination" method="post">
+            <form id="input-page-form" class="form-pagination" action="/api/menu/prices/pagination" method="post">
                 <div class="page-controll">
                     <h4>Mostrando página&nbsp</h4>
-                    <input type="number" id="inputPage" placeholder="<%=data.page.pagActual%>" name="inputPage" value="<%=data.page.pagActual%>" onchange="this.form.submit()">
+                    <input type="number" min="1" max="<%=data.page.totalPaginas%>" id="inputPage" placeholder="<%=data.page.pagActual%>" name="inputPage" value="<%=data.page.pagActual%>" onchange="submitForm('input-page-form')"/>
                     <h4> de <%=data.page.totalPaginas%></h4>
                 </div>
                 <div class="page-controll">
@@ -53,23 +53,45 @@
             </form>
         </div>        
         <script>
+
             function setPage(e) {
-                console.log('Opcion: '+e.target.id);
+                //console.log('Opcion: '+e.target.id);
                 var inputPage = parseInt(document.getElementById('inputPage').value);
                 
                 if (e.target.id == 'first'){
                     document.getElementById('inputPage').value = 1;
+                    submitForm('input-page-form');
                 } 
                 if (e.target.id == 'previous'){
-                    document.getElementById('inputPage').value = inputPage -1;
+                    if (inputPage == 1){
+                        alert('Ya se encuentra en la primer página!');
+                    } else {
+                        document.getElementById('inputPage').value = inputPage -1;
+                        submitForm('input-page-form');
+                    }                    
                 }
                 if (e.target.id == 'next'){
-                    document.getElementById('inputPage').value = inputPage +1;
+                    if (inputPage == <%=data.page.totalPaginas%>){
+                        alert('Ya se encuentra en la última página!');
+                    } else {
+                        document.getElementById('inputPage').value = inputPage +1;
+                        submitForm('input-page-form');
+                    }                    
                 }
                 if (e.target.id == 'last'){
-                    document.getElementById('inputPage').value = 15;
+                    document.getElementById('inputPage').value = <%=data.page.totalPaginas%>;
+                    submitForm('input-page-form');
                 }                 
             }
+
+
+            function submitForm(formId) {
+                var oForm = document.getElementById(formId);
+                if (oForm) {
+                    oForm.submit(); 
+                }
+            }
+
         </script>        
     </body>
 
