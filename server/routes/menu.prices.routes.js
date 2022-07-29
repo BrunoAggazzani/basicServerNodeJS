@@ -6,8 +6,10 @@ router.get('/search', menuPriceControll.getFormSearch);
 router.post('/table', menuPriceControll.getTablePriceList);
 router.post('/pagination', menuPriceControll.getTablePriceList);
 router.post('/updateProductPrice', menuPriceControll.getTablePriceList);
+router.post('/orderTable', menuPriceControll.getTablePriceList);
 
+router.get('/searchMassiveModif', menuPriceControll.getFormModif);
+router.post('/tableMassiveModif', menuPriceControll.getTableModif);
 
-//router.post('/tableChanged', menuPriceControll.getTableChanged);
 
 export default router;

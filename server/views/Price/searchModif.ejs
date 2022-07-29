@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('../templates/head', {datahead: {titulo: 'Búsqueda' , css: '/css/Price/searchModif.css' }}) %>
+
+    <body>
+        <div class='busqueda'>
+            <div class='container-busqueda'>
+                <h4>
+                    Seleccionar...
+                </h4>
+                <form class='container-form-busqueda' method='POST' action='/api/menu/prices/tableMassiveModif'>
+                    <!--###############################################################################################-->
+                    <div class='container-input'>
+                        <label for='list_NAME'>Lista de Precios</label>
+                        <select class='form-control' id='list_NAME' onchange="selectIDlist(this.value)" required>
+                            <option class='optionUser' default></option>
+                            <% if (data) { %>
+                                <% data.list_NAME.map(e=> { %>
+                                    <option class='optionUser'>
+                                        <%= e %>
+                                    </option>
+                                <% }) %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div style="display: none;">
+                        <input type="text" id="hideFieldlist" name='list_ID' value="" />
+                    </div>
+                    <!--###############################################################################################-->
+                    <div class='container-input'>
+                        <label for='dep_NAME'>Departamento</label>
+                        <select class='form-control' id="dep_NAME" onchange="selectIDdep(this.value)" required>
+                            <option class='optionUser' default><%= data.dep_NAME[0]%></option>
+                            <% if (data) { %>
+                                <% data.dep_NAME.map(e=> { %>
+                                    <option class='optionUser'>
+                                        <%= e %>
+                                    </option>
+                                <% }) %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div style="display: none;">
+                        <input type="text" id="hideFielddep" name='dep_ID' value="" />
+                    </div>
+                    <!--###############################################################################################-->
+                    <div class='container-input'>
+                        <label for='group_NAME'>Grupo</label>
+                        <select class='form-control' id='group_NAME' onchange="selectIDgroup(this.value)" onload="selectIDgroup(this.value)">
+                            <option class='optionUser' default><%= data.group_NAME[0]%></option>
+                            <% if (data) { %>
+                                <% data.group_NAME.map(e=> { %>
+                                    <option class='optionUser'>
+                                        <%= e %>
+                                    </option>
+                                <% }) %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div style="display: none;">
+                        <input type="text" id="hideFieldgroup" name='group_ID' value="" />
+                    </div>
+                    <!--###############################################################################################-->
+                    <br>
+                    <div class='container-input-radios'>
+                        <p>Acción</p>
+                        <input type="radio" id='aumento' name='accion' class='input-form-busqueda' value='aumento' checked/>
+                        <label for='aumento'>Aumento</label><br>
+                        <input type="radio" id='descuento' name='accion' class='input-form-busqueda' value='descuento'/>
+                        <label for='descuento'>Descuento</label>
+                    </div>
+                    <br>
+                    <div class='container-input-radios'>
+                        <p>Monto o porcentaje</p>
+                        <input type="radio" id='monto' name='tipo' class='input-form-busqueda' value='monto' onclick="setLabelValor()"/>
+                        <label for='monto'>Monto fijo</label><br>
+                        <input type="radio" id='porcen' name='tipo' class='input-form-busqueda' value='porcen' checked  onclick="setLabelValor()"/>
+                        <label for='porcen'>Porcentaje</label><br>
+                        <input type="number" id="valor" name="valor" value="0">
+                        <label for='valor' id="labelValor"></label>
+                    </div>
+                    <br>
+                    <div class='container-input-radios'>
+                        <p>¿Qué desea modificar?</p>
+                        <input type="radio" id='all' name='prices' class='input-form-busqueda' value='all' checked/>
+                        <label for='all'>Todos los precios</label><br>
+                        <input type="radio" id='choose' name='prices' class='input-form-busqueda' value='choose'/>
+                        <label for='choose'>Elegir precios</label>
+                    </div>
+                    <br>
+                    <div class='container-btn-form'>
+                        <button type='submit' class='btn-form'>ACEPTAR</button>
+                    </div>
+                </form>
+            </div>            
+            <script>
+                setLabelValor();
+                selectIDdep();
+                selectIDgroup();
+
+                function setLabelValor() {
+                    var monto = document.getElementById('monto');
+                    var porcen = document.getElementById('porcen');
+                    if (monto.checked){
+                        document.getElementById('labelValor').innerHTML = '$';
+                    } else {
+                        document.getElementById('labelValor').innerHTML = '%';
+                    }
+                }
+
+                function selectIDlist() {
+                    let parsed_data = <%- JSON.stringify(data) %>;
+                    //console.log(parsed_data);
+                    var name = document.getElementById('list_NAME').value;
+                    parsed_data.list_NAME.map(e => {
+                        if (e == name) {
+                            var position = parsed_data.list_NAME.indexOf(e);
+                            //console.log('posicion: '+position);
+                            //console.log('id: '+parsed_data.list_id[position]);
+                            document.getElementById('hideFieldlist').value = parsed_data.list_ID[position];
+                        }
+                    });
+
+                }
+
+                function selectIDdep() {
+                    let parsed_data = <%- JSON.stringify(data) %>;
+                    //console.log(parsed_data);
+                    var name = document.getElementById('dep_NAME').value;
+                    parsed_data.dep_NAME.map(e => {
+                        if (e == name) {
+                            var position = parsed_data.dep_NAME.indexOf(e);
+                            //console.log('posicion: '+position);
+                            console.log('id: '+parsed_data.dep_ID[position]);
+                            document.getElementById('hideFielddep').value = parsed_data.dep_ID[position];
+                        }
+                    });
+
+                }
+
+                function selectIDgroup() {
+                    let parsed_data = <%- JSON.stringify(data) %>;
+                    //console.log(parsed_data);
+                    var name = document.getElementById('group_NAME').value;
+                    parsed_data.group_NAME.map(e => {
+                        if (e == name) {
+                            var position = parsed_data.group_NAME.indexOf(e);
+                            //console.log('posicion: '+position);
+                            console.log('id: '+parsed_data.group_ID[position]);
+                            document.getElementById('hideFieldgroup').value = parsed_data.group_ID[position];
+                        }
+                    });
+
+                }
+
+            </script>
+    </body>
+
+</html>

@@ -7,13 +7,27 @@
         <div class="table"> 
             <div class="container-btns">
                 <button class='btn'><a href="/api/menu/prices/search"> <h4>Volver</h4></a></button>
-                <button class='btn'><a href="/api/menu/prices/search"><h4>Modificación Masiva</h4></a></button>
+                <button class='btn'><a href="/api/menu/prices/searchMassiveModif"><h4>Modificación Masiva (no va acá!)</h4></a></button>
             </div>           
             <div class="container-table">                            
                 <table id='myTable'>
                     <thead>
                         <tr>
-                            <th>PLU</th><th>NOMBRE</th><th>PRECIO</th>                                                                                           
+                            <th>
+                                <form method="POST" id="input-order-id" action="/api/menu/prices/orderTable">                                    
+                                    <input class="header-table" type="text" name="order" value="PLU" readonly onclick="submitForm('input-order-id')">                                    
+                                </form>
+                            </th>
+                            <th>
+                                <form method="POST" id="input-order-name" action="/api/menu/prices/orderTable">                                    
+                                    <input class="header-table" type="text" name="order" value="NOMBRE" readonly onclick="submitForm('input-order-name')">                                    
+                                </form>
+                            </th>
+                            <th>
+                                <form method="POST" id="input-order-price" action="/api/menu/prices/orderTable">                                    
+                                    <input class="header-table" type="text" name="order" value="PRECIO" readonly onclick="submitForm('input-order-price')">                                    
+                                </form>
+                            </th>                                                                                           
                         </tr>
                     </thead>
                     <tbody>

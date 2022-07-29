@@ -86,8 +86,7 @@ a>h4{
     font-weight: bold;
     color: #ffffff;
     border-left: 2px solid #8a8a8a;
-    white-space: nowrap;
-    padding: 10px 10px;
+    white-space: nowrap;    
     background: linear-gradient(to bottom, rgb(16, 112, 136) 55%, rgba(45, 123, 169, 0.42) 86%, #67b7df 100%);
     position: sticky;
     opacity: 0.9;
@@ -115,8 +114,28 @@ a>h4{
 
 table td, table th {
     border: 1px solid #AAAAAA;
-    padding: 3px 2px;
+    padding: 2px 1px;
     text-align: center;
+}
+
+.header-table{
+    display: inline-flex;
+    position: relative;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    background-color: rgba(77, 79, 87, 0);
+    padding: 10px 0px;
+    border: none;
+    width: -webkit-fill-available;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.header-table:hover {
+    cursor: pointer;
+    background: linear-gradient(to bottom, rgb(11, 76, 92) 25%, rgba(45, 123, 169, 0.42) 86%, #67b7df 100%);
+    opacity: 0.9;
 }
 
 .inputDisable{
