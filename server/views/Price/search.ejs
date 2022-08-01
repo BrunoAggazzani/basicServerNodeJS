@@ -4,7 +4,10 @@
 <%- include('../templates/head', {datahead: {titulo: 'Búsqueda', css: '/css/Price/search.css' }}) %>
 
     <body>
-        <div class='busqueda'>
+        <div class='busqueda'>        
+            <a class='container-btn-return' href="/api/menu">
+                <button class='btn-return' title="Volver"></button>
+            </a>                 
             <div class='container-busqueda'>
                 <h4>
                     Buscar...
@@ -31,10 +34,13 @@
                         <input type="text" id='product' name='product' class='input-form-busqueda' autoComplete='off' value=''/>
                     </div>
                     <br />
-                    <div class='container-btn-form'>
-                        <button type='submit' class='btn-form'>ACEPTAR</button>
+                    <div class='container-btn-form'>                        
+                        <button type='submit' class='btn-form'>Ver Lista</button>
                     </div>
                 </form>
+                <div class='container-btn-form'>
+                    <button class='btn-form'><a href="/api/menu/prices/searchMassiveModif"><h4>Modificación Masiva</h4></a></button>
+                </div>
             </div>
             <script>
 

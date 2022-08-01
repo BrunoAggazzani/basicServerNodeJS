@@ -5,21 +5,26 @@
 
     <body>
         <div class='busqueda'>
+            <a class='container-btn-return' href="/api/menu/prices/search">
+                <button class='btn-return' title="Volver"></button>
+            </a>
             <div class='container-busqueda'>
                 <h4>
                     Seleccionar...
                 </h4>
-                <form class='container-form-busqueda' method='POST' action='/api/menu/prices/tableMassiveModif'>
+                <form class='container-form-busqueda' id='form-busqueda' method='POST' action='/api/menu/prices/tableMassiveModif'>
                     <!--###############################################################################################-->
                     <div class='container-input'>
                         <label for='list_NAME'>Lista de Precios</label>
                         <select class='form-control' id='list_NAME' onchange="selectIDlist(this.value)" required>
-                            <option class='optionUser' default></option>
+                            <option class='optionUser' default><%= data.list_NAME[0]%></option>
                             <% if (data) { %>
                                 <% data.list_NAME.map(e=> { %>
-                                    <option class='optionUser'>
-                                        <%= e %>
-                                    </option>
+                                    <% if (data.list_NAME.indexOf(e) > 0) { %>                                        
+                                        <option class='optionUser'>
+                                            <%= e %>
+                                        </option>
+                                    <% } %>    
                                 <% }) %>
                             <% } %>
                         </select>
@@ -34,9 +39,11 @@
                             <option class='optionUser' default><%= data.dep_NAME[0]%></option>
                             <% if (data) { %>
                                 <% data.dep_NAME.map(e=> { %>
-                                    <option class='optionUser'>
-                                        <%= e %>
-                                    </option>
+                                    <% if (data.dep_NAME.indexOf(e) > 0) { %>                                        
+                                        <option class='optionUser'>
+                                            <%= e %>
+                                        </option>
+                                    <% } %>
                                 <% }) %>
                             <% } %>
                         </select>
@@ -51,9 +58,11 @@
                             <option class='optionUser' default><%= data.group_NAME[0]%></option>
                             <% if (data) { %>
                                 <% data.group_NAME.map(e=> { %>
-                                    <option class='optionUser'>
-                                        <%= e %>
-                                    </option>
+                                    <% if (data.group_NAME.indexOf(e) > 0) { %>                                        
+                                        <option class='optionUser'>
+                                            <%= e %>
+                                        </option>
+                                    <% } %>
                                 <% }) %>
                             <% } %>
                         </select>
@@ -83,9 +92,9 @@
                     <br>
                     <div class='container-input-radios'>
                         <p>¿Qué desea modificar?</p>
-                        <input type="radio" id='all' name='prices' class='input-form-busqueda' value='all' checked/>
+                        <input type="radio" id='all' name='prices' class='input-form-busqueda' value='all' checked onclick="choosePrices()"/>
                         <label for='all'>Todos los precios</label><br>
-                        <input type="radio" id='choose' name='prices' class='input-form-busqueda' value='choose'/>
+                        <input type="radio" id='choose' name='prices' class='input-form-busqueda' value='choose' onclick="choosePrices()"/>
                         <label for='choose'>Elegir precios</label>
                     </div>
                     <br>
@@ -95,9 +104,20 @@
                 </form>
             </div>            
             <script>
+
+                messageUpdate();
+
+                function messageUpdate () {
+                    if (<%-data.redirect  == true %>){
+                        alert('Precios modificados exitosamente!');
+                    }                    
+                }
+
                 setLabelValor();
+                selectIDlist();
                 selectIDdep();
                 selectIDgroup();
+                choosePrices();
 
                 function setLabelValor() {
                     var monto = document.getElementById('monto');
@@ -117,7 +137,7 @@
                         if (e == name) {
                             var position = parsed_data.list_NAME.indexOf(e);
                             //console.log('posicion: '+position);
-                            //console.log('id: '+parsed_data.list_id[position]);
+                            console.log('id: '+parsed_data.list_ID[position]);
                             document.getElementById('hideFieldlist').value = parsed_data.list_ID[position];
                         }
                     });
@@ -152,6 +172,16 @@
                         }
                     });
 
+                }
+
+                function choosePrices() {
+                    var opcion = document.getElementById('all');
+                    if (opcion.ckecked){
+                        console.log('option: '+option.value);
+                        var oform = document.getElementById('form-busqueda');
+                        oform.method = 'get';
+                        oform.action = '/api/menu/prices/searchMassiveModif'; 
+                    }
                 }
 
             </script>

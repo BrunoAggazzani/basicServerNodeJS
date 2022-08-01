@@ -23,6 +23,39 @@ body {
     filter: sepia(0.5);
 }
 
+.container-btn-return {
+    position: absolute;
+    top: 5vh;
+    left: 7vw;
+    padding: 0%;
+    margin: 0%;
+    border: none;
+    outline: none;
+    background: radial-gradient(rgb(0, 0, 0), rgb(0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    z-index: 1;
+}
+
+.container-btn-return:hover {
+    background: radial-gradient(rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+}
+
+.btn-return {
+    display: inline;
+    position: relative;
+    border: none;
+    outline: none;
+    background-image: url('../../../images/flecha_volver.png');
+    background-color: #4d4f5700;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    padding: 0%;
+    margin: 0%;
+}
+
 .container-busqueda {
     display: flex;
     flex-direction: column;
@@ -168,4 +201,8 @@ body {
 
 #valor{
     width: 100px;
+    color: white;
+    background-color: initial;
+    border-style: groove;
+    text-align: right;
 }

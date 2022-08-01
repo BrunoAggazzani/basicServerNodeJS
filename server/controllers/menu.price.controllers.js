@@ -101,7 +101,7 @@ export const getFormSearch = async(req, res)=>{
 };
 
 
-// ############################# Show form massive Modification ########################## poner el boton de modificacion masiva en el primer form del asistente de precios.
+// ############################# Show form massive Modification ########################## 
 
 export const getFormModif = async(req, res)=>{
     
@@ -184,11 +184,12 @@ export const getFormModif = async(req, res)=>{
 
 };
 
+// ############################# Salida del "form massive Modification" hacia tabla para seleccion de PLUs o ejecucion de update y redirreccion ########################## 
 export const getTableModif = async(req, res)=>{
 
     const data = req.body;
-    
-    datos.result_search_massiveModif.list_id = datos.result_search.list_id;
+    /*
+    datos.result_search_massiveModif.list_id = '';
     datos.result_search_massiveModif.department_id = ''; //data.dep_ID;
     datos.result_search_massiveModif.group_id = ''; //data.group_ID;
     datos.result_search_massiveModif.accion = ''; //data.accion;
@@ -196,8 +197,10 @@ export const getTableModif = async(req, res)=>{
     datos.result_search_massiveModif.valor = '';
     datos.result_search_massiveModif.prices = ''; //data.prices;    
     datos.result_search_massiveModif.PLUs = '';
+    */
     let productArray = [];
 
+    datos.result_search_massiveModif.list_id = data.list_ID;
     datos.result_search_massiveModif.department_id = data.dep_ID;
     datos.result_search_massiveModif.group_id = data.group_ID;
     datos.result_search_massiveModif.valor = data.valor;
@@ -208,13 +211,13 @@ export const getTableModif = async(req, res)=>{
         console.log('');
         res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
         console.log('');
-        console.log('Falló ejecución de query');
+        console.log('Falló ejecución de query al traer array de productos');
     }
 
     console.log('Array de productos: '+JSON.stringify(productArray));
     
 
-    if (data.prices == 'all'){
+    if (data.prices == 'all'){ // ##########  Modifica todos los PLUs  ################
         datos.result_search_massiveModif.department_id = data.dep_ID;
         datos.result_search_massiveModif.group_id = data.group_ID;
         datos.result_search_massiveModif.accion = data.accion;
@@ -247,19 +250,32 @@ export const getTableModif = async(req, res)=>{
                 } 
             }
 
-            console.log('new_price: '+new_price);
+            //console.log('new_price: '+new_price);
             queryString = "UPDATE public.productprice SET pricelist = "+new_price+" WHERE product_id = "+productArray[e].id+" AND pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"'";
             try{
-                req = await pool.query(queryString);   
-                console.log(queryString);
+                req = await pool.query(queryString);
             } catch {
-                console.log('puto');
+                console.log('error!');
                 //res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
                 //console.log('');
                 //console.log('Falló ejecución de query');
             }
-
         };
+        const resultado = {
+            list_ID: datos.search_massiveModif.list_id,
+            list_NAME: datos.search_massiveModif.list_name,
+            dep_ID: datos.search_massiveModif.department_id,
+            dep_NAME: datos.search_massiveModif.department_name,
+            group_ID: datos.search_massiveModif.group_id,
+            group_NAME: datos.search_massiveModif.group_name,
+            //redirect: true 
+        };
+    
+        res
+        .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+        .status(200).render('Price/searchModif.ejs', {data: resultado});
+        console.log('Updated Success!!');
+        console.log('Redireccionando al formulario de modificacion masiva...');
     }
 };
 
