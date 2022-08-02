@@ -13,21 +13,21 @@
                     <thead>
                         <tr>
                             <th>
-                                <input class="inputCheckbox" type="checkbox" readonly>
+                                <input class="inputCheckbox" type="checkbox" checked disabled>
                             </th>
                             <th>
-                                <form method="POST" id="input-order-id" action="/api/menu/prices/orderTable">                                    
+                                <form method="POST" id="input-order-id" action="/api/menu/prices/tableMassiveModif">                                    
                                     <input class="header-table" type="text" name="order" value="PLU" readonly onclick="submitForm('input-order-id')">                                    
                                 </form>
                             </th>
                             <th>
-                                <form method="POST" id="input-order-name" action="/api/menu/prices/orderTable">                                    
+                                <form method="POST" id="input-order-name" action="/api/menu/prices/tableMassiveModif">                                    
                                     <input class="header-table" type="text" name="order" value="NOMBRE" readonly onclick="submitForm('input-order-name')">                                    
                                 </form>
                             </th>
                             <th>
-                                <form method="POST" id="input-order-price" action="/api/menu/prices/orderTable">                                    
-                                    <input class="header-table" type="text" name="order" value="PRECIO" readonly onclick="submitForm('input-order-price')">                                    
+                                <form method="POST" id="input-order-price" action="/api/menu/prices/tableMassiveModif">                                    
+                                    <input class="header-table" type="text" name="order" value="NUEVO PRECIO" readonly onclick="submitForm('input-order-price')">                                    
                                 </form>
                             </th>                                                                                           
                         </tr>
@@ -36,7 +36,7 @@
                         <% if (data) { %>
                             <% for (var i = 0; i < data.product.pid.length;  i++ ) { %>                            
                                 <tr>
-                                    <form method="POST" id="newprice" action="/api/menu/prices/updateMassivePrice">
+                                    <form method="POST" id="newprice" action="/api/menu/prices/tableMassiveModif">
                                         <td><input class="inputCheckbox" type="checkbox"  onchange="this.form.submit()"></td>                                    
                                         <td><input class="inputDisable" type="text" name="id" value="<%= data.product.pid[i] %>" readonly></td>
                                         <td><input class="inputDisable" type="text" name="name" value="<%= data.product.pname[i] %>" readonly title="<%= data.product.pname[i] %>"></td>
@@ -52,17 +52,17 @@
                     </tbody>
                 </table>                                                    
             </div>
-            <form id="input-page-form" class="form-pagination" action="/api/menu/prices/pagination" method="post">
+            <form id="input-page-form" class="form-pagination" action="/api/menu/prices/tableMassiveModif" method="post">
                 <div class="page-controll">
                     <h4>Mostrando página&nbsp</h4>
                     <input type="number" min="1" max="<%=data.page.totalPaginas%>" id="inputPage" placeholder="<%=data.page.pagActual%>" name="inputPage" value="<%=data.page.pagActual%>" onchange="submitForm('input-page-form')"/>
                     <h4> de <%=data.page.totalPaginas%></h4>
                 </div>
                 <div class="page-controll">
-                    <input class="btn-pagination" type="button" id="first" onclick="setPage(event)" value="<%=__('| <')%>" >
-                    <input class="btn-pagination" type="button" id="previous" onclick="setPage(event)" value="<%=__('<<')%>" >
-                    <input class="btn-pagination" type="button" id="next" onclick="setPage(event)" value="<%=__('>>')%>" >
-                    <input class="btn-pagination" type="button" id="last" onclick="setPage(event)" value="<%=__('> |')%>" >
+                    <input class="btn-pagination" type="button" title="first" id="first" onclick="setPage(event)" value="<%=__('| <')%>" >
+                    <input class="btn-pagination" type="button" title="previous" id="previous" onclick="setPage(event)" value="<%=__('<<')%>" >
+                    <input class="btn-pagination" type="button" title="next" id="next" onclick="setPage(event)" value="<%=__('>>')%>" >
+                    <input class="btn-pagination" type="button" title="last" id="last" onclick="setPage(event)" value="<%=__('> |')%>" >
                 </div>
                 <div class="page-controll">
                     <h4><%=data.page.forMinimo%> a <%=data.page.forMaximo%> registros de <%=data.page.regTotal%></h4>

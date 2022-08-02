@@ -62,7 +62,7 @@ let datos = {
     
 }
 
-//########################################### Show Search Form ##############################
+//################################################################### Show Search Form ###############################################################################
 
 export const getFormSearch = async(req, res)=>{
 
@@ -101,7 +101,7 @@ export const getFormSearch = async(req, res)=>{
 };
 
 
-// ############################# Show form massive Modification ########################## 
+// ########################################################## Show form massive Modification ####################################################################### 
 
 export const getFormModif = async(req, res)=>{
     
@@ -190,13 +190,90 @@ export const getTableModif = async(req, res)=>{
     const data = req.body;
     let productArray = [];
 
-    datos.result_search_massiveModif.list_id = data.list_ID;
-    datos.result_search_massiveModif.department_id = data.dep_ID;
-    datos.result_search_massiveModif.group_id = data.group_ID;
-    datos.result_search_massiveModif.valor = data.valor;
-    try{
-        req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND department_id = "+datos.result_search_massiveModif.department_id+" AND group_id = "+datos.result_search_massiveModif.group_id+" AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"'");   
-        productArray = req.rows;          
+    if (data.list_ID){ // Cuando viene la primera vez desde el formulario de modificacion masiva
+        datos.result_search_massiveModif.list_id = data.list_ID;
+        datos.result_search_massiveModif.department_id = data.dep_ID;
+        datos.result_search_massiveModif.group_id = data.group_ID;
+        datos.result_search_massiveModif.accion = data.accion;
+        datos.result_search_massiveModif.tipo = data.tipo;
+        datos.result_search_massiveModif.valor = data.valor;
+        datos.result_search_massiveModif.prices = data.prices;
+    }    
+
+    console.log('list_id: '+datos.result_search_massiveModif.list_id);
+    console.log('department_id: '+datos.result_search_massiveModif.department_id);
+    console.log('group_id: '+datos.result_search_massiveModif.group_id);
+
+    if (data.order){ ///////////// llaman a getTableModif desde ordenamiento.
+        console.log('Ordenando tabla...');
+        let orderBy = datos.table.order.by;
+        let orderDirect = datos.table.order.direct;
+        switch(data.order) {
+          case 'PLU':
+            orderBy = 'id'
+            if (orderBy == datos.table.order.by){
+                // no cambia  datos.table.order.by
+                if(orderDirect == 'ASC'){
+                    datos.table.order.direct = 'DESC';
+                } else {
+                    datos.table.order.direct = 'ASC';
+                }
+            } else {
+                datos.table.order.by = orderBy;
+                datos.table.order.direct = 'ASC';
+            }
+            break;
+          case 'NOMBRE':
+            orderBy = 'name'
+            if (orderBy == datos.table.order.by){
+                // no cambia  datos.table.order.by
+                if(orderDirect == 'ASC'){
+                    datos.table.order.direct = 'DESC';
+                } else {
+                    datos.table.order.direct = 'ASC';
+                }
+            } else {
+                datos.table.order.by = orderBy;
+                datos.table.order.direct = 'ASC';
+            }
+            break;
+          case 'NUEVO PRECIO':
+            orderBy = 'price'
+            if (orderBy == datos.table.order.by){
+                // no cambia  datos.table.order.by
+                if(orderDirect == 'ASC'){
+                    datos.table.order.direct = 'DESC';
+                } else {
+                    datos.table.order.direct = 'ASC';
+                }
+            } else {
+                datos.table.order.by = orderBy;
+                datos.table.order.direct = 'ASC';
+            }
+            break;            
+        }
+    }
+
+    try{ ////////////////////////////////////////  Trae el array de productos segun lo especificado en el formulario ////////////////
+        if (datos.result_search_massiveModif.department_id > 0 && datos.result_search_massiveModif.group_id > 0){
+            console.log('Cargando el array de productos con department y group');
+            req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND department_id = "+datos.result_search_massiveModif.department_id+" AND group_id = "+datos.result_search_massiveModif.group_id+" AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
+            productArray = req.rows;
+        } else if (datos.result_search_massiveModif.department_id > 0 && datos.result_search_massiveModif.group_id == 0){
+            console.log('Cargando el array de productos con department solo');
+            req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND department_id = "+datos.result_search_massiveModif.department_id+" AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
+            productArray = req.rows;
+        } else if (datos.result_search_massiveModif.department_id == 0 && datos.result_search_massiveModif.group_id > 0){
+            console.log('Cargando el array de productos con group solo');
+            req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND group_id = "+datos.result_search_massiveModif.group_id+" AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
+            productArray = req.rows;
+        } else if (datos.result_search_massiveModif.department_id == 0 && datos.result_search_massiveModif.group_id == 0){
+            console.log('Cargando el array de productos sin department y sin group');
+            req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
+            productArray = req.rows;
+        } else {
+            console.log('No se cargó el array de productos');
+        }                  
     } catch (e){
         console.log('');
         res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
@@ -206,33 +283,27 @@ export const getTableModif = async(req, res)=>{
 
     console.log('Array de productos: '+JSON.stringify(productArray));
     
-
-    datos.result_search_massiveModif.accion = data.accion;
-    datos.result_search_massiveModif.tipo = data.tipo;
     let variacion = 0;
     let new_price = 0;
     let queryString = '';
     
-    if (data.prices == 'all'){ // ##########  Modifica todos los PLUs  ################
+    if (datos.result_search_massiveModif.prices == 'all'){ ///////////////////////// ##########  Modifica todos los PLUs  ################
+        console.log('Actualizando precio en all...');
         for (let e = 0; e < productArray.length; e++) {           
             
-            if (data.tipo == 'porcen'){ //############### ( * )
-                datos.result_search_massiveModif.tipo = 'porcen';        
-                if (data.accion == 'aumento'){
-                    datos.result_search_massiveModif.accion = 'aumento';
+            if (datos.result_search_massiveModif.tipo == 'porcen'){ //############### ( * )        
+                if (datos.result_search_massiveModif.accion == 'aumento'){
                     variacion =  1 + (data.valor / 100);
                     new_price = productArray[e].price * variacion;
-                } else if (data.accion == 'descuento'){
-                    datos.result_search_massiveModif.accion = 'descuento';
+                } else if (datos.result_search_massiveModif.accion == 'descuento'){
                     variacion =  1 - (data.valor / 100);
                     new_price = productArray[e].price * variacion;
                 }
-            } else if (data.tipo == 'monto') { //#########( + )
-                datos.result_search_massiveModif.tipo = 'monto';
-                if (data.accion == 'aumento'){            
+            } else if (datos.result_search_massiveModif.tipo == 'monto') { //#########( + )
+                if (datos.result_search_massiveModif.accion == 'aumento'){            
                     variacion = data.valor;
                     new_price = productArray[e].price + variacion;
-                } else if (data.accion == 'descuento'){
+                } else if (datos.result_search_massiveModif.accion == 'descuento'){
                     variacion = data.valor;
                     new_price = productArray[e].price - variacion; 
                 } 
@@ -254,41 +325,70 @@ export const getTableModif = async(req, res)=>{
         res
         .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
         .status(200).render('Success/success.ejs', {dataSuccess: success});
-    } else if (data.prices == 'choose'){
+
+    } else if (datos.result_search_massiveModif.prices == 'choose'){ ////////////////////// ##########  Modifica algunos PLUs  ################
+        console.log('Entrando en choose...');
+        if (data.newPrice) { // llaman a getTableModif desde actualización de precio.
+            console.log('Actualizando precio en choose...');
+            let id = data.id;
+            let price = data.newPrice;
+            try{
+                req = await pool.query("UPDATE productprice SET pricelist = "+price+", updated = NOW() WHERE product_id = '"+id+"' AND pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"'");                 
+            } catch (e){
+                console.log('');
+                res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
+                console.log('');
+                console.log('Falló ejecución de query');
+            }
+        }
+
+        if (data.inputPage){ ///////// llaman a getTableModif desde actualización de página.
+            console.log('Actualizando página...');
+            datos.table.pagination.pagActual = data.inputPage;
+        }                   
 
         if (productArray.length > 0) {
+
+            // ################ Pagination ###########################
+            datos.table.pagination.totalRegist = productArray.length;
+            datos.table.pagination.totalPaginas = Math.trunc(datos.table.pagination.totalRegist / datos.table.pagination.mostrar) + 1;
+            datos.table.pagination.forMinimo = (datos.table.pagination.pagActual - 1 ) * datos.table.pagination.mostrar;
+            datos.table.pagination.forMaximo = datos.table.pagination.pagActual * datos.table.pagination.mostrar;
+            if (datos.table.pagination.forMaximo > datos.table.pagination.totalRegist){
+                let forMax = (datos.table.pagination.totalRegist - datos.table.pagination.forMinimo) + datos.table.pagination.forMinimo;
+                datos.table.pagination.forMaximo = forMax;
+            }
+
             datos.table.product_price.prod_id = [];
             datos.table.product_price.prod_name = [];
             datos.table.product_price.prod_price = [];
 
-            for (let e = 0; e < productArray.length; e++) {
+            for (let e = datos.table.pagination.forMinimo; e < datos.table.pagination.forMaximo; e++) {
 
-                if (data.tipo == 'porcen'){ //############### ( * )
-                    datos.result_search_massiveModif.tipo = 'porcen';        
-                    if (data.accion == 'aumento'){
-                        datos.result_search_massiveModif.accion = 'aumento';
-                        variacion =  1 + (data.valor / 100);
-                        new_price = productArray[e].price * variacion;
-                    } else if (data.accion == 'descuento'){
-                        datos.result_search_massiveModif.accion = 'descuento';
-                        variacion =  1 - (data.valor / 100);
-                        new_price = productArray[e].price * variacion;
+                if (datos.result_search_massiveModif.tipo == 'porcen'){ //############### ( * )        
+                    if (datos.result_search_massiveModif.accion == 'aumento'){
+                        variacion =  1 + (datos.result_search_massiveModif.valor / 100);
+                        new_price = (parseFloat(productArray[e].price) * parseFloat(variacion)).toFixed(2);
+                    } else if (datos.result_search_massiveModif.accion == 'descuento'){
+                        variacion =  1 - (datos.result_search_massiveModif.valor / 100);
+                        new_price = (parseFloat(productArray[e].price) * parseFloat(variacion)).toFixed(2);
                     }
-                } else if (data.tipo == 'monto') { //#########( + )
-                    datos.result_search_massiveModif.tipo = 'monto';
-                    if (data.accion == 'aumento'){            
-                        variacion = data.valor;
-                        new_price = productArray[e].price + variacion;
-                    } else if (data.accion == 'descuento'){
-                        variacion = data.valor;
-                        new_price = productArray[e].price - variacion; 
+                } else if (datos.result_search_massiveModif.tipo == 'monto') { //#########( + )
+                    if (datos.result_search_massiveModif.accion == 'aumento'){            
+                        variacion = datos.result_search_massiveModif.valor;
+                        new_price = (parseFloat(productArray[e].price) + parseFloat(variacion)).toFixed(2);
+                    } else if (datos.result_search_massiveModif.accion == 'descuento'){
+                        variacion = datos.result_search_massiveModif.valor;
+                        new_price = (parseFloat(productArray[e].price) - parseFloat(variacion)).toFixed(2); 
                     } 
                 }
 
                 datos.table.product_price.prod_id.push(productArray[e].id);
                 datos.table.product_price.prod_name.push(productArray[e].name);
                 datos.table.product_price.prod_price.push(new_price);
-            }    
+            }
+            
+            
             
             // ############ Result Object #######################             
             const resultado = {
@@ -298,11 +398,11 @@ export const getTableModif = async(req, res)=>{
                     pprice: datos.table.product_price.prod_price
                 },
                 page: {
-                    regTotal: productArray.length,
-                    pagActual: 1,
-                    totalPaginas: productArray.length / 100,
-                    forMinimo: 1,
-                    forMaximo: 100,
+                    pagActual: datos.table.pagination.pagActual,
+                    totalPaginas: datos.table.pagination.totalPaginas,
+                    forMinimo: datos.table.pagination.forMinimo,
+                    forMaximo: datos.table.pagination.forMaximo,
+                    regTotal: datos.table.pagination.totalRegist
                 }
             };
             res
@@ -317,7 +417,7 @@ export const getTableModif = async(req, res)=>{
 };
 
 
-//########################################## Show Table ####################################
+//######################################################################### Show Table #############################################################################
 
 export const getTablePriceList = async(req, res)=>{
 
