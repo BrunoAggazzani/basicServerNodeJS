@@ -92,9 +92,9 @@
                     <br>
                     <div class='container-input-radios'>
                         <p>¿Qué desea modificar?</p>
-                        <input type="radio" id='all' name='prices' class='input-form-busqueda' value='all' checked onclick="choosePrices()"/>
+                        <input type="radio" id='all' name='prices' class='input-form-busqueda' value='all' checked/>
                         <label for='all'>Todos los precios</label><br>
-                        <input type="radio" id='choose' name='prices' class='input-form-busqueda' value='choose' onclick="choosePrices()"/>
+                        <input type="radio" id='choose' name='prices' class='input-form-busqueda' value='choose'/>
                         <label for='choose'>Elegir precios</label>
                     </div>
                     <br>
@@ -104,20 +104,11 @@
                 </form>
             </div>            
             <script>
-
-                messageUpdate();
-
-                function messageUpdate () {
-                    if (<%-data.redirect  == true %>){
-                        alert('Precios modificados exitosamente!');
-                    }                    
-                }
-
+                
                 setLabelValor();
                 selectIDlist();
                 selectIDdep();
                 selectIDgroup();
-                choosePrices();
 
                 function setLabelValor() {
                     var monto = document.getElementById('monto');
@@ -172,16 +163,6 @@
                         }
                     });
 
-                }
-
-                function choosePrices() {
-                    var opcion = document.getElementById('all');
-                    if (opcion.ckecked){
-                        console.log('option: '+option.value);
-                        var oform = document.getElementById('form-busqueda');
-                        oform.method = 'get';
-                        oform.action = '/api/menu/prices/searchMassiveModif'; 
-                    }
                 }
 
             </script>

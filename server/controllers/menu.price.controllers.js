@@ -188,16 +188,6 @@ export const getFormModif = async(req, res)=>{
 export const getTableModif = async(req, res)=>{
 
     const data = req.body;
-    /*
-    datos.result_search_massiveModif.list_id = '';
-    datos.result_search_massiveModif.department_id = ''; //data.dep_ID;
-    datos.result_search_massiveModif.group_id = ''; //data.group_ID;
-    datos.result_search_massiveModif.accion = ''; //data.accion;
-    datos.result_search_massiveModif.tipo = ''; //data.tipo;
-    datos.result_search_massiveModif.valor = '';
-    datos.result_search_massiveModif.prices = ''; //data.prices;    
-    datos.result_search_massiveModif.PLUs = '';
-    */
     let productArray = [];
 
     datos.result_search_massiveModif.list_id = data.list_ID;
@@ -217,15 +207,13 @@ export const getTableModif = async(req, res)=>{
     console.log('Array de productos: '+JSON.stringify(productArray));
     
 
+    datos.result_search_massiveModif.accion = data.accion;
+    datos.result_search_massiveModif.tipo = data.tipo;
+    let variacion = 0;
+    let new_price = 0;
+    let queryString = '';
+    
     if (data.prices == 'all'){ // ##########  Modifica todos los PLUs  ################
-        datos.result_search_massiveModif.department_id = data.dep_ID;
-        datos.result_search_massiveModif.group_id = data.group_ID;
-        datos.result_search_massiveModif.accion = data.accion;
-        datos.result_search_massiveModif.tipo = data.tipo;
-        let variacion = 0;
-        let new_price = 0;
-        let queryString = '';
-        //productArray.map(e => {
         for (let e = 0; e < productArray.length; e++) {           
             
             if (data.tipo == 'porcen'){ //############### ( * )
@@ -256,26 +244,75 @@ export const getTableModif = async(req, res)=>{
                 req = await pool.query(queryString);
             } catch {
                 console.log('error!');
-                //res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
-                //console.log('');
-                //console.log('Falló ejecución de query');
+                res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
+                console.log('');
+                console.log('Falló ejecución de query');
             }
         };
-        const resultado = {
-            list_ID: datos.search_massiveModif.list_id,
-            list_NAME: datos.search_massiveModif.list_name,
-            dep_ID: datos.search_massiveModif.department_id,
-            dep_NAME: datos.search_massiveModif.department_name,
-            group_ID: datos.search_massiveModif.group_id,
-            group_NAME: datos.search_massiveModif.group_name,
-            //redirect: true 
-        };
     
+        const success = {href: "/api/menu/prices/searchMassiveModif", mje: "Excelente..!"};
         res
         .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-        .status(200).render('Price/searchModif.ejs', {data: resultado});
-        console.log('Updated Success!!');
-        console.log('Redireccionando al formulario de modificacion masiva...');
+        .status(200).render('Success/success.ejs', {dataSuccess: success});
+    } else if (data.prices == 'choose'){
+
+        if (productArray.length > 0) {
+            datos.table.product_price.prod_id = [];
+            datos.table.product_price.prod_name = [];
+            datos.table.product_price.prod_price = [];
+
+            for (let e = 0; e < productArray.length; e++) {
+
+                if (data.tipo == 'porcen'){ //############### ( * )
+                    datos.result_search_massiveModif.tipo = 'porcen';        
+                    if (data.accion == 'aumento'){
+                        datos.result_search_massiveModif.accion = 'aumento';
+                        variacion =  1 + (data.valor / 100);
+                        new_price = productArray[e].price * variacion;
+                    } else if (data.accion == 'descuento'){
+                        datos.result_search_massiveModif.accion = 'descuento';
+                        variacion =  1 - (data.valor / 100);
+                        new_price = productArray[e].price * variacion;
+                    }
+                } else if (data.tipo == 'monto') { //#########( + )
+                    datos.result_search_massiveModif.tipo = 'monto';
+                    if (data.accion == 'aumento'){            
+                        variacion = data.valor;
+                        new_price = productArray[e].price + variacion;
+                    } else if (data.accion == 'descuento'){
+                        variacion = data.valor;
+                        new_price = productArray[e].price - variacion; 
+                    } 
+                }
+
+                datos.table.product_price.prod_id.push(productArray[e].id);
+                datos.table.product_price.prod_name.push(productArray[e].name);
+                datos.table.product_price.prod_price.push(new_price);
+            }    
+            
+            // ############ Result Object #######################             
+            const resultado = {
+                product: {
+                    pid: datos.table.product_price.prod_id,
+                    pname: datos.table.product_price.prod_name,
+                    pprice: datos.table.product_price.prod_price
+                },
+                page: {
+                    regTotal: productArray.length,
+                    pagActual: 1,
+                    totalPaginas: productArray.length / 100,
+                    forMinimo: 1,
+                    forMaximo: 100,
+                }
+            };
+            res
+            .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+            .status(200).render('Price/tableModif.ejs', {data: resultado});
+        } else {
+            console.log('');
+            res.status(404).send('<h2 style="position: relative; top: 45%; padding: 5%; text-align: center">La búsqueda no arrojó resultados.</h2>');
+            console.log('');
+        }
     }
 };
 
@@ -438,7 +475,7 @@ export const getTablePriceList = async(req, res)=>{
             .status(200).render('Price/table.ejs', {data: resultado});
         } else {
             console.log('');
-            res.status(404).send('<h2 style="position: relative; top: 45%; padding: 5%; text-align: center">La búsqueda no arrojó resultados.<br/>No sea boludo, ¡escriba bién!</h2>');
+            res.status(404).send('<h2 style="position: relative; top: 45%; padding: 5%; text-align: center">La búsqueda no arrojó resultados.</h2>');
             console.log('');
         }                  
     } catch (e){
