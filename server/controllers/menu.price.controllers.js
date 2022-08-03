@@ -38,9 +38,12 @@ let datos = {
     table: {
 
         product_price: {
+            updated: [], // Atributo que se envia a la vista
             prod_id: [],
             prod_name: [],
             prod_price: [],
+
+            IDs_price_changed: [] // lista de productos actualizados 
         },
 
         pagination: {
@@ -104,6 +107,8 @@ export const getFormSearch = async(req, res)=>{
 // ########################################################## Show form massive Modification ####################################################################### 
 
 export const getFormModif = async(req, res)=>{
+
+    datos.table.product_price.IDs_price_changed = []; // Reseteo la lista de IDs actualizados para la tabla de modificacion masiva.
     
     datos.search_massiveModif.list_id = [];
     datos.search_massiveModif.list_name = [];
@@ -188,6 +193,9 @@ export const getFormModif = async(req, res)=>{
 export const getTableModif = async(req, res)=>{
 
     const data = req.body;
+    
+    let id = data.id;
+    let price = data.newPrice;
     let productArray = [];
 
     if (data.list_ID){ // Cuando viene la primera vez desde el formulario de modificacion masiva
@@ -198,7 +206,20 @@ export const getTableModif = async(req, res)=>{
         datos.result_search_massiveModif.tipo = data.tipo;
         datos.result_search_massiveModif.valor = data.valor;
         datos.result_search_massiveModif.prices = data.prices;
-    }    
+    }
+    
+    if (data.newPrice) { // llaman a getTableModif desde actualización de precio.
+        console.log('Actualizando precio para tabla de modificacion masiva');
+        datos.table.product_price.IDs_price_changed.push(id);
+        try{
+            req = await pool.query("UPDATE productprice SET pricelist = "+price+", updated = NOW() WHERE product_id = '"+id+"' AND pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"'");                 
+        } catch (e){
+            console.log('');
+            res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
+            console.log('');
+            console.log('Falló ejecución de query');
+        }
+    }
 
     console.log('list_id: '+datos.result_search_massiveModif.list_id);
     console.log('department_id: '+datos.result_search_massiveModif.department_id);
@@ -289,23 +310,23 @@ export const getTableModif = async(req, res)=>{
     
     if (datos.result_search_massiveModif.prices == 'all'){ ///////////////////////// ##########  Modifica todos los PLUs  ################
         console.log('Actualizando precio en all...');
+
         for (let e = 0; e < productArray.length; e++) {           
-            
             if (datos.result_search_massiveModif.tipo == 'porcen'){ //############### ( * )        
                 if (datos.result_search_massiveModif.accion == 'aumento'){
                     variacion =  1 + (data.valor / 100);
-                    new_price = productArray[e].price * variacion;
+                    new_price = (parseFloat(productArray[e].price) * parseFloat(variacion)).toFixed(2);
                 } else if (datos.result_search_massiveModif.accion == 'descuento'){
                     variacion =  1 - (data.valor / 100);
-                    new_price = productArray[e].price * variacion;
+                    new_price = (parseFloat(productArray[e].price) * parseFloat(variacion)).toFixed(2);
                 }
             } else if (datos.result_search_massiveModif.tipo == 'monto') { //#########( + )
                 if (datos.result_search_massiveModif.accion == 'aumento'){            
                     variacion = data.valor;
-                    new_price = productArray[e].price + variacion;
+                    new_price = (parseFloat(productArray[e].price) + parseFloat(variacion)).toFixed(2);
                 } else if (datos.result_search_massiveModif.accion == 'descuento'){
                     variacion = data.valor;
-                    new_price = productArray[e].price - variacion; 
+                    new_price = (parseFloat(productArray[e].price) - parseFloat(variacion)).toFixed(2); 
                 } 
             }
 
@@ -327,20 +348,7 @@ export const getTableModif = async(req, res)=>{
         .status(200).render('Success/success.ejs', {dataSuccess: success});
 
     } else if (datos.result_search_massiveModif.prices == 'choose'){ ////////////////////// ##########  Modifica algunos PLUs  ################
-        console.log('Entrando en choose...');
-        if (data.newPrice) { // llaman a getTableModif desde actualización de precio.
-            console.log('Actualizando precio en choose...');
-            let id = data.id;
-            let price = data.newPrice;
-            try{
-                req = await pool.query("UPDATE productprice SET pricelist = "+price+", updated = NOW() WHERE product_id = '"+id+"' AND pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"'");                 
-            } catch (e){
-                console.log('');
-                res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
-                console.log('');
-                console.log('Falló ejecución de query');
-            }
-        }
+        console.log('Entrando en choose...');        
 
         if (data.inputPage){ ///////// llaman a getTableModif desde actualización de página.
             console.log('Actualizando página...');
@@ -359,9 +367,13 @@ export const getTableModif = async(req, res)=>{
                 datos.table.pagination.forMaximo = forMax;
             }
 
+
+            datos.table.product_price.updated = [];
             datos.table.product_price.prod_id = [];
             datos.table.product_price.prod_name = [];
             datos.table.product_price.prod_price = [];
+
+            
 
             for (let e = datos.table.pagination.forMinimo; e < datos.table.pagination.forMaximo; e++) {
 
@@ -382,17 +394,61 @@ export const getTableModif = async(req, res)=>{
                         new_price = (parseFloat(productArray[e].price) - parseFloat(variacion)).toFixed(2); 
                     } 
                 }
-
-                datos.table.product_price.prod_id.push(productArray[e].id);
-                datos.table.product_price.prod_name.push(productArray[e].name);
-                datos.table.product_price.prod_price.push(new_price);
+                let updated = false;
+                /*
+                if (datos.table.product_price.IDs_price_changed.length > 0){
+                    for (let i = 0; i < datos.table.product_price.IDs_price_changed.length; i++) {
+                        if (datos.table.product_price.IDs_price_changed[i] == productArray[e].id) { // si el ID de producto es igual al ID de actualizacion de precio...
+                            updated = true;
+                            datos.table.product_price.updated.push(updated);
+                            datos.table.product_price.prod_id.push(productArray[e].id);
+                            datos.table.product_price.prod_name.push(productArray[e].name);
+                            datos.table.product_price.prod_price.push(new_price);
+                        } else {
+                            updated = false;
+                            datos.table.product_price.updated.push(updated);
+                            datos.table.product_price.prod_id.push(productArray[e].id);
+                            datos.table.product_price.prod_name.push(productArray[e].name);
+                            datos.table.product_price.prod_price.push(new_price);
+                        }
+                    }
+                }
+                */
+                if (datos.table.product_price.IDs_price_changed.length == 0){             // Si la lista de actualizados esta vacia
+                    datos.table.product_price.updated.push(updated);
+                    datos.table.product_price.prod_id.push(productArray[e].id);
+                    datos.table.product_price.prod_name.push(productArray[e].name);
+                    datos.table.product_price.prod_price.push(new_price);                                                                
+                } else {                                                                  // Si tiene IDs...
+                    for (let i = 0; i < datos.table.product_price.IDs_price_changed.length; i++) {// Recorre el array
+                        //console.log(Object.values(datos.table.product_price.IDs_price_changed[i]));
+                        if (productArray[e].id == datos.table.product_price.IDs_price_changed[i]) { // Si ID de producto coincide con ID actualizado
+                            console.log('Actualizado: '+datos.table.product_price.IDs_price_changed[i]+' coincide con producto: '+productArray[e].id);
+                            updated = true;
+                            datos.table.product_price.updated.push(updated);
+                            datos.table.product_price.prod_id.push(productArray[e].id);
+                            datos.table.product_price.prod_name.push(productArray[e].name);
+                            datos.table.product_price.prod_price.push(new_price);
+                            //break;
+                        } else {                                                                   //  NO coincide ID de producto con ID de actualizados.
+                            updated = false;      
+                            datos.table.product_price.updated.push(updated);
+                            datos.table.product_price.prod_id.push(productArray[e].id);
+                            datos.table.product_price.prod_name.push(productArray[e].name);
+                            datos.table.product_price.prod_price.push(new_price);
+                            //break;
+                        }
+                        //break;
+                    }
+                    
+                }
+            
             }
-            
-            
-            
+            console.log('Actualizados: '+Object.values(datos.table.product_price.IDs_price_changed));
             // ############ Result Object #######################             
             const resultado = {
                 product: {
+                    updtd: datos.table.product_price.updated,
                     pid: datos.table.product_price.prod_id,
                     pname: datos.table.product_price.prod_name,
                     pprice: datos.table.product_price.prod_price
@@ -405,6 +461,7 @@ export const getTableModif = async(req, res)=>{
                     regTotal: datos.table.pagination.totalRegist
                 }
             };
+            console.log('Resultado en choose: '+Object.values(resultado.product.updtd));
             res
             .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
             .status(200).render('Price/tableModif.ejs', {data: resultado});

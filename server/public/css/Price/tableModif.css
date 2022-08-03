@@ -144,6 +144,7 @@ a>h4{
     border: 1.2px solid #1C6EA4;
     /*background-color: #EEEEEE;*/
     font-size: 15px;
+    text-align: -webkit-center;
 }
 
 table td, table th {
@@ -172,6 +173,34 @@ table td, table th {
     opacity: 0.9;
 }
 
+.iconUpdate{
+    position: relative;
+    background-image: url('../../../images/refresh.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+    padding: 4px 4px;
+    cursor: pointer;
+    border: none;
+    background-color: #ffffff00;
+}
+
+.iconUpdated {
+    position: relative;
+    background-image: url('../../../images/update_data.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+    padding: 4px 4px;
+    cursor: pointer;
+    border: none;
+    background-color: #ffffff00;
+}
+
 .inputCheckbox{
     position: relative;
     text-align: center;
@@ -192,7 +221,6 @@ table td, table th {
 }
 
 .inputPrice{
-    display: none;
     position: relative;
     text-align: center;
     color: black;
