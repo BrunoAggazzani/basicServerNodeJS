@@ -413,12 +413,13 @@ export const getTableModif = async(req, res)=>{
                         }
                     }
                 }
-                */
+                */                
+                let coincide = false;
                 if (datos.table.product_price.IDs_price_changed.length == 0){             // Si la lista de actualizados esta vacia
                     datos.table.product_price.updated.push(updated);
                     datos.table.product_price.prod_id.push(productArray[e].id);
                     datos.table.product_price.prod_name.push(productArray[e].name);
-                    datos.table.product_price.prod_price.push(new_price);                                                                
+                    datos.table.product_price.prod_price.push(new_price);                                                                                    
                 } else {                                                                  // Si tiene IDs...
                     for (let i = 0; i < datos.table.product_price.IDs_price_changed.length; i++) {// Recorre el array
                         //console.log(Object.values(datos.table.product_price.IDs_price_changed[i]));
@@ -429,18 +430,16 @@ export const getTableModif = async(req, res)=>{
                             datos.table.product_price.prod_id.push(productArray[e].id);
                             datos.table.product_price.prod_name.push(productArray[e].name);
                             datos.table.product_price.prod_price.push(new_price);
-                            //break;
-                        } else {                                                                   //  NO coincide ID de producto con ID de actualizados.
-                            updated = false;      
-                            datos.table.product_price.updated.push(updated);
-                            datos.table.product_price.prod_id.push(productArray[e].id);
-                            datos.table.product_price.prod_name.push(productArray[e].name);
-                            datos.table.product_price.prod_price.push(new_price);
-                            //break;
+                            coincide = true;
+                            break;
                         }
-                        //break;
                     }
-                    
+                    if (coincide == false) {
+                        datos.table.product_price.updated.push(updated);
+                        datos.table.product_price.prod_id.push(productArray[e].id);
+                        datos.table.product_price.prod_name.push(productArray[e].name);
+                        datos.table.product_price.prod_price.push(new_price); 
+                    }
                 }
             
             }
