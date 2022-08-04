@@ -23,15 +23,37 @@ body {
     filter: sepia(0.5);
 }
 
+@keyframes background-change {
+    0% {
+        background: radial-gradient(rgb(79, 134, 132), rgb(79, 134, 132), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    }
+    /*50% {
+        background: radial-gradient(rgb(126, 125, 125), rgb(126, 125, 125), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    }
+    100% {
+        background: radial-gradient(rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    }*/
+}
+
 .container-btn-return{
-    position: absolute;
-    top: 5vh;
-    left: 5vw;
+    position: fixed;
+    bottom: 2vh;
+    left: 2vw;
     padding: 0%;
     margin: 0%;
     border: none;
     outline: none;
-    background: radial-gradient(rgb(0, 0, 0), rgb(0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    background: radial-gradient(rgb(0, 0, 0), rgb(0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));    
+    animation-name: background-change;
+    animation-duration: 2s;
+    animation-iteration-count:infinite;
+    animation-timing-function: linear;
+    z-index: 1;
+}
+
+.container-btn-return:hover {
+    background: radial-gradient(rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    animation-duration: 0s;
 }
 
 .btn-return{
@@ -39,20 +61,17 @@ body {
     position: relative;
     border: none;
     outline: none;
-    background-image: url('../../../images/flecha_volver.png');
+    background-image: url('../../../images/flecha_volver2.png');
     background-color: #4d4f5700;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     width: 50px;
-    height: 50px;
+    height: 35px;
     cursor: pointer;
     padding: 0%;
     margin: 0%;
-}
-
-.container-btn-return:hover{
-    background: radial-gradient(rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    border-radius: 0.4em;
 }
 
 
@@ -83,9 +102,83 @@ body {
     padding-bottom: 4%;
 }
 
-@media (max-width: 650px) {
+@media (max-width: 249px) {
+    body {
+        background-color: black;
+        overflow: auto;
+    }
+    .container-busqueda {
+        width: 350px;
+    }
+    .busqueda {
+        display: none;
+        width: 350px;
+    }
+}
+
+@media (min-width: 250px) {    
+    body {
+        overflow: auto;        
+    }
+    .container-busqueda {
+        width: 350px;        
+    }
+    .busqueda {
+        width: 350px;
+    }
+}
+
+@media (min-width: 350px) {
+    body {
+        width: 100%;
+    }
+    .container-busqueda {
+        width: 98%;
+    }
+    .busqueda {
+        width: 100%;
+    }
+}
+
+@media (min-width: 450px) {
+    .container-busqueda {
+        width: 95%;
+    }
+}
+
+@media (min-width: 550px) {
     .container-busqueda {
         width: 90%;
+    }
+}
+
+@media (min-width: 650px) {
+    .container-busqueda {
+        width: 85%;
+    }
+}
+
+@media (min-width: 750px) {
+    .container-busqueda {
+        width: 80%;
+    }
+}
+
+@media (min-width: 850px) {
+    .container-busqueda {
+        width: 70%;
+    }
+}
+
+@media (min-width: 950px) {
+    .container-busqueda {
+        width: 60%;
+    }
+}
+
+@media (min-width: 1100px) {
+    .container-busqueda {
+        width: 50%;
     }
 }
 
@@ -106,7 +199,7 @@ body {
     height: 20vh;
     justify-content: space-around;
     align-items: inherit;
-    padding: 3% 8%;
+    padding: 3% 0%;
     padding-top: 0%;
     font-size: 1.2rem;
 }
@@ -115,7 +208,7 @@ body {
     position: relative;
     display: flex;
     justify-content: space-between;
-    padding: 10px 0px;
+    padding: 10px 30px;
 }
 
 .container-input label {
@@ -160,7 +253,7 @@ body {
 .container-btn-form {
     display: flex;
     justify-content: center;
-    width: 140px;
+    width: 60%;
     position: relative;
     align-self: center;
     padding-top: 2%;

@@ -18,19 +18,37 @@ body{
     filter: sepia(0.5);
 }
 
+@keyframes background-change {
+    0% {
+        background: radial-gradient(rgb(79, 134, 132), rgb(79, 134, 132), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    }
+    /*50% {
+        background: radial-gradient(rgb(126, 125, 125), rgb(126, 125, 125), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    }
+    100% {
+        background: radial-gradient(rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    }*/
+}
+
 .container-btn-return {
-    position: static;
-    top: 5vh;
-    left: 5vw;
+    position: fixed;
+    bottom: 2vh;
+    left: 2vw;
     padding: 0%;
     margin: 0%;
     border: none;
     outline: none;
     background: radial-gradient(rgb(0, 0, 0), rgb(0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    animation-name: background-change;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    z-index: 1;
 }
 
 .container-btn-return:hover {
     background: radial-gradient(rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
+    animation-duration: 0s;
 }
 
 .btn-return {
@@ -38,16 +56,17 @@ body{
     position: relative;
     border: none;
     outline: none;
-    background-image: url('../../../images/flecha_volver.png');
+    background-image: url('../../../images/flecha_volver2.png');
     background-color: #4d4f5700;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     width: 50px;
-    height: 50px;
+    height: 35px;
     cursor: pointer;
     padding: 0%;
     margin: 0%;
+    border-radius: 0.4em;
 }
 
 

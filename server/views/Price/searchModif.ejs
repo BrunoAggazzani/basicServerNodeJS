@@ -4,10 +4,10 @@
 <%- include('../templates/head', {datahead: {titulo: 'Búsqueda' , css: '/css/Price/searchModif.css' }}) %>
 
     <body>
-        <div class='busqueda'>
-            <a class='container-btn-return' href="/api/menu/prices/search">
-                <button class='btn-return' title="Volver"></button>
-            </a>
+        <a class='container-btn-return' href="/api/menu/prices/search">
+            <button class='btn-return' title="Volver"></button>
+        </a>
+        <div class='busqueda'>            
             <div class='container-busqueda'>
                 <h4>
                     Seleccionar...
@@ -74,29 +74,50 @@
                     <br>
                     <div class='container-input-radios'>
                         <p>Acción</p>
-                        <input type="radio" id='aumento' name='accion' class='input-form-busqueda' value='aumento' checked/>
-                        <label for='aumento'>Aumento</label><br>
-                        <input type="radio" id='descuento' name='accion' class='input-form-busqueda' value='descuento'/>
-                        <label for='descuento'>Descuento</label>
+                        <div class='container-input-radios2'>
+                            <div class="input-radios2">
+                                <input type="radio" id='aumento' name='accion' class='input-form-busqueda' value='aumento' checked/>
+                                <label for='aumento'>Aumento</label><br>
+                            </div>
+                            <div class="input-radios2">
+                                <input type="radio" id='descuento' name='accion' class='input-form-busqueda' value='descuento'/>
+                                <label for='descuento'>Descuento</label>
+                            </div>                            
+                        </div>
                     </div>
                     <br>
                     <div class='container-input-radios'>
                         <p>Monto o porcentaje</p>
-                        <input type="radio" id='monto' name='tipo' class='input-form-busqueda' value='monto' onclick="setLabelValor()"/>
-                        <label for='monto'>Monto fijo</label><br>
-                        <input type="radio" id='porcen' name='tipo' class='input-form-busqueda' value='porcen' checked  onclick="setLabelValor()"/>
-                        <label for='porcen'>Porcentaje</label><br>
-                        <input type="number" id="valor" name="valor" value="0">
-                        <label for='valor' id="labelValor"></label>
+                        <div class='container-input-radios2'>
+                            <div class="input-radios2">
+                                <input type="radio" id='monto' name='tipo' class='input-form-busqueda' value='monto' onclick="setLabelValor()"/>
+                                <label for='monto'>Monto fijo</label><br>
+                            </div>
+                            <div class="input-radios2">    
+                                <input type="radio" id='porcen' name='tipo' class='input-form-busqueda' value='porcen' checked  onclick="setLabelValor()"/>
+                                <label for='porcen'>Porcentaje</label><br>
+                            </div>
+                            <div class="input-radios2">
+                                <input type="number" id="valor" name="valor" value="0">
+                                <label for='valor' id="labelValor"></label>
+                            </div>
+                        </div>                       
                     </div>
                     <br>
                     <div class='container-input-radios'>
                         <p>¿Qué desea modificar?</p>
-                        <input type="radio" id='all' name='prices' class='input-form-busqueda' value='all' checked/>
-                        <label for='all'>Todos los precios</label><br>
-                        <input type="radio" id='choose' name='prices' class='input-form-busqueda' value='choose'/>
-                        <label for='choose'>Elegir precios</label>
+                        <div class='container-input-radios2'>
+                            <div class="input-radios2">
+                                <input type="radio" id='all' name='prices' class='input-form-busqueda' value='all' checked/>
+                                <label for='all'>Todos los precios</label><br>
+                            </div>               
+                            <div class="input-radios2">
+                                <input type="radio" id='choose' name='prices' class='input-form-busqueda' value='choose'/>
+                                <label for='choose'>Elegir precios</label>
+                            </div>
+                        </div>
                     </div>
+                    <br>
                     <br>
                     <div class='container-btn-form'>
                         <button type='submit' class='btn-form'>ACEPTAR</button>

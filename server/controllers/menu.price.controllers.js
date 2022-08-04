@@ -348,7 +348,8 @@ export const getTableModif = async(req, res)=>{
         .status(200).render('Success/success.ejs', {dataSuccess: success});
 
     } else if (datos.result_search_massiveModif.prices == 'choose'){ ////////////////////// ##########  Modifica algunos PLUs  ################
-        console.log('Entrando en choose...');        
+        console.log('Entrando en choose...');
+        datos.table.pagination.pagActual = 1;        
 
         if (data.inputPage){ ///////// llaman a getTableModif desde actualización de página.
             console.log('Actualizando página...');
@@ -394,26 +395,7 @@ export const getTableModif = async(req, res)=>{
                         new_price = (parseFloat(productArray[e].price) - parseFloat(variacion)).toFixed(2); 
                     } 
                 }
-                let updated = false;
-                /*
-                if (datos.table.product_price.IDs_price_changed.length > 0){
-                    for (let i = 0; i < datos.table.product_price.IDs_price_changed.length; i++) {
-                        if (datos.table.product_price.IDs_price_changed[i] == productArray[e].id) { // si el ID de producto es igual al ID de actualizacion de precio...
-                            updated = true;
-                            datos.table.product_price.updated.push(updated);
-                            datos.table.product_price.prod_id.push(productArray[e].id);
-                            datos.table.product_price.prod_name.push(productArray[e].name);
-                            datos.table.product_price.prod_price.push(new_price);
-                        } else {
-                            updated = false;
-                            datos.table.product_price.updated.push(updated);
-                            datos.table.product_price.prod_id.push(productArray[e].id);
-                            datos.table.product_price.prod_name.push(productArray[e].name);
-                            datos.table.product_price.prod_price.push(new_price);
-                        }
-                    }
-                }
-                */                
+                let updated = false;                
                 let coincide = false;
                 if (datos.table.product_price.IDs_price_changed.length == 0){             // Si la lista de actualizados esta vacia
                     datos.table.product_price.updated.push(updated);

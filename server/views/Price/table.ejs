@@ -4,10 +4,10 @@
 <%- include('../templates/head', {datahead: {titulo: 'Lista de Precios' , css: '/css/Price/table.css' }}) %>
 
     <body>
+        <a class='container-btn-return' href="/api/menu/prices/search">
+            <button class='btn-return' title="Volver"></button>
+        </a>           
         <div class="table"> 
-            <a class='container-btn-return' href="/api/menu/prices/search">
-                <button class='btn-return' title="Volver"></button>
-            </a>           
             <div class="container-table">                            
                 <table id='myTable'>
                     <thead>
