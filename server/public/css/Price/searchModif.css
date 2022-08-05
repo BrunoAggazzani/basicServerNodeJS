@@ -15,12 +15,12 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     background-image: url('../../../images/bg-verificador-precios-V4_edicion1.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    position: absolute;
+    position: relative;
     filter: sepia(0.5);
 }
 
@@ -83,6 +83,7 @@ body {
     align-content: space-evenly;
     background-color: rgba(0, 0, 0, 0.541);
     width: 42vw;
+    height: -webkit-fill-available;
     border-radius: 0.5em;
     box-shadow: 1px 1px 10px #9e9e9e;
     margin: 2%;

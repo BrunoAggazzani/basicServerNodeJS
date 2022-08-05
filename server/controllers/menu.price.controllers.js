@@ -549,9 +549,9 @@ export const getTablePriceList = async(req, res)=>{
 
     try{
         if (datos.result_search.prod_like_name != ''){
-            req = await pool.query("SELECT pp.product_id as id, p.name as name, round(pp.pricelist, 2) as price,  pp.pricelist_version_id as listprice FROM public.productprice pp JOIN public.product p ON pp.product_id = p.product_id WHERE pp.pricelist_version_id = '"+datos.result_search.list_id+"' AND p.name ILIKE '"+datos.result_search.prod_like_name+"%' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);       
+            req = await pool.query("SELECT pp.product_id as id, p.name as name, round(pp.pricelist, 2) as price,  pp.pricelist_version_id as listprice FROM public.productprice pp JOIN public.product p ON pp.product_id = p.product_id WHERE p.product_id != 0 AND pp.pricelist_version_id = '"+datos.result_search.list_id+"' AND p.name ILIKE '"+datos.result_search.prod_like_name+"%' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);       
         } else if (datos.result_search.prod_like_name == '') {
-            req = await pool.query("SELECT pp.product_id as id, p.name as name, round(pp.pricelist, 2) as price, pp.pricelist_version_id as listprice FROM public.productprice pp JOIN public.product p ON pp.product_id = p.product_id WHERE pp.pricelist_version_id = '"+datos.result_search.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);       
+            req = await pool.query("SELECT pp.product_id as id, p.name as name, round(pp.pricelist, 2) as price, pp.pricelist_version_id as listprice FROM public.productprice pp JOIN public.product p ON pp.product_id = p.product_id WHERE p.product_id != 0 AND pp.pricelist_version_id = '"+datos.result_search.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);       
         }
         
         if (req.rows.length > 0) {
