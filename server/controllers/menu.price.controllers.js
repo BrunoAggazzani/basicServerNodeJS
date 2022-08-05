@@ -206,6 +206,8 @@ export const getTableModif = async(req, res)=>{
         datos.result_search_massiveModif.tipo = data.tipo;
         datos.result_search_massiveModif.valor = data.valor;
         datos.result_search_massiveModif.prices = data.prices;
+
+        datos.table.pagination.pagActual = 1;
     }
     
     if (data.newPrice) { // llaman a getTableModif desde actualización de precio.
@@ -349,7 +351,7 @@ export const getTableModif = async(req, res)=>{
 
     } else if (datos.result_search_massiveModif.prices == 'choose'){ ////////////////////// ##########  Modifica algunos PLUs  ################
         console.log('Entrando en choose...');
-        datos.table.pagination.pagActual = 1;        
+                
 
         if (data.inputPage){ ///////// llaman a getTableModif desde actualización de página.
             console.log('Actualizando página...');

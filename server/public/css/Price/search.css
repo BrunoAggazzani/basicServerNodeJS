@@ -23,18 +23,6 @@ body {
     filter: sepia(0.5);
 }
 
-@keyframes background-change {
-    0% {
-        background: radial-gradient(rgb(79, 134, 132), rgb(79, 134, 132), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
-    }
-    /*50% {
-        background: radial-gradient(rgb(126, 125, 125), rgb(126, 125, 125), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
-    }
-    100% {
-        background: radial-gradient(rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
-    }*/
-}
-
 .container-btn-return{
     position: fixed;
     bottom: 2vh;
@@ -42,18 +30,21 @@ body {
     padding: 0%;
     margin: 0%;
     border: none;
-    outline: none;
-    background: radial-gradient(rgb(0, 0, 0), rgb(0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));    
-    animation-name: background-change;
-    animation-duration: 2s;
-    animation-iteration-count:infinite;
-    animation-timing-function: linear;
+    outline: none;   
     z-index: 1;
 }
 
-.container-btn-return:hover {
-    background: radial-gradient(rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0));
-    animation-duration: 0s;
+
+@keyframes background-change {
+    0% {
+        background-color: rgb(52, 146, 138);
+    }
+    50% {
+        background-color: rgb(1, 1, 1);
+    }
+    100% {
+        background-color:rgb(52, 146, 138);
+    }
 }
 
 .btn-return{
@@ -72,8 +63,16 @@ body {
     padding: 0%;
     margin: 0%;
     border-radius: 0.4em;
+    animation-name: background-change;
+    animation-duration: 2s;
+    animation-iteration-count:infinite;
+    animation-timing-function: linear;
 }
 
+.btn-return:hover {
+    background-color: whitesmoke;
+    animation-duration: 0s;
+}
 
 .btn:hover {
     background-color: rgba(10, 60, 73, 0.753);
@@ -208,7 +207,7 @@ body {
     position: relative;
     display: flex;
     justify-content: space-between;
-    padding: 10px 30px;
+    padding: 3vh 7vw;
 }
 
 .container-input label {

@@ -4,7 +4,7 @@
 <%- include('../templates/head', {datahead: {titulo: 'Lista de Precios' , css: '/css/Price/tableModif.css' }}) %>
 
     <body>
-        <a class='container-btn-return' href="/api/menu/prices/search">
+        <a class='container-btn-return' href="/api/menu/prices/searchMassiveModif">
             <button class='btn-return' title="Volver"></button>
         </a>           
         <div class="table"> 
@@ -40,7 +40,7 @@
                                         <% if (data.product.updtd[i] == false) { %>
                                             <td><input class="iconUpdate" onclick="this.form.submit()"></td>
                                         <% } else if (data.product.updtd[i] == true) { %>
-                                            <td><input class="iconUpdated" onclick="this.form.submit()" disabled></td>
+                                            <td><input class="iconUpdated" onclick="this.form.submit()"></td>
                                         <% } %>                                    
                                         <td><input class="inputDisable" type="text" name="id" value="<%= data.product.pid[i] %>" readonly></td>
                                         <td><input class="inputDisable" type="text" name="name" value="<%= data.product.pname[i] %>" readonly title="<%= data.product.pname[i] %>"></td>
