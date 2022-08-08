@@ -2,6 +2,7 @@ import {pool} from '../DB/connect';
 //import CryptoJS from 'crypto-js';
 
 //################################   variables globales #####################################
+let count = 0;
 
 let datos = {
 
@@ -37,14 +38,11 @@ let datos = {
 
     table: {
 
-        product_price: {
-            updated: [], // Atributo que se envia a la vista
-            prod_id: [],
-            prod_name: [],
-            prod_price: [],
+        product_price: [],
 
-            IDs_price_changed: [] // lista de productos actualizados 
-        },
+        IDs_price_changed: [], // lista de productos actualizados
+
+        originalPrices: [],
 
         pagination: {
             mostrar: 100,
@@ -108,7 +106,8 @@ export const getFormSearch = async(req, res)=>{
 
 export const getFormModif = async(req, res)=>{
 
-    datos.table.product_price.IDs_price_changed = []; // Reseteo la lista de IDs actualizados para la tabla de modificacion masiva.
+    datos.table.IDs_price_changed = []; // Reseteo la lista de IDs actualizados para la tabla de modificacion masiva.
+    count = 0;
     
     datos.search_massiveModif.list_id = [];
     datos.search_massiveModif.list_name = [];
@@ -212,7 +211,15 @@ export const getTableModif = async(req, res)=>{
     
     if (data.newPrice) { // llaman a getTableModif desde actualización de precio.
         console.log('Actualizando precio para tabla de modificacion masiva');
-        datos.table.product_price.IDs_price_changed.push(id);
+        if (IDs_price_changed.length > 0) {
+            for (let j = 0; j < IDs_price_changed.length; j++) {
+                if (data.newPrice == IDs_price_changed[j]) {
+                    datos.table.IDs_price_changed.push(id);
+                }                
+            }
+        }
+        
+        datos.table.IDs_price_changed.push(id);
         try{
             req = await pool.query("UPDATE productprice SET pricelist = "+price+", updated = NOW() WHERE product_id = '"+id+"' AND pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"'");                 
         } catch (e){
@@ -281,7 +288,7 @@ export const getTableModif = async(req, res)=>{
         if (datos.result_search_massiveModif.department_id > 0 && datos.result_search_massiveModif.group_id > 0){
             console.log('Cargando el array de productos con department y group');
             req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND department_id = "+datos.result_search_massiveModif.department_id+" AND group_id = "+datos.result_search_massiveModif.group_id+" AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
-            productArray = req.rows;
+            productArray = req.rows;            
         } else if (datos.result_search_massiveModif.department_id > 0 && datos.result_search_massiveModif.group_id == 0){
             console.log('Cargando el array de productos con department solo');
             req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND department_id = "+datos.result_search_massiveModif.department_id+" AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
@@ -296,7 +303,8 @@ export const getTableModif = async(req, res)=>{
             productArray = req.rows;
         } else {
             console.log('No se cargó el array de productos');
-        }                  
+        }
+        count++;                  
     } catch (e){
         console.log('');
         res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
@@ -305,30 +313,35 @@ export const getTableModif = async(req, res)=>{
     }
 
     console.log('Array de productos: '+JSON.stringify(productArray));
+
+    
     
     let variacion = 0;
     let new_price = 0;
+    let previous_price = 0; // precio anterior
     let queryString = '';
     
     if (datos.result_search_massiveModif.prices == 'all'){ ///////////////////////// ##########  Modifica todos los PLUs  ################
         console.log('Actualizando precio en all...');
 
-        for (let e = 0; e < productArray.length; e++) {           
+        for (let e = 0; e < productArray.length; e++) {
+            previous_price = productArray[e].price;
+
             if (datos.result_search_massiveModif.tipo == 'porcen'){ //############### ( * )        
                 if (datos.result_search_massiveModif.accion == 'aumento'){
                     variacion =  1 + (data.valor / 100);
-                    new_price = (parseFloat(productArray[e].price) * parseFloat(variacion)).toFixed(2);
+                    new_price = (parseFloat(previous_price) * parseFloat(variacion)).toFixed(2);
                 } else if (datos.result_search_massiveModif.accion == 'descuento'){
                     variacion =  1 - (data.valor / 100);
-                    new_price = (parseFloat(productArray[e].price) * parseFloat(variacion)).toFixed(2);
+                    new_price = (parseFloat(previous_price) * parseFloat(variacion)).toFixed(2);
                 }
             } else if (datos.result_search_massiveModif.tipo == 'monto') { //#########( + )
                 if (datos.result_search_massiveModif.accion == 'aumento'){            
                     variacion = data.valor;
-                    new_price = (parseFloat(productArray[e].price) + parseFloat(variacion)).toFixed(2);
+                    new_price = (parseFloat(previous_price) + parseFloat(variacion)).toFixed(2);
                 } else if (datos.result_search_massiveModif.accion == 'descuento'){
                     variacion = data.valor;
-                    new_price = (parseFloat(productArray[e].price) - parseFloat(variacion)).toFixed(2); 
+                    new_price = (parseFloat(previous_price) - parseFloat(variacion)).toFixed(2); 
                 } 
             }
 
@@ -349,9 +362,11 @@ export const getTableModif = async(req, res)=>{
         .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
         .status(200).render('Success/success.ejs', {dataSuccess: success});
 
+
+
+
     } else if (datos.result_search_massiveModif.prices == 'choose'){ ////////////////////// ##########  Modifica algunos PLUs  ################
-        console.log('Entrando en choose...');
-                
+        console.log('Entrando en choose...');                
 
         if (data.inputPage){ ///////// llaman a getTableModif desde actualización de página.
             console.log('Actualizando página...');
@@ -369,73 +384,86 @@ export const getTableModif = async(req, res)=>{
                 let forMax = (datos.table.pagination.totalRegist - datos.table.pagination.forMinimo) + datos.table.pagination.forMinimo;
                 datos.table.pagination.forMaximo = forMax;
             }
-
-
-            datos.table.product_price.updated = [];
-            datos.table.product_price.prod_id = [];
-            datos.table.product_price.prod_name = [];
-            datos.table.product_price.prod_price = [];
-
             
-
+            datos.table.product_price = [];
+            
+            if (count < 2) {
+                
+                datos.table.originalPrices = [];
+            }           
+            
             for (let e = datos.table.pagination.forMinimo; e < datos.table.pagination.forMaximo; e++) {
+                previous_price = productArray[e].price;
+                
+                if (count < 2) {
+                    datos.table.originalPrices.push(previous_price);
+                }
 
                 if (datos.result_search_massiveModif.tipo == 'porcen'){ //############### ( * )        
                     if (datos.result_search_massiveModif.accion == 'aumento'){
                         variacion =  1 + (datos.result_search_massiveModif.valor / 100);
-                        new_price = (parseFloat(productArray[e].price) * parseFloat(variacion)).toFixed(2);
+                        new_price = (parseFloat(previous_price) * parseFloat(variacion)).toFixed(2);
                     } else if (datos.result_search_massiveModif.accion == 'descuento'){
                         variacion =  1 - (datos.result_search_massiveModif.valor / 100);
-                        new_price = (parseFloat(productArray[e].price) * parseFloat(variacion)).toFixed(2);
+                        new_price = (parseFloat(previous_price) * parseFloat(variacion)).toFixed(2);
                     }
                 } else if (datos.result_search_massiveModif.tipo == 'monto') { //#########( + )
                     if (datos.result_search_massiveModif.accion == 'aumento'){            
                         variacion = datos.result_search_massiveModif.valor;
-                        new_price = (parseFloat(productArray[e].price) + parseFloat(variacion)).toFixed(2);
+                        new_price = (parseFloat(previous_price) + parseFloat(variacion)).toFixed(2);
                     } else if (datos.result_search_massiveModif.accion == 'descuento'){
                         variacion = datos.result_search_massiveModif.valor;
-                        new_price = (parseFloat(productArray[e].price) - parseFloat(variacion)).toFixed(2); 
+                        new_price = (parseFloat(previous_price) - parseFloat(variacion)).toFixed(2); 
                     } 
                 }
                 let updated = false;                
                 let coincide = false;
-                if (datos.table.product_price.IDs_price_changed.length == 0){             // Si la lista de actualizados esta vacia
-                    datos.table.product_price.updated.push(updated);
-                    datos.table.product_price.prod_id.push(productArray[e].id);
-                    datos.table.product_price.prod_name.push(productArray[e].name);
-                    datos.table.product_price.prod_price.push(new_price);                                                                                    
+                if (datos.table.IDs_price_changed.length == 0){             // Si la lista de actualizados esta vacia
+                    datos.table.product_price.push({
+                        updated: updated,
+                        pid: productArray[e].id,
+                        pname: productArray[e].name,
+                        pprice: new_price,
+                        originalprice: datos.table.originalPrices[e]  
+                    });                
                 } else {                                                                  // Si tiene IDs...
-                    for (let i = 0; i < datos.table.product_price.IDs_price_changed.length; i++) {// Recorre el array
-                        //console.log(Object.values(datos.table.product_price.IDs_price_changed[i]));
-                        if (productArray[e].id == datos.table.product_price.IDs_price_changed[i]) { // Si ID de producto coincide con ID actualizado
-                            console.log('Actualizado: '+datos.table.product_price.IDs_price_changed[i]+' coincide con producto: '+productArray[e].id);
+                    for (let i = 0; i < datos.table.IDs_price_changed.length; i++) {// Recorre el array
+                        if (productArray[e].id == datos.table.IDs_price_changed[i]) { // Si ID de producto coincide con ID actualizado
+                            console.log(' ');
+                            console.log('Actualizado: '+datos.table.IDs_price_changed[i]+' coincide con producto: '+productArray[e].id);
+                            console.log(' ');
                             updated = true;
-                            datos.table.product_price.updated.push(updated);
-                            datos.table.product_price.prod_id.push(productArray[e].id);
-                            datos.table.product_price.prod_name.push(productArray[e].name);
-                            datos.table.product_price.prod_price.push(new_price);
+                            datos.table.product_price.push({
+                                updated: updated,
+                                pid: productArray[e].id,
+                                pname: productArray[e].name,
+                                pprice: new_price,
+                                originalprice: datos.table.originalPrices[e]  
+                            });
                             coincide = true;
                             break;
                         }
                     }
                     if (coincide == false) {
-                        datos.table.product_price.updated.push(updated);
-                        datos.table.product_price.prod_id.push(productArray[e].id);
-                        datos.table.product_price.prod_name.push(productArray[e].name);
-                        datos.table.product_price.prod_price.push(new_price); 
+                        datos.table.product_price.push({
+                            updated: updated,
+                            pid: productArray[e].id,
+                            pname: productArray[e].name,
+                            pprice: new_price,
+                            originalprice: datos.table.originalPrices[e] 
+                        }); 
                     }
                 }
-            
+                                
             }
-            console.log('Actualizados: '+Object.values(datos.table.product_price.IDs_price_changed));
+            console.log(' ');
+            console.log('product_price: '+JSON.stringify(datos.table.product_price));
+            console.log(' ');
+            console.log('Actualizados: '+Object.values(datos.table.IDs_price_changed));
+            console.log(' ');
             // ############ Result Object #######################             
             const resultado = {
-                product: {
-                    updtd: datos.table.product_price.updated,
-                    pid: datos.table.product_price.prod_id,
-                    pname: datos.table.product_price.prod_name,
-                    pprice: datos.table.product_price.prod_price
-                },
+                product: datos.table.product_price,
                 page: {
                     pagActual: datos.table.pagination.pagActual,
                     totalPaginas: datos.table.pagination.totalPaginas,
@@ -444,7 +472,7 @@ export const getTableModif = async(req, res)=>{
                     regTotal: datos.table.pagination.totalRegist
                 }
             };
-            console.log('Resultado en choose: '+Object.values(resultado.product.updtd));
+            console.log('Resultado en choose: '+JSON.stringify(resultado.product));
             res
             .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
             .status(200).render('Price/tableModif.ejs', {data: resultado});

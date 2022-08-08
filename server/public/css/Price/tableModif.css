@@ -219,9 +219,18 @@ table td, table th {
     width: 15px;
     height: 15px;
     padding: 4px 4px;
-    cursor: pointer;
+    cursor: none;
     border: none;
     background-color: rgba(0, 255, 21, 0.25);
+}
+
+td>h2 {
+    display: inline;
+    vertical-align: middle;
+    padding: 0px 5px;
+    color: rgba(255, 0, 0, 0.801);
+    cursor: pointer;
+    border: none;
 }
 
 
