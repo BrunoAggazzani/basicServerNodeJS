@@ -36,15 +36,15 @@
                         <% if (data) { %>
                             <% for (var i = 0; i < data.product.length;  i++ ) { %>                            
                                 <tr>
-                                    <form method="POST" id="newprice" action="/api/menu/prices/tableMassiveModif">
+                                    <form method="POST" id="<%%formNewPrice%%><%=i%>" action="/api/menu/prices/tableMassiveModif">
                                         <% if (data.product[i].updated == false) { %>
                                             <td><input class="iconUpdate" onclick="this.form.submit()"></td>
                                         <% } else if (data.product[i].updated == true) { %>
-                                            <td><input class="iconUpdated" onclick="this.form.submit()" disabled><h2 onclick="rollback(<%= data.product[i].originalprice %>, 'newprice')">X</h2></td>
+                                            <td><input class="iconUpdated" onclick="this.form.submit()" disabled><h2 onclick="rollback(<%= data.product[i].originalprice %>, '<%%newPrice%%><%=i%>', '<%%formNewPrice%%><%=i%>')">X</h2></td>
                                         <% } %>                                    
                                         <td><input class="inputDisable" type="text" name="id" value="<%= data.product[i].pid %>" readonly></td>
                                         <td><input class="inputDisable" type="text" name="name" value="<%= data.product[i].pname %>" readonly title="<%= data.product[i].pname %>"></td>
-                                        <td><input class="inputPrice" type="number"  id="newPrice" name="newPrice" value="<%= data.product[i].pprice %>" /></td>                                    
+                                        <td><input class="inputPrice" type="number"  id="<%%newPrice%%><%=i%>" name="newPrice" value="<%= data.product[i].pprice %>" onchange="this.form.submit()"/></td>                                    
                                     </form>                                
                                 </tr>
                             <% } %>                            
@@ -112,13 +112,9 @@
                 }
             }
 
-            function rollback(oldprice, formID){
-                var new_price = document.getElementById('newPrice').value;
-                console.log('new price: '+new_price);
-                var ori_price = new_price - ((new_price - oldprice) * 2);
-                console.log('original price: '+ori_price);
-                document.getElementById('newPrice').value = ori_price;
-                console.log('new price 2: '+new_price);                
+            function rollback(oldprice, id, formID){
+                document.getElementById(id).value = oldprice;
+                console.log('oldPrice: '+document.getElementById(id).value);                
                 submitForm(formID);
             }
 

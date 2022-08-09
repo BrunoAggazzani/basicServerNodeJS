@@ -211,15 +211,22 @@ export const getTableModif = async(req, res)=>{
     
     if (data.newPrice) { // llaman a getTableModif desde actualización de precio.
         console.log('Actualizando precio para tabla de modificacion masiva');
-        if (IDs_price_changed.length > 0) {
-            for (let j = 0; j < IDs_price_changed.length; j++) {
-                if (data.newPrice == IDs_price_changed[j]) {
-                    datos.table.IDs_price_changed.push(id);
+        if (datos.table.IDs_price_changed.length > 0) {
+            let find = false;
+            for (let j = 0; j < datos.table.IDs_price_changed.length; j++) {
+                if (data.id == datos.table.IDs_price_changed[j]) { // si el id recibido es igual a un id en la lista...
+                    find = true;
+                    let index = datos.table.IDs_price_changed.indexOf(datos.table.IDs_price_changed[j]);
+                    datos.table.IDs_price_changed.splice(index, 1);                    
                 }                
             }
+            if (find == false){ // si despues de recorrer la lista find sigue siendo false, lo agrega.
+                datos.table.IDs_price_changed.push(id);
+            }
+        } else { // si la lista esta vacia lo agrega.
+            datos.table.IDs_price_changed.push(id);
         }
-        
-        datos.table.IDs_price_changed.push(id);
+
         try{
             req = await pool.query("UPDATE productprice SET pricelist = "+price+", updated = NOW() WHERE product_id = '"+id+"' AND pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"'");                 
         } catch (e){
@@ -314,7 +321,13 @@ export const getTableModif = async(req, res)=>{
 
     console.log('Array de productos: '+JSON.stringify(productArray));
 
-    
+    if (count < 2) {
+        datos.table.originalPrices = [];
+        for (let e = 0; e < productArray.length; e++) {
+            datos.table.originalPrices.push({id: productArray[e].id, price: productArray[e].price});        
+        }
+    }
+        
     
     let variacion = 0;
     let new_price = 0;
@@ -385,20 +398,11 @@ export const getTableModif = async(req, res)=>{
                 datos.table.pagination.forMaximo = forMax;
             }
             
-            datos.table.product_price = [];
-            
-            if (count < 2) {
-                
-                datos.table.originalPrices = [];
-            }           
+            datos.table.product_price = [];                       
             
             for (let e = datos.table.pagination.forMinimo; e < datos.table.pagination.forMaximo; e++) {
                 previous_price = productArray[e].price;
                 
-                if (count < 2) {
-                    datos.table.originalPrices.push(previous_price);
-                }
-
                 if (datos.result_search_massiveModif.tipo == 'porcen'){ //############### ( * )        
                     if (datos.result_search_massiveModif.accion == 'aumento'){
                         variacion =  1 + (datos.result_search_massiveModif.valor / 100);
@@ -424,7 +428,7 @@ export const getTableModif = async(req, res)=>{
                         pid: productArray[e].id,
                         pname: productArray[e].name,
                         pprice: new_price,
-                        originalprice: datos.table.originalPrices[e]  
+                        originalprice: datos.table.originalPrices[e].price  
                     });                
                 } else {                                                                  // Si tiene IDs...
                     for (let i = 0; i < datos.table.IDs_price_changed.length; i++) {// Recorre el array
@@ -438,7 +442,7 @@ export const getTableModif = async(req, res)=>{
                                 pid: productArray[e].id,
                                 pname: productArray[e].name,
                                 pprice: new_price,
-                                originalprice: datos.table.originalPrices[e]  
+                                originalprice: datos.table.originalPrices[e].price  
                             });
                             coincide = true;
                             break;
@@ -450,7 +454,7 @@ export const getTableModif = async(req, res)=>{
                             pid: productArray[e].id,
                             pname: productArray[e].name,
                             pprice: new_price,
-                            originalprice: datos.table.originalPrices[e] 
+                            originalprice: datos.table.originalPrices[e].price 
                         }); 
                     }
                 }
