@@ -209,15 +209,15 @@ export const getTableModif = async(req, res)=>{
         datos.table.pagination.pagActual = 1;
     }
     
-    if (data.newPrice) { // llaman a getTableModif desde actualización de precio.
+    if (data.newPrice) { ///////////////////////////////////////////////////////////////// llaman a getTableModif desde actualización de precio.///////////////////
         console.log('Actualizando precio para tabla de modificacion masiva');
-        if (datos.table.IDs_price_changed.length > 0) {
+        if (datos.table.IDs_price_changed.length > 0) { // Esto es solo para marcar el producto como actualizado o no.
             let find = false;
             for (let j = 0; j < datos.table.IDs_price_changed.length; j++) {
                 if (data.id == datos.table.IDs_price_changed[j]) { // si el id recibido es igual a un id en la lista...
                     find = true;
-                    let index = datos.table.IDs_price_changed.indexOf(datos.table.IDs_price_changed[j]);
-                    datos.table.IDs_price_changed.splice(index, 1);                    
+                    let index = datos.table.IDs_price_changed.indexOf(datos.table.IDs_price_changed[j]);// Identifica el indice del ID en la lista de IDs.
+                    datos.table.IDs_price_changed.splice(index, 1);// Borra el indice encontrado.                    
                 }                
             }
             if (find == false){ // si despues de recorrer la lista find sigue siendo false, lo agrega.
@@ -241,73 +241,126 @@ export const getTableModif = async(req, res)=>{
     console.log('department_id: '+datos.result_search_massiveModif.department_id);
     console.log('group_id: '+datos.result_search_massiveModif.group_id);
 
-    if (data.order){ ///////////// llaman a getTableModif desde ordenamiento.
-        console.log('Ordenando tabla...');
-        let orderBy = datos.table.order.by;
-        let orderDirect = datos.table.order.direct;
-        switch(data.order) {
-          case 'PLU':
-            orderBy = 'id'
-            if (orderBy == datos.table.order.by){
-                // no cambia  datos.table.order.by
-                if(orderDirect == 'ASC'){
-                    datos.table.order.direct = 'DESC';
-                } else {
-                    datos.table.order.direct = 'ASC';
-                }
-            } else {
-                datos.table.order.by = orderBy;
-                datos.table.order.direct = 'ASC';
-            }
-            break;
-          case 'NOMBRE':
-            orderBy = 'name'
-            if (orderBy == datos.table.order.by){
-                // no cambia  datos.table.order.by
-                if(orderDirect == 'ASC'){
-                    datos.table.order.direct = 'DESC';
-                } else {
-                    datos.table.order.direct = 'ASC';
-                }
-            } else {
-                datos.table.order.by = orderBy;
-                datos.table.order.direct = 'ASC';
-            }
-            break;
-          case 'NUEVO PRECIO':
-            orderBy = 'price'
-            if (orderBy == datos.table.order.by){
-                // no cambia  datos.table.order.by
-                if(orderDirect == 'ASC'){
-                    datos.table.order.direct = 'DESC';
-                } else {
-                    datos.table.order.direct = 'ASC';
-                }
-            } else {
-                datos.table.order.by = orderBy;
-                datos.table.order.direct = 'ASC';
-            }
-            break;            
-        }
-    }
-
+    console.log('order by: '+datos.table.order.by);
+    console.log('order direct: '+datos.table.order.direct);
+    
     try{ ////////////////////////////////////////  Trae el array de productos segun lo especificado en el formulario ////////////////
         if (datos.result_search_massiveModif.department_id > 0 && datos.result_search_massiveModif.group_id > 0){
             console.log('Cargando el array de productos con department y group');
             req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND department_id = "+datos.result_search_massiveModif.department_id+" AND group_id = "+datos.result_search_massiveModif.group_id+" AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
-            productArray = req.rows;            
+            productArray = req.rows;
+            switch (datos.table.order.by) {
+                case 'id':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.id > b.id) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.id < b.id) ? 1 : -1);
+                    }                    
+                    break;
+                
+                case 'name':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.name < b.name) ? 1 : -1);
+                    }                    
+                    break;    
+            
+                case 'price':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.price > b.price) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.price < b.price) ? 1 : -1);
+                    }                    
+                    break;
+            }            
         } else if (datos.result_search_massiveModif.department_id > 0 && datos.result_search_massiveModif.group_id == 0){
             console.log('Cargando el array de productos con department solo');
             req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND department_id = "+datos.result_search_massiveModif.department_id+" AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
             productArray = req.rows;
+            switch (datos.table.order.by) {
+                case 'id':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.id > b.id) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.id < b.id) ? 1 : -1);
+                    }                    
+                    break;
+                
+                case 'name':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.name < b.name) ? 1 : -1);
+                    }                    
+                    break;    
+            
+                case 'price':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.price > b.price) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.price < b.price) ? 1 : -1);
+                    }                    
+                    break;
+            }
         } else if (datos.result_search_massiveModif.department_id == 0 && datos.result_search_massiveModif.group_id > 0){
             console.log('Cargando el array de productos con group solo');
             req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND group_id = "+datos.result_search_massiveModif.group_id+" AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
             productArray = req.rows;
+            switch (datos.table.order.by) {
+                case 'id':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.id > b.id) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.id < b.id) ? 1 : -1);
+                    }                    
+                    break;
+                
+                case 'name':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.name < b.name) ? 1 : -1);
+                    }                    
+                    break;    
+            
+                case 'price':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.price > b.price) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.price < b.price) ? 1 : -1);
+                    }                    
+                    break;
+            }
         } else if (datos.result_search_massiveModif.department_id == 0 && datos.result_search_massiveModif.group_id == 0){
             console.log('Cargando el array de productos sin department y sin group');
             req = await pool.query("SELECT p.product_id AS id, p.name as name, pp.pricelist as price FROM public.product p JOIN public.productprice pp ON p.product_id = pp.product_id WHERE p.product_id != 0 AND pp.pricelist_version_id = '"+datos.result_search_massiveModif.list_id+"' ORDER BY "+datos.table.order.by+" "+datos.table.order.direct);   
             productArray = req.rows;
+            switch (datos.table.order.by) {
+                case 'id':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.id > b.id) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.id < b.id) ? 1 : -1);
+                    }                    
+                    break;
+                
+                case 'name':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.name < b.name) ? 1 : -1);
+                    }                    
+                    break;    
+            
+                case 'price':
+                    if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                        productArray.sort((a, b) => (a.price > b.price) ? 1 : -1);
+                    } else {
+                        productArray.sort((a, b) => (a.price < b.price) ? 1 : -1);
+                    }                    
+                    break;
+            }
         } else {
             console.log('No se cargó el array de productos');
         }
@@ -319,15 +372,111 @@ export const getTableModif = async(req, res)=>{
         console.log('Falló ejecución de query al traer array de productos');
     }
 
-    console.log('Array de productos: '+JSON.stringify(productArray));
+    console.log('count: '+count);
 
-    if (count < 2) {
+    if (count < 2) { //  Crea array con precios originales la primera vez que se carga la tabla (este es el primer array y se mantiene siempre igual para conservar los precios originales).
         datos.table.originalPrices = [];
         for (let e = 0; e < productArray.length; e++) {
-            datos.table.originalPrices.push({id: productArray[e].id, price: productArray[e].price});        
+            datos.table.originalPrices.push({id: productArray[e].id, name: productArray[e].name, price: productArray[e].price});        
         }
     }
-        
+    
+    if (data.order){ ///////////// llaman a getTableModif desde ordenamiento.
+        console.log('Ordenando tabla...');
+        let orderBy = datos.table.order.by;
+        let orderDirect = datos.table.order.direct;
+        switch(data.order) {
+          case 'PLU':
+            orderBy = 'id'
+            if (orderBy == datos.table.order.by){ // Setea "order.by" y "order.direct".
+                // no cambia  datos.table.order.by
+                if(orderDirect == 'ASC'){
+                    datos.table.order.direct = 'DESC';                    
+                } else {
+                    datos.table.order.direct = 'ASC';
+                }
+            } else {
+                datos.table.order.by = orderBy;
+                datos.table.order.direct = 'ASC';
+            }
+
+            if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                productArray.sort((a, b) => (a.id > b.id) ? 1 : -1);
+            } else {
+                productArray.sort((a, b) => (a.id < b.id) ? 1 : -1);
+            }
+
+            if (datos.table.originalPrices.length > 0) {  // Ordena array original(originalPrices).
+                if (datos.table.order.direct == 'ASC') {
+                    datos.table.originalPrices.sort((a, b) => (a.id > b.id) ? 1 : -1);
+                } else {
+                    datos.table.originalPrices.sort((a, b) => (a.id < b.id) ? 1 : -1);
+                }
+            }
+            break;
+          case 'NOMBRE':
+            orderBy = 'name'
+            if (orderBy == datos.table.order.by){ // Setea "order.by" y "order.direct".
+                // no cambia  datos.table.order.by
+                if(orderDirect == 'ASC'){
+                    datos.table.order.direct = 'DESC';
+                } else {
+                    datos.table.order.direct = 'ASC';
+                }
+            } else {
+                datos.table.order.by = orderBy;
+                datos.table.order.direct = 'ASC';
+            }
+
+            if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                productArray.sort((a, b) => (a.name > b.name) ? 1 : -1);
+            } else {
+                productArray.sort((a, b) => (a.name < b.name) ? 1 : -1);
+            }
+
+            if (datos.table.originalPrices.length > 0) { // Ordena array original(originalPrices).
+                if (datos.table.order.direct == 'ASC') {
+                    datos.table.originalPrices.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                } else {
+                    datos.table.originalPrices.sort((a, b) => (a.name < b.name) ? 1 : -1);
+                }
+            }
+            break;
+          case 'NUEVO PRECIO':
+            orderBy = 'price'
+            if (orderBy == datos.table.order.by){ // Setea "order.by" y "order.direct".
+                // no cambia  datos.table.order.by
+                if(orderDirect == 'ASC'){
+                    datos.table.order.direct = 'DESC';
+                } else {
+                    datos.table.order.direct = 'ASC';
+                }
+            } else {
+                datos.table.order.by = orderBy;
+                datos.table.order.direct = 'ASC';
+            }
+
+            if (datos.table.order.direct == 'ASC') { // Ordena array actualizado(productArray).
+                productArray.sort((a, b) => (a.price > b.price) ? 1 : -1);
+            } else {
+                productArray.sort((a, b) => (a.price < b.price) ? 1 : -1);
+            }
+
+            if (datos.table.originalPrices.length > 0) { // Ordena array original(originalPrices).
+                if (datos.table.order.direct == 'ASC') {
+                    datos.table.originalPrices.sort((a, b) => (a.price > b.price) ? 1 : -1);
+                } else {
+                    datos.table.originalPrices.sort((a, b) => (a.price < b.price) ? 1 : -1);
+                }
+            }
+            break;            
+        }
+    }
+
+    console.log('order by: '+datos.table.order.by);
+    console.log('order direct: '+datos.table.order.direct);
+
+    //console.log('Array de productos: '+JSON.stringify(productArray));
     
     let variacion = 0;
     let new_price = 0;
@@ -463,6 +612,8 @@ export const getTableModif = async(req, res)=>{
             console.log(' ');
             console.log('product_price: '+JSON.stringify(datos.table.product_price));
             console.log(' ');
+            console.log('Original prices: '+JSON.stringify(datos.table.originalPrices));
+            console.log(' ');
             console.log('Actualizados: '+Object.values(datos.table.IDs_price_changed));
             console.log(' ');
             // ############ Result Object #######################             
@@ -476,7 +627,7 @@ export const getTableModif = async(req, res)=>{
                     regTotal: datos.table.pagination.totalRegist
                 }
             };
-            console.log('Resultado en choose: '+JSON.stringify(resultado.product));
+            //console.log('Resultado en choose: '+JSON.stringify(resultado.product));
             res
             .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
             .status(200).render('Price/tableModif.ejs', {data: resultado});
