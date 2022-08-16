@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('../../templates/head', {datahead: {titulo: 'Búsqueda PLUs' , css: '/css/ABM/PLUs/PLU.css' }}) %>
+
+    <body>
+        <a class='container-btn-return' href="/api/menu/abm">
+            <button class='btn-return' title="Volver"></button>
+        </a>
+        <div class='busqueda'>            
+            <div class='container-busqueda'>
+                <h4>
+                    Buscar PLU 
+                </h4>
+                <form class='container-form-busqueda' id='form-busqueda' method='POST' action='/api/menu/abm/plu'>
+                    <div class='container-item-form'>
+                        <p>PLU</p>
+                        <div class='container-inputs'>
+                            <input type="number" id='product' name='PLU' class='' autoComplete='off' value=''/>
+                        </div>
+                    </div>
+                    <br>
+                    <div class='container-item-form'>
+                        <p>Filtro de búsqueda</p>
+                        <div class='container-inputs'>
+                            <div class="input-radio">
+                                <input type="radio" id='code' name='tipo' value='code' checked onclick="setypeinput(this.id)"/>
+                                <label for='all'>Código</label><br>
+                            </div>               
+                            <div class="">
+                                <input type="radio" id='name' name='tipo' value='name' onclick="setypeinput(this.id)"/>
+                                <label for='choose'>Nombre</label>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <div class='container-btn-form'>
+                        <button type='submit' class='btn-form'>ACEPTAR</button>
+                    </div>
+                </form>
+            </div>
+            <script>
+                function setypeinput(id){
+                    var product = document.getElementById('product');
+                    if (id == 'code') {
+                        product.type = 'number';
+                        product.pattern = "[0-9]+";
+                    }
+                    if (id == 'name') {
+                        product.type = 'text';
+                        product.pattern = "";
+                    }
+                }
+            </script>
+            <!--            
+            <script>
+                
+                setLabelValor();
+                selectIDlist();
+                selectIDdep();
+                selectIDgroup();
+
+                function setLabelValor() {
+                    var monto = document.getElementById('monto');
+                    var porcen = document.getElementById('porcen');
+                    if (monto.checked){
+                        document.getElementById('labelValor').innerHTML = '$';
+                    } else {
+                        document.getElementById('labelValor').innerHTML = '%';
+                    }
+                }
+
+                function selectIDlist() {
+                    let parsed_data = <%#- JSON.stringify(data) %>;
+                    //console.log(parsed_data);
+                    var name = document.getElementById('list_NAME').value;
+                    parsed_data.list_NAME.map(e => {
+                        if (e == name) {
+                            var position = parsed_data.list_NAME.indexOf(e);
+                            //console.log('posicion: '+position);
+                            console.log('id: '+parsed_data.list_ID[position]);
+                            document.getElementById('hideFieldlist').value = parsed_data.list_ID[position];
+                        }
+                    });
+
+                }
+
+                function selectIDdep() {
+                    let parsed_data = <%#- JSON.stringify(data) %>;
+                    //console.log(parsed_data);
+                    var name = document.getElementById('dep_NAME').value;
+                    parsed_data.dep_NAME.map(e => {
+                        if (e == name) {
+                            var position = parsed_data.dep_NAME.indexOf(e);
+                            //console.log('posicion: '+position);
+                            console.log('id: '+parsed_data.dep_ID[position]);
+                            document.getElementById('hideFielddep').value = parsed_data.dep_ID[position];
+                        }
+                    });
+
+                }
+
+                function selectIDgroup() {
+                    let parsed_data = <%#- JSON.stringify(data) %>;
+                    //console.log(parsed_data);
+                    var name = document.getElementById('group_NAME').value;
+                    parsed_data.group_NAME.map(e => {
+                        if (e == name) {
+                            var position = parsed_data.group_NAME.indexOf(e);
+                            //console.log('posicion: '+position);
+                            console.log('id: '+parsed_data.group_ID[position]);
+                            document.getElementById('hideFieldgroup').value = parsed_data.group_ID[position];
+                        }
+                    });
+
+                }
+
+            </script>
+            -->
+    </body>
+
+</html>

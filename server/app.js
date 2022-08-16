@@ -10,6 +10,7 @@ import menuRoutes from './routes/menu.routes';
 import loginRoutes from './routes/login.routes';
 import menuPriceRoutes from './routes/menu.prices.routes';
 import menuAbmRoutes from './routes/menu.abm.routes';
+import menuAbmPluRoutes from './routes/menu.abm.plu.routes';
 import menuReportRoutes from './routes/menu.reports.routes';
 import menuSettingRoutes from './routes/menu.settings.routes';
 
@@ -37,6 +38,7 @@ app.use('/api/signin', loginRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/menu/prices', menuPriceRoutes);
 app.use('/api/menu/abm', menuAbmRoutes);
+app.use('/api/menu/abm/plu', menuAbmPluRoutes);
 app.use('/api/menu/reports', menuReportRoutes);
 app.use('/api/menu/settings', menuSettingRoutes);
 
