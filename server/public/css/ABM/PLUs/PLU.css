@@ -181,11 +181,11 @@ body {
     display: flex;
     position: relative;
     flex-direction: column;
-    width: 96%;
+    width: 100%;
     align-items: center;
     padding: 0% 0%;
     font-size: 1.2rem;
-    margin: 2%;
+    margin: 0% 0%;
 }
 
 .container-item-form {
@@ -243,7 +243,7 @@ label {
 
 .container-btn-form {
     align-self: center;
-    padding-top: 5% 0%;
+    padding-bottom: 1px;
     width: 40%;
 }
 
@@ -270,7 +270,7 @@ label {
     touch-action: manipulation;
     white-space: nowrap;
     will-change: box-shadow, transform;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     width: -webkit-fill-available;
 }
 

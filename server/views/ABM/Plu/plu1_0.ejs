@@ -7,7 +7,7 @@
         <a class='container-btn-return' href="/api/menu/abm">
             <button class='btn-return' title="Volver"></button>
         </a>
-        <div class='busqueda'>            
+        <div id="PLU" class='busqueda'>            
             <div class='container-busqueda'>
                 <h4>
                     Buscar PLU 
@@ -16,7 +16,7 @@
                     <div class='container-item-form'>
                         <p>PLU</p>
                         <div class='container-inputs'>
-                            <input type="number" id='product' name='PLU' class='' autoComplete='off' value=''/>
+                            <input type="number" id='product' name='PLU' autoComplete='off' required/>
                         </div>
                     </div>
                     <br>
@@ -36,9 +36,15 @@
                     <br>
                     <br>
                     <div class='container-btn-form'>
-                        <button type='submit' class='btn-form'>ACEPTAR</button>
-                    </div>
+                        <button type='submit' class='btn-form' onclick="buscar()">BUSCAR</button>
+                    </div>                    
                 </form>
+                <div class='container-btn-form'>
+                    <button class='btn-form'>VER TODO</button>
+                </div>                
+                <div class='container-btn-form'>
+                    <button class='btn-form'>NUEVO</button>
+                </div>
             </div>
             <script>
                 function setypeinput(id){
@@ -52,6 +58,12 @@
                         product.pattern = "";
                     }
                 }
+
+                function buscar() {
+
+                }
+
+                console.log('Data: '+ <%- JSON.stringify(data) %>);
             </script>
             <!--            
             <script>
