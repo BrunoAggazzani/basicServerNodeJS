@@ -8,12 +8,24 @@ export const getAbmPlu = async (req, res)=>{
     let PLUlist = [];
 
     try{
-        req = await pool.query("SELECT p.product_id AS id, p.name AS name, p.erp_code AS erp, p.isactive AS activo, p.description AS descripción, p.department_id, d.name AS departamento, p.group_id, g.name AS grupo, p.attribute AS tipo, p.tare AS tara FROM public.product p JOIN public.department d ON p.department_id = d.department_id JOIN public. main_group g ON p.group_id = g.group_id WHERE p.product_id != '0'");       
+        req = await pool.query("SELECT p.product_id AS id, p.name AS name, p.erp_code AS erp, p.isactive AS activo, p.description AS descripcion, p.department_id, d.name AS departamento, p.group_id, g.name AS grupo, p.attribute AS tipo, p.tare AS tara FROM public.product p JOIN public.department d ON p.department_id = d.department_id JOIN public. main_group g ON p.group_id = g.group_id WHERE p.product_id != '0'");       
             if (req.rows.length > 0) {
                 req.rows.map((e)=>{
-                    PLUlist.push(e);
+                    let PLU = {
+                        id: e.id,
+                        name: e.name,
+                        erp: e.erp,
+                        activo: e.activo,
+                        descripcion: e.descripcion,
+                        depto: e.departamento,
+                        grupo: e.grupo,
+                        tipo: e.tipo,
+                        tara: e.tara
+                    }
+                    PLUlist.push(PLU);
                 });
                 console.log('PLUlist: '+JSON.stringify(PLUlist[0]));
+                console.log('PLUlist: '+PLUlist[0].name);
 
                 const result = JSON.stringify(PLUlist);
                     

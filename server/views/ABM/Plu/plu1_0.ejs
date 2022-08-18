@@ -12,14 +12,7 @@
                 <h4>
                     Buscar PLU 
                 </h4>
-                <form class='container-form-busqueda' id='form-busqueda' method='POST' action='/api/menu/abm/plu'>
-                    <div class='container-item-form'>
-                        <p>PLU</p>
-                        <div class='container-inputs'>
-                            <input type="number" id='product' name='PLU' autoComplete='off' required/>
-                        </div>
-                    </div>
-                    <br>
+                <form class='container-form-busqueda' id='form-busqueda' method='' action=''>
                     <div class='container-item-form'>
                         <p>Filtro de búsqueda</p>
                         <div class='container-inputs'>
@@ -34,9 +27,16 @@
                         </div>
                     </div>
                     <br>
+                    <div class='container-item-form'>
+                        <p>PLU</p>
+                        <div class='container-inputs'>
+                            <input type="number" id='product' name='PLU' autoComplete='off' required/>
+                        </div>
+                    </div>
+                    <br>                    
                     <br>
                     <div class='container-btn-form'>
-                        <button type='submit' class='btn-form' onclick="buscar()">BUSCAR</button>
+                        <button type='button' class='btn-form' onclick="buscar()">BUSCAR</button>
                     </div>                    
                 </form>
                 <div class='container-btn-form'>
@@ -47,13 +47,21 @@
                 </div>
             </div>
             <script>
+                localStorage.setItem('list', <%- JSON.stringify(data) %>);
+                const productList = JSON.parse(localStorage.getItem('list'));
+                //console.log(productList[0].name);
+                const product = document.getElementById('product');
+                const code = document.getElementById('code');
+                const name = document.getElementById('name');
+
                 function setypeinput(id){
-                    var product = document.getElementById('product');
                     if (id == 'code') {
+                        product.value = '';
                         product.type = 'number';
                         product.pattern = "[0-9]+";
                     }
                     if (id == 'name') {
+                        product.value = '';
                         product.type = 'text';
                         product.pattern = "";
                     }
@@ -61,9 +69,28 @@
 
                 function buscar() {
 
+                    let phrase = '1282 suprema maryland';
+                    let str = '1282';
+                    let expresion = '/^'+str+'*/i';
+                    console.log(expresion);
+                    let expReg = new RegExp(expresion);
+                    console.log(phrase.match(expReg));
+
+                    if(code.checked && product.value != '') {
+                        productList.map((e) => {
+                            //console.log('ID: '+e.id);
+                        })
+                    }
+
+                    if(name.checked && product.value != '') {
+                        productList.map((e) => {
+                            //console.log(e.name);
+                        })
+                    }
+
                 }
 
-                console.log('Data: '+ <%- JSON.stringify(data) %>);
+                
             </script>
             <!--            
             <script>
