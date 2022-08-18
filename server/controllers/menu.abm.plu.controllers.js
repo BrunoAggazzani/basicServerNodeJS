@@ -23,9 +23,9 @@ export const getAbmPlu = async (req, res)=>{
                         tara: e.tara
                     }
                     PLUlist.push(PLU);
+                    //console.log(PLU.name);
                 });
-                console.log('PLUlist: '+JSON.stringify(PLUlist[0]));
-                console.log('PLUlist: '+PLUlist[0].name);
+                //console.log('PLUlist: '+JSON.stringify(PLUlist));
 
                 const result = JSON.stringify(PLUlist);
                     

@@ -8,7 +8,7 @@ body {
     padding: 0;
 }
 
-.busqueda {
+.container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -73,7 +73,7 @@ body {
     animation-duration: 0s;
 }
 
-.container-busqueda {
+.container-data {
     display: flex;
     flex-direction: column;
     position: relative;
@@ -92,10 +92,10 @@ body {
         background-color: black;
         overflow: auto;
     }
-    .container-busqueda {
+    .container-data {
         width: 350px;
     }
-    .busqueda {
+    .container {
         display: none;
         width: 350px;
     }
@@ -105,10 +105,10 @@ body {
     body {
         overflow: auto;
     }
-    .container-busqueda {
+    .container-data {
         width: 350px;
     }
-    .busqueda {
+    .container {
         width: 350px;
     }
 }
@@ -117,57 +117,57 @@ body {
     body {
         width: 100%;
     }
-    .container-busqueda {
+    .container-data {
         width: 98%;
     }
-    .busqueda {
+    .container {
         width: 100%;
     }
 }
 
 @media (min-width: 450px) {
-    .container-busqueda {
+    .container-data {
         width: 95%;
     }
 }
 
 @media (min-width: 550px) {
-    .container-busqueda {
+    .container-data {
         width: 90%;
     }
 }
 
 @media (min-width: 650px) {
-    .container-busqueda {
+    .container-data {
         width: 85%;
     }
 }
 
 @media (min-width: 750px) {
-    .container-busqueda {
+    .container-data {
         width: 80%;
     }
 }
 
 @media (min-width: 850px) {
-    .container-busqueda {
+    .container-data {
         width: 70%;
     }
 }
 
 @media (min-width: 950px) {
-    .container-busqueda {
+    .container-data {
         width: 60%;
     }
 }
 
 @media (min-width: 1100px) {
-    .container-busqueda {
+    .container-data {
         width: 50%;
     }
 }
 
-.container-busqueda h4 {
+.container-data h4 {
     position: relative;
     font-family: auto;
     font-size: -webkit-xxx-large;
@@ -280,5 +280,7 @@ label {
     transform: translateY(-3px) translateX(-2px);
 }
 
-
+.btn-form:focus {
+    outline: none;
+}
 

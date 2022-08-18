@@ -4,11 +4,11 @@
 <%- include('../../templates/head', {datahead: {titulo: 'Búsqueda PLUs' , css: '/css/ABM/PLUs/PLU.css' }}) %>
 
     <body>
-        <a class='container-btn-return' href="/api/menu/abm">
-            <button class='btn-return' title="Volver"></button>
+        <a id="a-volver" class='container-btn-return' href="/api/menu/abm">
+            <button id="btn-volver" class='btn-return' title="Volver"></button>
         </a>
-        <div id="PLU" class='busqueda'>            
-            <div class='container-busqueda'>
+        <div class='container'>            
+            <div id="container-data" class='container-data'>
                 <h4>
                     Buscar PLU 
                 </h4>
@@ -30,31 +30,47 @@
                     <div class='container-item-form'>
                         <p>PLU</p>
                         <div class='container-inputs'>
-                            <input type="number" id='product' name='PLU' autoComplete='off' required/>
+                            <input type="number" id='product' name='PLU' required/>
                         </div>
                     </div>
                     <br>                    
                     <br>
                     <div class='container-btn-form'>
-                        <button type='button' class='btn-form' onclick="buscar()">BUSCAR</button>
+                        <button type='submit' class='btn-form' onclick="buscar()">BUSCAR</button>
                     </div>                    
                 </form>
+                <!--
                 <div class='container-btn-form'>
                     <button class='btn-form'>VER TODO</button>
-                </div>                
+                </div>
+                -->                
                 <div class='container-btn-form'>
                     <button class='btn-form'>NUEVO</button>
                 </div>
             </div>
+            <div id="container-data2" class="container-data2" style="display: none">
+                <table id='myTable'>
+                    <thead>
+                        <tr>
+                            <th>ICON</th>
+                            <th>CÓDIGO</th>
+                            <th>NOMBRE</th>                                                                                          
+                        </tr>
+                    </thead>
+                    <tbody id="data">
+                        
+                    </tbody>
+                </table>
+            </div>
             <script>
                 localStorage.setItem('list', <%- JSON.stringify(data) %>);
-                const productList = JSON.parse(localStorage.getItem('list'));
-                //console.log(productList[0].name);
+                let productList = JSON.parse(localStorage.getItem('list'));
+                //console.log(productList);
                 const product = document.getElementById('product');
                 const code = document.getElementById('code');
                 const name = document.getElementById('name');
 
-                function setypeinput(id){
+                function setypeinput(id){   ///////////////////////////   setypeinput   /////////////////
                     if (id == 'code') {
                         product.value = '';
                         product.type = 'number';
@@ -67,96 +83,67 @@
                     }
                 }
 
-                function buscar() {
-
-                    let phrase = '1282 suprema maryland';
-                    let str = '1282';
-                    let expresion = '/^'+str+'*/i';
-                    console.log(expresion);
-                    let expReg = new RegExp(expresion);
-                    console.log(phrase.match(expReg));
+                function buscar() { /////////////////////////////////   Buscar   /////////////////
+                    
+                    let str = '^';
+                    str += product.value.toString();
+                    str.trim();
+                    
+                    let expReg = new RegExp(str, "i");
+                    //let resultList = [];
+                    let body = ``;
 
                     if(code.checked && product.value != '') {
                         productList.map((e) => {
-                            //console.log('ID: '+e.id);
+                            if (e.id != null && e.id != '' && e.id != undefined){
+                                if (e.id.match(expReg) != '' && e.id.match(expReg) != null) {
+                                    body += `<tr>                                                
+                                                <td><button onClick="fetchFormProduct(${e.id})">ICON</button></td>
+                                                <td>${e.id}</td>
+                                                <td>${e.name}</td>                                                
+                                            </tr>`;
+                                }
+                            }                            
                         })
+                        document.getElementById('container-data').style = 'display: none';
+                        document.getElementById('container-data2').style = 'display: flex; width: 80%; height: 75vh; overflow: auto';
+                        document.getElementById('data').innerHTML = body;
+                        document.getElementById('a-volver').href = '/api/menu/abm/plu';
+                        document.getElementById('btn-volver').addEventListener("click", deleteList, false);
                     }
-
+                    
                     if(name.checked && product.value != '') {
                         productList.map((e) => {
-                            //console.log(e.name);
+                            if (e.name != null && e.name != '' && e.name != undefined){
+                                if (e.name.match(expReg) != '' && e.name.match(expReg) != null) {
+                                    body += `<tr>                                                
+                                                <td><button onClick="fetchFormProduct(${e.id})">ICON</button></td>
+                                                <td>${e.id}</td>
+                                                <td>${e.name}</td>                                                
+                                            </tr>`;
+                                }
+                            }                            
                         })
+                        document.getElementById('container-data').style = 'display: none';
+                        document.getElementById('container-data2').style = 'display: flex; width: 80%; height: 75vh; overflow: auto';
+                        document.getElementById('data').innerHTML = body;
+                        document.getElementById('a-volver').href = '/api/menu/abm/plu';
+                        document.getElementById('btn-volver').addEventListener("click", deleteList, false);
                     }
 
                 }
 
+                function fetchFormProduct(id) {  ///////////////////////////   fetchFormProduct   /////////////////
+                    console.log('fetchFormProduct - id: '+id);
+                    
+                }
+
+                function deleteList() {  /////////////////////////////////   delete list   /////////////////
+                    localStorage.removeItem('list');
+                    productList = [];
+                }
                 
             </script>
-            <!--            
-            <script>
-                
-                setLabelValor();
-                selectIDlist();
-                selectIDdep();
-                selectIDgroup();
-
-                function setLabelValor() {
-                    var monto = document.getElementById('monto');
-                    var porcen = document.getElementById('porcen');
-                    if (monto.checked){
-                        document.getElementById('labelValor').innerHTML = '$';
-                    } else {
-                        document.getElementById('labelValor').innerHTML = '%';
-                    }
-                }
-
-                function selectIDlist() {
-                    let parsed_data = <%#- JSON.stringify(data) %>;
-                    //console.log(parsed_data);
-                    var name = document.getElementById('list_NAME').value;
-                    parsed_data.list_NAME.map(e => {
-                        if (e == name) {
-                            var position = parsed_data.list_NAME.indexOf(e);
-                            //console.log('posicion: '+position);
-                            console.log('id: '+parsed_data.list_ID[position]);
-                            document.getElementById('hideFieldlist').value = parsed_data.list_ID[position];
-                        }
-                    });
-
-                }
-
-                function selectIDdep() {
-                    let parsed_data = <%#- JSON.stringify(data) %>;
-                    //console.log(parsed_data);
-                    var name = document.getElementById('dep_NAME').value;
-                    parsed_data.dep_NAME.map(e => {
-                        if (e == name) {
-                            var position = parsed_data.dep_NAME.indexOf(e);
-                            //console.log('posicion: '+position);
-                            console.log('id: '+parsed_data.dep_ID[position]);
-                            document.getElementById('hideFielddep').value = parsed_data.dep_ID[position];
-                        }
-                    });
-
-                }
-
-                function selectIDgroup() {
-                    let parsed_data = <%#- JSON.stringify(data) %>;
-                    //console.log(parsed_data);
-                    var name = document.getElementById('group_NAME').value;
-                    parsed_data.group_NAME.map(e => {
-                        if (e == name) {
-                            var position = parsed_data.group_NAME.indexOf(e);
-                            //console.log('posicion: '+position);
-                            console.log('id: '+parsed_data.group_ID[position]);
-                            document.getElementById('hideFieldgroup').value = parsed_data.group_ID[position];
-                        }
-                    });
-
-                }
-
-            </script>
-            -->
     </body>
 
 </html>
