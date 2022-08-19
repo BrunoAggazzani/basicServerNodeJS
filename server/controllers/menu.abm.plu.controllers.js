@@ -45,8 +45,15 @@ export const getAbmPlu = async (req, res)=>{
         console.log('Falló ejecución de query');
     }
 
-    if (data.PLU) {
-        console.log('lalala');
-    }
 
 };
+
+export const getAbmPlu_formEdit = (req, res) => {
+    console.log('Entro en formEdit!');
+    const dato = req.body;
+    const resultado = {id: dato.id}
+    console.log('datos: '+JSON.stringify(dato));
+    res
+      .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'", "'Accept': 'application/json'")
+      .status(200).json(resultado);
+}

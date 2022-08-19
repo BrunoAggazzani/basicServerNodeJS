@@ -135,7 +135,24 @@
 
                 function fetchFormProduct(id) {  ///////////////////////////   fetchFormProduct   /////////////////
                     console.log('fetchFormProduct - id: '+id);
-                    
+                    let url = '/api/menu/abm/plu';
+                    let fetchData = {
+                        method: 'POST',
+                        body: JSON.stringify({id: id}),
+                        headers: new Headers({'content-type': 'application/json'})
+                    };
+
+                    fetch(url, fetchData)
+                      .then((resp) => {
+                            resp.json();
+                            //console.log(resp);
+                      })
+                      .then((dato) => {
+                            console.log('Data: '+JSON.parse(dato));
+                      })
+                      .catch((e) => {
+                            console.log(e);
+                      });
                 }
 
                 function deleteList() {  /////////////////////////////////   delete list   /////////////////
