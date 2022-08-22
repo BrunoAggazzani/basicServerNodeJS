@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<%- include('../../templates/head', {datahead: {titulo: 'Búsqueda PLUs' , css: '/css/ABM/PLUs/PLU.css' }}) %>
+<%- include('../../templates/head', {datahead: {titulo: 'Búsqueda PLUs', css: '/css/ABM/PLUs/PLU.css' }}) %>
 
     <body>
         <a id="a-volver" class='container-btn-return' href="/api/menu/abm">
@@ -48,8 +48,8 @@
                     <button class='btn-form'>NUEVO</button>
                 </div>
             </div>
-            <div id="container-data2" class="container-data2" style="display: none">
-                <table id='myTable'>
+            <div id="container-data2" class="container-data" style="display: none">
+                <table id='myTable' container-table>
                     <thead>
                         <tr>
                             <th>ICON</th>
@@ -91,16 +91,17 @@
                     
                     let expReg = new RegExp(str, "i");
                     //let resultList = [];
-                    let body = ``;
-
+                    
                     if(code.checked && product.value != '') {
                         productList.map((e) => {
                             if (e.id != null && e.id != '' && e.id != undefined){
                                 if (e.id.match(expReg) != '' && e.id.match(expReg) != null) {
-                                    body += `<tr>                                                
-                                                <td><button onClick="fetchFormProduct(${e.id})">ICON</button></td>
-                                                <td>${e.id}</td>
-                                                <td>${e.name}</td>                                                
+                                    body += `<tr>
+                                                <form method="POST" action="/api/menu/abm/plu" id="idForm">
+                                                    <td><button onClick="sendForm(idForm)">ICON</button></td>
+                                                    <td name="id" value="${e.id}">${e.id}</td>
+                                                    <td>${e.name}</td>                                                
+                                                </form>                                                
                                             </tr>`;
                                 }
                             }                            
@@ -113,47 +114,64 @@
                     }
                     
                     if(name.checked && product.value != '') {
+                        let tbody = document.getElementById('data');
+                        let fragment = document.createDocumentFragment();
+
                         productList.map((e) => {
                             if (e.name != null && e.name != '' && e.name != undefined){
                                 if (e.name.match(expReg) != '' && e.name.match(expReg) != null) {
-                                    body += `<tr>                                                
-                                                <td><button onClick="fetchFormProduct(${e.id})">ICON</button></td>
-                                                <td>${e.id}</td>
-                                                <td>${e.name}</td>                                                
-                                            </tr>`;
+                                    let tr = document.createElement('tr');
+                                    let form = document.createElement('form');
+                                    form.method = 'POST';
+                                    form.action = '/api/menu/abm/plu';
+                                    form.id = e.id;
+                                    let td1 = document.createElement('td');
+                                    td1.innerHTML = '<button class="btn-form" onClick="sendForm(idForm)">ICON</button>';
+                                    let td2 = document.createElement('td');
+                                    td2.innerHTML = `<input type="text" name="id" value="${e.id}" readonly/>`;
+                                    let td3 = document.createElement('td');
+                                    td3.innerText = `${e.name}`;
+                                    form.appendChild(td1);
+                                    form.appendChild(td2);
+                                    form.appendChild(td3);
+                                    tr.appendChild(form);
+                                    fragment.appendChild(tr);
                                 }
                             }                            
                         })
+                        tbody.appendChild(fragment);
                         document.getElementById('container-data').style = 'display: none';
                         document.getElementById('container-data2').style = 'display: flex; width: 80%; height: 75vh; overflow: auto';
-                        document.getElementById('data').innerHTML = body;
                         document.getElementById('a-volver').href = '/api/menu/abm/plu';
                         document.getElementById('btn-volver').addEventListener("click", deleteList, false);
                     }
 
                 }
 
-                function fetchFormProduct(id) {  ///////////////////////////   fetchFormProduct   /////////////////
-                    console.log('fetchFormProduct - id: '+id);
+                function sendForm(formu) {  ///////////////////////////   fetchFormProduct   /////////////////
+                    console.log('enviando form...');
+                    formul = document.getElementById(formu);
+                    formul.submit();
+                    /*
                     let url = '/api/menu/abm/plu';
-                    let fetchData = {
+                    let fetchData = new Request(url, {
                         method: 'POST',
                         body: JSON.stringify({id: id}),
-                        headers: new Headers({'content-type': 'application/json'})
-                    };
+                        headers: {
+                          'Content-Type': 'application/json; charset=utf-8'
+                        }
+                    });
 
-                    fetch(url, fetchData)
-                      .then((resp) => {
-                            resp.json();
-                            //console.log(resp);
-                      })
-                      .then((dato) => {
-                            console.log('Data: '+JSON.parse(dato));
-                      })
+                    fetch(fetchData)
+                      .then(() => {
+                            console.log('ID enviado!');
+                      })                      
                       .catch((e) => {
                             console.log(e);
                       });
+                    */  
                 }
+
 
                 function deleteList() {  /////////////////////////////////   delete list   /////////////////
                     localStorage.removeItem('list');

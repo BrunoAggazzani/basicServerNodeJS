@@ -48,12 +48,33 @@ export const getAbmPlu = async (req, res)=>{
 
 };
 
-export const getAbmPlu_formEdit = (req, res) => {
+export const getAbmPlu_formEdit = async (req, res) => {
     console.log('Entro en formEdit!');
-    const dato = req.body;
-    const resultado = {id: dato.id}
-    console.log('datos: '+JSON.stringify(dato));
-    res
-      .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'", "'Accept': 'application/json'")
-      .status(200).json(resultado);
+    const dato = JSON.stringify(req.body.id);
+    console.log('datos: '+dato);
+    
+    try{
+        req = await pool.query("SELECT p.product_id AS id, p.name AS name, p.erp_code AS erp, p.isactive AS activo, p.description AS descripcion, p.department_id, d.name AS departamento, p.group_id, g.name AS grupo, p.attribute AS tipo, p.tare AS tara FROM public.product p JOIN public.department d ON p.department_id = d.department_id JOIN public. main_group g ON p.group_id = g.group_id WHERE p.product_id = '"+dato+"'");       
+            if (req.rows.length > 0) {
+
+                let result = JSON.stringify(req.rows)
+                
+                console.log('result: '+result);
+                    
+                res
+                .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+                .status(200).render('ABM/Plu/plu1_1.ejs', {data: result});
+                
+            } else {
+                console.log('');
+                res.status(404).send({message: 'No hay registros!'});
+                console.log('');
+            }      
+    } catch (e){
+        console.log('');
+        res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
+        console.log(e);
+        console.log('Falló ejecución de query');
+    }
+    
 }
