@@ -1,0 +1,218 @@
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.principal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    background-image: url('../../../images/bg-verificador-precios-V4_edicion1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    filter: sepia(0.5);
+}
+
+.container-bts {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    position: relative;
+    width: 80%;
+
+}
+
+.grand-container {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    width: 80vw;
+    min-height: 80vh;
+}
+
+.formGral {
+    display: flex;
+    position: relative;
+    width: 480vw;
+}
+
+.container-data {
+    display: inline-flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.199);
+    width: 80vw;
+    border-radius: 0.4em;
+    box-shadow: 1px 1px 10px 1px rgba(212, 209, 209, 0.199);
+    margin: 0%;
+}
+
+.form-part{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.entries {
+    display: flex;
+    justify-content: space-evenly;
+    position: relative;
+    width: 100%;
+}
+
+.entries>label {
+    color: azure;
+    padding-right: 5px;
+}
+
+.entries>input{
+    justify-self: right;
+}
+
+/*
+@media (max-width: 249px) {
+    body {
+        background-color: black;
+        overflow: auto;
+    }
+    .container-data {
+        width: 350px;
+    }
+    .container {
+        display: none;
+        width: 350px;
+    }
+}
+
+@media (min-width: 250px) {
+    body {
+        overflow: auto;
+    }
+    .container-data {
+        width: 350px;
+    }
+    .container {
+        width: 350px;
+    }
+}
+
+@media (min-width: 350px) {
+    body {
+        width: 100%;
+    }
+    .container-data {
+        width: 98%;
+    }
+    .container {
+        width: 100%;
+    }
+}
+
+@media (min-width: 450px) {
+    .container-data {
+        width: 95%;
+    }
+}
+
+@media (min-width: 550px) {
+    .container-data {
+        width: 90%;
+    }
+}
+
+@media (min-width: 650px) {
+    .container-data {
+        width: 85%;
+    }
+}
+
+@media (min-width: 750px) {
+    .container-data {
+        width: 80%;
+    }
+}
+
+@media (min-width: 850px) {
+    .container-data {
+        width: 70%;
+    }
+}
+
+@media (min-width: 950px) {
+    .container-data {
+        width: 60%;
+    }
+}
+
+@media (min-width: 1100px) {
+    .container-data {
+        width: 50%;
+    }
+}
+*/
+
+.container-btn-return {
+    position: fixed;
+    bottom: 2vh;
+    left: 2vw;
+    padding: 0%;
+    margin: 0%;
+    border: none;
+    outline: none;
+    z-index: 1;
+}
+
+@keyframes background-change {
+    0% {
+        background-color: rgb(52, 146, 138);
+    }
+    50% {
+        background-color: rgb(1, 1, 1);
+    }
+    100% {
+        background-color: rgb(52, 146, 138);
+    }
+}
+
+.btn-return {
+    display: inline;
+    position: relative;
+    border: none;
+    outline: none;
+    background-image: url('../../../images/flecha_volver2.png');
+    background-color: #4d4f5700;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 35px;
+    cursor: pointer;
+    padding: 0%;
+    margin: 0%;
+    border-radius: 0.4em;
+    animation-name: background-change;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+.btn-return:hover {
+    background-color: whitesmoke;
+    animation-duration: 0s;
+}

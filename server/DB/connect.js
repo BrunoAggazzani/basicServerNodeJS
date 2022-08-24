@@ -1,11 +1,11 @@
 import { Client } from 'pg';
 
 const configDB = {
-    user: 'postgres',
-    host: 'localhost',
+    user: 'systel',
+    host: '192.168.2.198',
     port: '5432',
-    password: 'systel',
-    database: 'cuora_clara',
+    password: 'Systel#4316',
+    database: 'cuora',
     statement_timeout: 20000        
 }
 

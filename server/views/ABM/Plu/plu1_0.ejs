@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<%- include('../../templates/head', {datahead: {titulo: 'Búsqueda PLUs', css: '/css/ABM/PLUs/PLU.css' }}) %>
+<%- include('../../templates/head', {datahead: {titulo: 'Búsqueda PLUs', css: '/css/ABM/PLUs/plu1_0.css' }}) %>
 
     <body>
         <a id="a-volver" class='container-btn-return' href="/api/menu/abm">
@@ -12,17 +12,17 @@
                 <h4>
                     Buscar PLU 
                 </h4>
-                <form class='container-form-busqueda' id='form-busqueda' method='' action=''>
+                <form class='container-form-busqueda' id='form-busqueda' method='POST' action='/api/menu/abm/plu'>
                     <div class='container-item-form'>
                         <p>Filtro de búsqueda</p>
                         <div class='container-inputs'>
                             <div class="input-radio">
-                                <input type="radio" id='code' name='tipo' value='code' checked onclick="setypeinput(this.id)"/>
-                                <label for='all'>Código</label><br>
+                                <input type="radio" id='id' name='tipo' value='id' checked onclick="setypeinput(this.id)"/>
+                                <label for='code'>Código</label><br>
                             </div>               
-                            <div class="">
+                            <div class="input-radio">
                                 <input type="radio" id='name' name='tipo' value='name' onclick="setypeinput(this.id)"/>
-                                <label for='choose'>Nombre</label>
+                                <label for='name'>Nombre</label>
                             </div>
                         </div>
                     </div>
@@ -30,59 +30,38 @@
                     <div class='container-item-form'>
                         <p>PLU</p>
                         <div class='container-inputs'>
-                            <input type="number" id='product' name='PLU' required/>
+                            <input type="number" id='product' name='valor' required autocomplete='off'/>
                         </div>
                     </div>
                     <br>                    
                     <br>
                     <div class='container-btn-form'>
-                        <button type='submit' class='btn-form' onclick="buscar()">BUSCAR</button>
+                        <button type='submit' class='btn-form' >BUSCAR</button>
                     </div>                    
-                </form>
-                <!--
-                <div class='container-btn-form'>
-                    <button class='btn-form'>VER TODO</button>
-                </div>
-                -->                
+                </form>                
                 <div class='container-btn-form'>
                     <button class='btn-form'>NUEVO</button>
                 </div>
-            </div>
-            <div id="container-data2" class="container-data" style="display: none">
-                <table id='myTable' container-table>
-                    <thead>
-                        <tr>
-                            <th>ICON</th>
-                            <th>CÓDIGO</th>
-                            <th>NOMBRE</th>                                                                                          
-                        </tr>
-                    </thead>
-                    <tbody id="data">
-                        
-                    </tbody>
-                </table>
-            </div>
+            </div>            
             <script>
-                localStorage.setItem('list', <%- JSON.stringify(data) %>);
-                let productList = JSON.parse(localStorage.getItem('list'));
+                //localStorage.setItem('list', <%# JSON.stringify(data) %>);
+                //let productList = JSON.parse(localStorage.getItem('list'));
                 //console.log(productList);
                 const product = document.getElementById('product');
                 const code = document.getElementById('code');
                 const name = document.getElementById('name');
 
                 function setypeinput(id){   ///////////////////////////   setypeinput   /////////////////
-                    if (id == 'code') {
+                    if (id == 'id') {
                         product.value = '';
                         product.type = 'number';
-                        product.pattern = "[0-9]+";
                     }
                     if (id == 'name') {
                         product.value = '';
                         product.type = 'text';
-                        product.pattern = "";
                     }
                 }
-
+                /*
                 function buscar() { /////////////////////////////////   Buscar   /////////////////
                     
                     let str = '^';
@@ -90,31 +69,9 @@
                     str.trim();
                     
                     let expReg = new RegExp(str, "i");
-                    //let resultList = [];
-                    
-                    if(code.checked && product.value != '') {
-                        productList.map((e) => {
-                            if (e.id != null && e.id != '' && e.id != undefined){
-                                if (e.id.match(expReg) != '' && e.id.match(expReg) != null) {
-                                    body += `<tr>
-                                                <form method="POST" action="/api/menu/abm/plu" id="idForm">
-                                                    <td><button onClick="sendForm(idForm)">ICON</button></td>
-                                                    <td name="id" value="${e.id}">${e.id}</td>
-                                                    <td>${e.name}</td>                                                
-                                                </form>                                                
-                                            </tr>`;
-                                }
-                            }                            
-                        })
-                        document.getElementById('container-data').style = 'display: none';
-                        document.getElementById('container-data2').style = 'display: flex; width: 80%; height: 75vh; overflow: auto';
-                        document.getElementById('data').innerHTML = body;
-                        document.getElementById('a-volver').href = '/api/menu/abm/plu';
-                        document.getElementById('btn-volver').addEventListener("click", deleteList, false);
-                    }
-                    
+                   
                     if(name.checked && product.value != '') {
-                        let tbody = document.getElementById('data');
+                        let tbody = document.getElementById('data-table');
                         let fragment = document.createDocumentFragment();
 
                         productList.map((e) => {
@@ -127,12 +84,12 @@
                                     form.id = e.id;
                                     let td1 = document.createElement('td');
                                     td1.innerHTML = '<button class="btn-form" onClick="sendForm(idForm)">ICON</button>';
+                                    form.appendChild(td1);
                                     let td2 = document.createElement('td');
                                     td2.innerHTML = `<input type="text" name="id" value="${e.id}" readonly/>`;
-                                    let td3 = document.createElement('td');
-                                    td3.innerText = `${e.name}`;
-                                    form.appendChild(td1);
                                     form.appendChild(td2);
+                                    let td3 = document.createElement('td');
+                                    td3.innerText = `${e.name}`;                                   
                                     form.appendChild(td3);
                                     tr.appendChild(form);
                                     fragment.appendChild(tr);
@@ -141,7 +98,7 @@
                         })
                         tbody.appendChild(fragment);
                         document.getElementById('container-data').style = 'display: none';
-                        document.getElementById('container-data2').style = 'display: flex; width: 80%; height: 75vh; overflow: auto';
+                        document.getElementById('container-table').style = 'display: flex';
                         document.getElementById('a-volver').href = '/api/menu/abm/plu';
                         document.getElementById('btn-volver').addEventListener("click", deleteList, false);
                     }
@@ -151,33 +108,14 @@
                 function sendForm(formu) {  ///////////////////////////   fetchFormProduct   /////////////////
                     console.log('enviando form...');
                     formul = document.getElementById(formu);
-                    formul.submit();
-                    /*
-                    let url = '/api/menu/abm/plu';
-                    let fetchData = new Request(url, {
-                        method: 'POST',
-                        body: JSON.stringify({id: id}),
-                        headers: {
-                          'Content-Type': 'application/json; charset=utf-8'
-                        }
-                    });
-
-                    fetch(fetchData)
-                      .then(() => {
-                            console.log('ID enviado!');
-                      })                      
-                      .catch((e) => {
-                            console.log(e);
-                      });
-                    */  
+                    formul.submit();                      
                 }
-
 
                 function deleteList() {  /////////////////////////////////   delete list   /////////////////
                     localStorage.removeItem('list');
                     productList = [];
                 }
-                
+                */
             </script>
     </body>
 

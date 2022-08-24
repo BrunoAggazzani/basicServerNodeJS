@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('../../templates/head', {datahead: {titulo: 'Form Gral PLU' , css: '/css/ABM/PLUs/plu2_0.css' }}) %>
+
+    <body>
+        <div class="principal">
+            <div class="container-btns">
+                <button id="datos" onclick="viewForm(this.id)">DATOS</button>
+                <button id="precios" onclick="viewForm(this.id)">PRECIOS</button>
+                <button id="avanzado" onclick="viewForm(this.id)">AVANZADO</button>
+                <button id="codigo" onclick="viewForm(this.id)">CÓD. BARRAS</button>
+                <button id="fechas" onclick="viewForm(this.id)">FECHAS</button>
+                <button id="audit" onclick="viewForm(this.id)">AUDITORÍA</button>
+                <button>GUARDAR</button>
+            </div>
+            <div id="grand-container" class='grand-container'>
+                <form id="formGral" class="formGral">
+                    <div id="container-DATOS" class='container-data'>
+                        <h3 style="color: white">Datos</h3>
+                        <div class="form-part">
+                            <div class="entries">
+                               <label for='icono'>Icono de producto</label>
+                                <!--<input type="button" id='icono' name='icono' class='' value='' onclick=""/>-->
+                                <a href="/api/menu/abm/plu/formEditGral/productImages"><img src="data:image/jpg;base64,<%=data[0].binarydata%>" title="<%=data[0].image%>"></a>
+                                <br> 
+                            </div>
+                            <div class="entries">
+                                <label for='PLU'>PLU</label>
+                                <input type="number" id='PLU' name='PLU' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='erp'>Código ERP</label>
+                                <input type="text" id='erp' name='erp' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='activo'>Activo(select)</label>
+                                <input type="text" id='activo' name='activo' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='descrip'>Descripción</label>
+                                <input type="text" id='descrip' name='descrip' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='tipo'>Modo venta(select)</label>
+                                <input type="text" id='tipo' name='tipo' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='depto'>Departemento(select)</label>
+                                <input type="text" id='depto' name='depto' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='grupo'>Grupo(select)</label>
+                                <input type="text" id='grupo' name='grupo' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='publi'>Publicidad</label>
+                                <input type="button" id='publi' name='publi' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='iva'>IVA</label>
+                                <input type="button" id='iva' name='iva' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">
+                                <label for='lote'>Lote</label>
+                                <input type="text" id='lote' name='lote' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">
+                                <label for='tara'>Tara</label>
+                                <input type="number" id='tara' name='tara' class='' value='' onclick=""/>
+                                <br>                                
+                            </div>
+                            <div class="entries">                                
+                                <label for='perTare'>Porcentaje de agua</label>
+                                <input type="number" id='perTare' name='perTare' class='' value='' onclick=""/>
+                                <br>                            
+                            </div>
+                        </div>
+                    </div>
+                    <div id="container-PRECIOS" class='container-data'>
+                        <h3 style="color: white">Precios</h3>
+                        <div class="form-part">
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="container-AVANZADO" class='container-data'>
+                        <h3 style="color: white">Avanzado</h3>
+                        <div class="form-part">
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="container-CODBARRAS" class='container-data'>
+                        <h3 style="color: white">Cód. Barras</h3>
+                        <div class="form-part">
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="container-FECHAS" class='container-data'>
+                        <h3 style="color: white">Fechas</h3>
+                        <div class="form-part">
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="container-AUDITORIA" class='container-data'>
+                        <h3 style="color: white">Auditoria</h3>
+                        <div class="form-part">
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                            <div class="entries">                                
+                                <label for='nombre'>Nombre</label>
+                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>     
+            <a id="a-volver" class='container-btn-return' href="/api/menu/abm">
+                <button id="btn-volver" class='btn-return' title="Volver"></button>
+            </a>            
+        </div>
+        <script>
+        /*
+            var img = document.createElement('img');
+            img.src = 'data:image/jpg;buffer,' + btoa('<%=data[0].binarydata.data%>');
+            document.getElementById('icono').appendChild(img);
+        */    
+            function viewForm(id){
+                switch (id) {
+                    case 'datos':
+                        console.log(id);
+                        document.getElementById('formGral').style.marginLeft = '0vw';
+                        break
+                    case 'precios':
+                        console.log(id);
+                        document.getElementById('formGral').style.marginLeft = '-80vw';
+                        break
+                    case 'avanzado':
+                        console.log(id);
+                        document.getElementById('formGral').style.marginLeft = '-160vw';
+                        break
+                    case 'codigo':
+                        console.log(id);
+                        document.getElementById('formGral').style.marginLeft = '-240vw';
+                        break
+                    case 'fechas':
+                        console.log(id);
+                        document.getElementById('formGral').style.marginLeft = '-320vw';
+                        break
+                    case 'audit':
+                        console.log(id);
+                        document.getElementById('formGral').style.marginLeft = '-400vw';
+                        break                     
+                }               
+            }
+        </script>        
+    </body>    
+</html>
