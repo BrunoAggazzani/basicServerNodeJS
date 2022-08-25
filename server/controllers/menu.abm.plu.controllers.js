@@ -197,7 +197,7 @@ export const updateProductImages = async (req, res) => {  // Actualiza imagen de
         }
     }
     
-    try{
+    try{ /////////////////////////////// Hacer un metodo para todo este try (que reciba com parametros req y res) para no repetir tanto código al pedo. ###########################################
         console.log('Segunda vez:Trayendo datos, para formulario de edicion, de PLU con id: '+productID);
         let result = await pool.query("SELECT p.product_id AS id, p.name AS name, im.name AS image, encode(im.binarydata, 'base64') AS binarydata FROM public.product p LEFT JOIN public.image im ON p.icon_id = im.image_id WHERE product_id = '" +productID+"'");       
         // VER COMO TRAER LOS DATOS DE PLU QUE NO TIENEN IMÁGENES ASIGNADAS COMO ICONOS. (rta: con LEFT JOIN)
