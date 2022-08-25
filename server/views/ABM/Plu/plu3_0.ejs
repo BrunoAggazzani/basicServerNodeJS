@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('../../templates/head', {datahead: {titulo: 'Selección Imagen' , css: '/css/ABM/PLUs/plu3_0.css' }}) %>
+
+    <body>
+        <a class='container-btn-return' href="/api/menu/abm/plu">
+            <button class='btn-return' title="Volver"></button>
+        </a>
+        <div class="table">
+            <div class="container-table">
+                <table id='myTable'>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>
+                                <form method="POST" id="input-order-id" action="">
+                                    <input class="header-table" type="text" name="order" value="NOMBRE" readonly>
+                                </form>
+                            </th>
+                            <th>
+                                <form method="POST" id="input-order-name" action="">
+                                    <input class="header-table" type="text" name="order" value="IMAGEN" readonly>
+                                </form>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (data) { %>
+                            <% for (var i=0; i < data.length; i++ ) { %>                                   
+                                <tr>                                        
+                                    <td class="td-edit">
+                                        <input type="button" value="Sel" onclick="submitForm('<%= i %>')">
+                                    </td>
+                                    <td style="display: none">
+                                        <form id="<%= i %>" method="POST" action="/api/menu/abm/plu/formEditGral/updateProductImages">
+                                            <!--<input class="inputDisable" type="text" name="idProduct" value="<%# product %>" style="display: none">-->
+                                            <input class="inputDisable" type="text" name="idImage" value="<%= data[i].id %>" style="display: none">
+                                        </form>                                                
+                                    </td>
+                                    <td>
+                                        <input class="inputDisable" type="text" name="name" value="<%= data[i].image %>" readonly>
+                                    </td>
+                                    <td>
+                                        <img src="data:image/jpg;base64,<%=data[i].binarydata%>" width="80px" height="80px">
+                                    </td>                                        
+                                </tr>                               
+                            <% } %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="3">No_hay_registros</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script>
+
+            function submitForm(formId) {
+                var oForm = document.getElementById(formId);
+                if (oForm) {
+                    oForm.submit();
+                }
+            }
+
+        </script>
+    </body>
+
+</html>

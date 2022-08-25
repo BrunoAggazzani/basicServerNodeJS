@@ -6,5 +6,6 @@ router.get('/', menuAbmPluControll.getAbmPlu);
 router.post('/', menuAbmPluControll.showTable);
 router.post('/formEditGral', menuAbmPluControll.showFormEditGral);
 router.get('/formEditGral/productImages', menuAbmPluControll.showProductImages);
+router.post('/formEditGral/updateProductImages', menuAbmPluControll.updateProductImages);
 
 export default router;

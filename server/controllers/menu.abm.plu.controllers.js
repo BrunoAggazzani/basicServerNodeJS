@@ -106,9 +106,9 @@ export const showFormEditGral = async (req, res) => {
     let result = [];
         
     try{
-        console.log('Trayendo datos, para formulario de edicion, de PLU con id: '+productID);
-        result = await pool.query("SELECT p.product_id AS id, p.name AS name, im.name AS image, encode(im.binarydata, 'base64') AS binarydata FROM public.product p JOIN public.image im ON p.icon_id = im.image_id WHERE product_id = '" +productID+"'");       
-        
+        console.log('Primera vez: Trayendo datos, para formulario de edicion, de PLU con id: '+productID);
+        result = await pool.query("SELECT p.product_id AS id, p.name AS name, im.name AS image, encode(im.binarydata, 'base64') AS binarydata FROM public.product p LEFT JOIN public.image im ON p.icon_id = im.image_id WHERE product_id = '" +productID+"'");       
+        // VER COMO TRAER LOS DATOS DE PLU QUE NO TIENEN IMÁGENES ASIGNADAS COMO ICONOS.
         if (result.rows.length > 0) {            
             //console.log('result: '+JSON.stringify(result.rows[0]));
             
@@ -143,28 +143,29 @@ export const showFormEditGral = async (req, res) => {
 }
 
 export const showProductImages = async (req, res) => {  // trae todas las imagenes de producto y las muestra en una tabla.
-
+    
     try {
         console.log("Trayendo imagenes, para tabla de seleccion de imagenes de producto");
-        result = await pool.query("SELECT name AS image, encode(binarydata, 'base64') AS binarydata FROM public.image ");
+        let result = await pool.query("SELECT image_id AS id, name AS image, encode(binarydata, 'base64') AS binarydata FROM public.image WHERE isproducticon = 'Y'");
         
         if (result.rows.length > 0) {
-            console.log('result: '+JSON.stringify(result.rows[0]));            
+            //console.log('result: '+JSON.stringify(result.rows[0]));            
             
             let resultado = [];
             result.rows.map((e) => {
               resultado.push({
+                id: e.id,
                 image: e.image,
                 binarydata: e.binarydata,
               });
             });
-            console.log('Resultado: '+resultado[0].binarydata);
-            /*
+            //console.log('Resultado: '+JSON.stringify(resultado[0]));
+            
             res
               .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
               .status(200)
-              .render("ABM/Plu/plu2_0.ejs", { data: resultado });
-            */
+              .render("ABM/Plu/plu3_0.ejs", { data: resultado});
+            
             } else {
             console.log("");
             res.status(404).send({ message: "No hay registros!" });
@@ -177,4 +178,57 @@ export const showProductImages = async (req, res) => {  // trae todas las imagen
         console.log("Falló ejecución de query");
     }
     
+}
+
+export const updateProductImages = async (req, res) => {  // Actualiza imagen de producto y vuelve a cargar el formulario gral de product.
+
+    const dato = req.body;
+    
+    if (dato.idImage) {
+        try{
+            console.log('Actualizando imagen de producto...');
+            req = await pool.query("UPDATE product SET icon_id = '"+dato.idImage+"', updated = NOW() WHERE product_id = '"+productID+"'");                             
+        } catch (e){
+            console.log('');
+            res.send('<h1>Pifiada del servidor!!</h1>');        
+            console.log('');
+            console.log('Falló ejecución de query');
+            console.log(e);
+        }
+    }
+    
+    try{
+        console.log('Segunda vez:Trayendo datos, para formulario de edicion, de PLU con id: '+productID);
+        let result = await pool.query("SELECT p.product_id AS id, p.name AS name, im.name AS image, encode(im.binarydata, 'base64') AS binarydata FROM public.product p LEFT JOIN public.image im ON p.icon_id = im.image_id WHERE product_id = '" +productID+"'");       
+        // VER COMO TRAER LOS DATOS DE PLU QUE NO TIENEN IMÁGENES ASIGNADAS COMO ICONOS. (rta: con LEFT JOIN)
+        if (result.rows.length > 0) {            
+            //console.log('result: '+JSON.stringify(result.rows[0]));
+            
+            let resultado = [];
+            result.rows.map(e => {
+                resultado.push({
+                  id: e.id,
+                  name: e.name,
+                  image: e.image,
+                  binarydata: e.binarydata,
+                });
+            })
+            //console.log('tipo: '+typeof resultado[0].binarydata);
+            //console.log('Resultado: '+resultado[0].binarydata);
+                
+            res
+            .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+            .status(200).render('ABM/Plu/plu2_0.ejs', {data: resultado});
+            
+        } else {
+            console.log('');
+            res.status(404).send({message: 'No hay registros!'});
+            console.log('');
+        }      
+    } catch (e){
+        console.log('');
+        res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
+        console.log(e);
+        console.log('Falló ejecución de query');
+    }
 }
