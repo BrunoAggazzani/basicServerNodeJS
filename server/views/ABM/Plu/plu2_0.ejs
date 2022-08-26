@@ -3,15 +3,15 @@
 
 <%- include('../../templates/head', {datahead: {titulo: 'Form Gral PLU' , css: '/css/ABM/PLUs/plu2_0.css' }}) %>
 
-    <body>
+    <body  onload="setMargin()">
         <div class="principal">
             <div class="container-btns">
-                <button id="datos" onclick="viewForm(this.id)">DATOS</button>
-                <button id="precios" onclick="viewForm(this.id)">PRECIOS</button>
-                <button id="avanzado" onclick="viewForm(this.id)">AVANZADO</button>
-                <button id="codigo" onclick="viewForm(this.id)">CÓD. BARRAS</button>
-                <button id="fechas" onclick="viewForm(this.id)">FECHAS</button>
-                <button id="audit" onclick="viewForm(this.id)">AUDITORÍA</button>
+                <button id="DATOS" onclick="viewForm(this.id)">DATOS</button>
+                <button id="PRECIOS" onclick="viewForm(this.id)">PRECIOS</button>
+                <button id="AVANZADO" onclick="viewForm(this.id)">AVANZADO</button>
+                <button id="CODIGO" onclick="viewForm(this.id)">CÓD. BARRAS</button>
+                <button id="FECHAS" onclick="viewForm(this.id)">FECHAS</button>
+                <button id="AUDIT" onclick="viewForm(this.id)">AUDITORÍA</button>
                 <button>GUARDAR</button>
             </div>
             <div id="grand-container" class='grand-container'>
@@ -22,7 +22,8 @@
                             <div class="entries">
                                <label for='icono'>Icono de producto</label>
                                 <!--<input type="button" id='icono' name='icono' class='' value='' onclick=""/>-->
-                                <a href="/api/menu/abm/plu/formEditGral/productImages"><img src="data:image/jpg;base64,<%=data[0].binarydata%>" title="<%=data[0].image%>"></a>
+                                <a href="/api/menu/abm/plu/formEditGral/productImages"><img src="data:image/jpg;base64,<%=data.binarydata%>" title="<%=data.image%>"></a>
+                                <input type="text" id='imageId' name='imageId' class='' value='' onclick=""/>
                                 <br> 
                             </div>
                             <div class="entries">
@@ -195,43 +196,60 @@
                 </form>
             </div>     
             <a id="a-volver" class='container-btn-return' href="/api/menu/abm/plu">
-                <button id="btn-volver" class='btn-return' title="Volver"></button>
+                <button id="btn-volver" class='btn-return' title="Volver" onclick="deleteStorage()"></button>
             </a>            
         </div>
         <script>
-        /*
-            var img = document.createElement('img');
-            img.src = 'data:image/jpg;buffer,' + btoa('<%#data[0].binarydata.data%>');
-            document.getElementById('icono').appendChild(img);
-        */    
+            //console.log('Data: '+ '<%# JSON.stringify(data) %>');
+            localStorage.setItem('dataPLU',  '<%- JSON.stringify(data) %>');
+            
+            // ############################ bloque navegación pestañas #######################################
+            function setMargin(){
+                document.getElementById('formGral').style.marginLeft = localStorage.getItem("margin");
+                console.log('Margin: '+document.getElementById('formGral').style.marginLeft);
+            }
+            
             function viewForm(id){
                 switch (id) {
-                    case 'datos':
+                    case 'DATOS':
                         console.log(id);
+                        localStorage.setItem("margin", "0vw");
                         document.getElementById('formGral').style.marginLeft = '0vw';
                         break
-                    case 'precios':
+                    case 'PRECIOS':
                         console.log(id);
+                        localStorage.setItem("margin", "-80vw");
                         document.getElementById('formGral').style.marginLeft = '-80vw';
                         break
-                    case 'avanzado':
+                    case 'AVANZADO':
                         console.log(id);
+                        localStorage.setItem("margin", "-160vw");
                         document.getElementById('formGral').style.marginLeft = '-160vw';
                         break
-                    case 'codigo':
+                    case 'CODIGO':
                         console.log(id);
+                        localStorage.setItem("margin", "-240vw");
                         document.getElementById('formGral').style.marginLeft = '-240vw';
                         break
-                    case 'fechas':
+                    case 'FECHAS':
                         console.log(id);
+                        localStorage.setItem("margin", "-320vw");
                         document.getElementById('formGral').style.marginLeft = '-320vw';
                         break
-                    case 'audit':
+                    case 'AUDIT':
                         console.log(id);
+                        localStorage.setItem("margin", "-400vw");
                         document.getElementById('formGral').style.marginLeft = '-400vw';
                         break                     
                 }               
             }
+            // ############################ FÍN bloque navegación pestañas #############################
+            
+
+            function deleteStorage() { // Esto va siempre al ultimo
+                localStorage.removeItem('dataPLU');
+                localStorage.removeItem('margin');
+            }            
         </script>        
     </body>    
 </html>

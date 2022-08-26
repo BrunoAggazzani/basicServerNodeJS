@@ -97,52 +97,18 @@ export const showTable = async (req, res) => {
 }
 
 let productID = 0;
-export const showFormEditGral = async (req, res) => {
+export const showFormEditGral = async (req, res) => { ///////////////////////////// Muestra el formulario de edición gral ######
     console.log('Entro en showFormEditGral!');
     const dato = req.body;
     console.log('datos: '+JSON.stringify(dato));
     //console.log();
     productID = dato.id;
-    let result = [];
         
-    try{
-        console.log('Primera vez: Trayendo datos, para formulario de edicion, de PLU con id: '+productID);
-        result = await pool.query("SELECT p.product_id AS id, p.name AS name, im.name AS image, encode(im.binarydata, 'base64') AS binarydata FROM public.product p LEFT JOIN public.image im ON p.icon_id = im.image_id WHERE product_id = '" +productID+"'");       
-        // VER COMO TRAER LOS DATOS DE PLU QUE NO TIENEN IMÁGENES ASIGNADAS COMO ICONOS.
-        if (result.rows.length > 0) {            
-            //console.log('result: '+JSON.stringify(result.rows[0]));
-            
-            let resultado = [];
-            result.rows.map(e => {
-                resultado.push({
-                  id: e.id,
-                  name: e.name,
-                  image: e.image,
-                  binarydata: e.binarydata,
-                });
-            })
-            //console.log('tipo: '+typeof resultado[0].binarydata);
-            //console.log('Resultado: '+resultado[0].binarydata);
-                
-            res
-            .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-            .status(200).render('ABM/Plu/plu2_0.ejs', {data: resultado});
-            
-        } else {
-            console.log('');
-            res.status(404).send({message: 'No hay registros!'});
-            console.log('');
-        }      
-    } catch (e){
-        console.log('');
-        res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
-        console.log(e);
-        console.log('Falló ejecución de query');
-    }
+    reloadFormProduct(req, res);
     
 }
 
-export const showProductImages = async (req, res) => {  // trae todas las imagenes de producto y las muestra en una tabla.
+export const showProductImages = async (req, res) => {  // trae todas las imagenes de producto y las muestra en una tabla ######
     
     try {
         console.log("Trayendo imagenes, para tabla de seleccion de imagenes de producto");
@@ -180,7 +146,7 @@ export const showProductImages = async (req, res) => {  // trae todas las imagen
     
 }
 
-export const updateProductImages = async (req, res) => {  // Actualiza imagen de producto y vuelve a cargar el formulario gral de product.
+export const updateProductImages = async (req, res) => {  // Actualiza imagen de producto y vuelve a cargar el formulario gral de product ####
 
     const dato = req.body;
     
@@ -197,14 +163,26 @@ export const updateProductImages = async (req, res) => {  // Actualiza imagen de
         }
     }
     
-    try{ /////////////////////////////// Hacer un metodo para todo este try (que reciba com parametros req y res) para no repetir tanto código al pedo. ###########################################
+    reloadFormProduct(req, res);
+}
+
+
+const reloadFormProduct = async (req, res) => {     //  Método gral para leer los datos del formulario y renderizarlos en la vista ###
+
+    try{ 
         console.log('Segunda vez:Trayendo datos, para formulario de edicion, de PLU con id: '+productID);
         let result = await pool.query("SELECT p.product_id AS id, p.name AS name, im.name AS image, encode(im.binarydata, 'base64') AS binarydata FROM public.product p LEFT JOIN public.image im ON p.icon_id = im.image_id WHERE product_id = '" +productID+"'");       
-        // VER COMO TRAER LOS DATOS DE PLU QUE NO TIENEN IMÁGENES ASIGNADAS COMO ICONOS. (rta: con LEFT JOIN)
+        // TRAER LOS DATOS DE PLU QUE NO TIENEN IMÁGENES ASIGNADAS COMO ICONOS. (rta: con LEFT JOIN)
         if (result.rows.length > 0) {            
             //console.log('result: '+JSON.stringify(result.rows[0]));
             
-            let resultado = [];
+            let plu = {
+                id: result.rows[0].id,
+                name: result.rows[0].name,
+                image: result.rows[0].image,
+                binarydata: result.rows[0].binarydata,
+            };
+            /*
             result.rows.map(e => {
                 resultado.push({
                   id: e.id,
@@ -213,12 +191,13 @@ export const updateProductImages = async (req, res) => {  // Actualiza imagen de
                   binarydata: e.binarydata,
                 });
             })
+            */
             //console.log('tipo: '+typeof resultado[0].binarydata);
-            //console.log('Resultado: '+resultado[0].binarydata);
+            //console.log('Resultado plu: '+JSON.stringify(plu));
                 
             res
             .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-            .status(200).render('ABM/Plu/plu2_0.ejs', {data: resultado});
+            .status(200).render('ABM/Plu/plu2_0.ejs', {data: plu});
             
         } else {
             console.log('');
@@ -231,4 +210,5 @@ export const updateProductImages = async (req, res) => {  // Actualiza imagen de
         console.log(e);
         console.log('Falló ejecución de query');
     }
+
 }

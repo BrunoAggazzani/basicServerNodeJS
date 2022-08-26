@@ -5,7 +5,7 @@
 
     <body>
         <a id="a-volver" class='container-btn-return' href="/api/menu/abm">
-            <button id="btn-volver" class='btn-return' title="Volver"></button>
+            <button id="btn-volver" class='btn-return' title="Volver" onclick="deleteList()"></button>
         </a>
         <div class='container'>            
             <div id="container-data" class='container-data'>
@@ -44,6 +44,7 @@
                 </div>
             </div>            
             <script>
+                //console.log(<%# JSON.stringify(data) %>);
                 //localStorage.setItem('list', <%# JSON.stringify(data) %>);
                 //let productList = JSON.parse(localStorage.getItem('list'));
                 //console.log(productList);
@@ -110,10 +111,10 @@
                     formul = document.getElementById(formu);
                     formul.submit();                      
                 }
-
+                
                 function deleteList() {  /////////////////////////////////   delete list   /////////////////
                     localStorage.removeItem('list');
-                    productList = [];
+                    //productList = [];
                 }
                 */
             </script>
