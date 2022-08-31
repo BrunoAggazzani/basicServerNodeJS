@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<%- include('../../templates/head', {datahead: {titulo: 'Form Gral PLU' , css: '/css/ABM/PLUs/plu2_0.css' }}) %>
+<%- include('../../templates/head', {datahead: {titulo: 'Form Gral PLU' , css: '/css/ABM/PLUs/plu_form_princ.css' }}) %>
 
     <body  onload="setMargin()">
         <div class="principal">
@@ -19,97 +19,116 @@
                     <div id="container-DATOS" class='container-data'>
                         <h3 style="color: white">Datos</h3>
                         <div class="form-part">
-                            <div class="entries">
-                               <label for='icono'>Icono de producto</label>
-                                <!--<input type="button" id='icono' name='icono' class='' value='' onclick=""/>-->
-                                <a href="/api/menu/abm/plu/formEditGral/productImages"><img src="data:image/jpg;base64,<%=data.binarydata%>" title="<%=data.image%>"></a>
-                                <input type="text" id='imageId' name='imageId' class='' value='' onclick=""/>
+                            <div class="entries" id="divicon">
+                                <a href="/api/menu/abm/plu/formEditGral/productImages">
+                                    <% if(data.binarydata != '' && data.binarydata != null){ %>
+                                        <img src="data:image/jpg;base64,<%=data.binarydata%>" title="Editar">
+                                    <% } else { %>
+                                        Agregar Icono
+                                    <% } %>    
+                                </a>
                                 <br> 
                             </div>
-                            <div class="entries">
+                            <div class="entries" id="divPLU">
                                 <label for='PLU'>PLU</label>
-                                <input type="number" id='PLU' name='PLU' class='' value='' onclick=""/>
+                                <input type="number" id='PLU' name='PLU' class='' value='<%=data.id%>' onclick="" disabled/>
                                 <br>
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="diverp">                                
                                 <label for='erp'>Código ERP</label>
-                                <input type="text" id='erp' name='erp' class='' value='' onclick=""/>
+                                <input type="text" id='erp' name='erp' class='' value='<%=data.erp%>' onclick=""/>
                                 <br>
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="divactivo">                                
                                 <label for='activo'>Activo(select)</label>
-                                <input type="text" id='activo' name='activo' class='' value='' onclick=""/>
+                                <select  id='activo' name='activo' >
+                                    <option class='optionUser' id="opcY" value="Y">SI</option>                                                                
+                                    <option class='optionUser' id="opcN" value="N">NO</option>
+                                </select>
                                 <br>
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="divnombre">                                
                                 <label for='nombre'>Nombre</label>
-                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
+                                <input type="text" id='nombre' name='nombre' class='' value='<%=data.name%>' onclick=""/>
                                 <br>
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="divdescrip">                                
                                 <label for='descrip'>Descripción</label>
-                                <input type="text" id='descrip' name='descrip' class='' value='' onclick=""/>
+                                <input type="text" id='descrip' name='descrip' class='' value='<%=data.descript%>' onclick=""/>
                                 <br>
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="divtipo">                                
                                 <label for='tipo'>Modo venta(select)</label>
-                                <input type="text" id='tipo' name='tipo' class='' value='' onclick=""/>
+                                <select  id='tipo' name='tipo' >
+                                    <option class='optionUser' id="pesable" value="0">PESABLE</option>                                                                
+                                    <option class='optionUser' id="unitario" value="1">UNITARIO</option>
+                                    <option class='optionUser' id="congelado" value="2">CONGELADO</option>
+                                    <option class='optionUser' id="escurrido" value="3">ESCURRIDO</option>
+                                </select>
                                 <br>
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="divdepto">                                
                                 <label for='depto'>Departemento(select)</label>
-                                <input type="text" id='depto' name='depto' class='' value='' onclick=""/>
+                                <select  id='depto' name='depto'>
+                                    <% data.arrdepto.map(e => { %>
+                                        <option class='optionUser' id="d<%= e.depto_id %>" value="<%= e.depto_id %>"><%= e.depto_name %></option>
+                                    <% }) %>
+                                </select>
                                 <br>
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="divgrupo">                                
                                 <label for='grupo'>Grupo(select)</label>
-                                <input type="text" id='grupo' name='grupo' class='' value='' onclick=""/>
+                                <select  id='grupo' name='grupo'>
+                                    <% data.arrgroup.map(e => { %>
+                                        <option class='optionUser' id="g<%= e.group_id %>" value="<%= e.group_id %>"><%= e.group_name %></option>
+                                    <% }) %>
+                                </select>
                                 <br>
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="divpubli">                                
                                 <label for='publi'>Publicidad</label>
-                                <input type="button" id='publi' name='publi' class='' value='' onclick=""/>
+                                <select  id='publi' name='publi'>
+                                    <% data.arrpubli.map(e => { %>
+                                        <option class='optionUser' id="<%= e.publi_id %>" value="<%= e.publi_id %>"><%= e.publi_name %></option>
+                                    <% }) %>
+                                </select>
                                 <br>
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="diviva">                                
                                 <label for='iva'>IVA</label>
-                                <input type="button" id='iva' name='iva' class='' value='' onclick=""/>
+                                <select  id='iva' name='iva'>
+                                    <% data.arriva.map(e => { %>
+                                        <option class='optionUser' id="<%= e.iva_id %>" value="<%= e.iva_id %>"><%= e.iva_name %></option>
+                                    <% }) %>
+                                </select>
                                 <br>
                             </div>
-                            <div class="entries">
+                            <div class="entries" id="divlote">
                                 <label for='lote'>Lote</label>
-                                <input type="text" id='lote' name='lote' class='' value='' onclick=""/>
+                                <input type="text" id='lote' name='lote' class='' value='<%=data.lote%>' onclick=""/>
                                 <br>
                             </div>
-                            <div class="entries">
+                            <div class="entries" id="divtara">
                                 <label for='tara'>Tara</label>
-                                <input type="number" id='tara' name='tara' class='' value='' onclick=""/>
+                                <input type="number" id='tara' name='tara' class='' value='<%=data.tara%>' onclick=""/>
                                 <br>                                
                             </div>
-                            <div class="entries">                                
+                            <div class="entries" id="divperTare">                                
                                 <label for='perTare'>Porcentaje de agua</label>
-                                <input type="number" id='perTare' name='perTare' class='' value='' onclick=""/>
+                                <input type="number" id='perTare' name='perTare' class='' value='<%=data.waterperc%>' onclick=""/>
                                 <br>                            
                             </div>
                         </div>
                     </div>
-                    <div id="container-PRECIOS" class='container-data'>
-                        <h3 style="color: white">Precios</h3>
+                    <div id="container-PRECIOS" class='container-data'>                        
                         <div class="form-part">
-                            <div class="entries">                                
-                                <label for='nombre'>Nombre</label>
-                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
-                                <br>
+                            <h3 style="color: white">Listas de Precios</h3>
+                            <div class="frame">                                
+                                <iframe src="/api/menu/abm/plu/formEditGral/showTablePricelist"></iframe>
                             </div>
-                            <div class="entries">                                
-                                <label for='nombre'>Nombre</label>
-                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
-                                <br>
-                            </div>
-                            <div class="entries">                                
-                                <label for='nombre'>Nombre</label>
-                                <input type="text" id='nombre' name='nombre' class='' value='' onclick=""/>
-                                <br>
+                            <h3 style="color: white">Descuentos</h3>
+                            <div class="frame">                                
+                                <iframe src="/api/menu/abm/plu/formEditGral/showTableDiscount"></iframe>
                             </div>
                         </div>
                     </div>
@@ -244,7 +263,66 @@
                 }               
             }
             // ############################ FÍN bloque navegación pestañas #############################
-            
+
+            // ################################# onLoad campos ##########################################
+
+            let isactive = <%-JSON.stringify(data.isactive)%>;
+            console.log('isactive: '+isactive);
+            if (isactive == 'Y'){
+                document.getElementById('opcY').setAttribute('selected', '');
+            } else {
+                document.getElementById('opcN').setAttribute('selected', '');
+            }
+
+            let tipo = <%-JSON.stringify(data.type)%>;
+            switch (tipo){
+                case 0: 
+                    document.getElementById('pesable').setAttribute('selected', '');
+                    break;                
+                case 1: 
+                    document.getElementById('unitario').setAttribute('selected', '');
+                    break;                
+                case 2: 
+                    document.getElementById('congelado').setAttribute('selected', '');
+                    break;                
+                case 3: 
+                    document.getElementById('escurrido').setAttribute('selected', '');
+                    break;                
+            }
+
+            if (<%-data.depto.id%> != ''){ // ##### Depto #####
+                console.log('Depto: '+<%-data.depto.id%>);
+                document.getElementById('d<%-data.depto.id%>').setAttribute('selected', '');
+            } else { // Esto es para cuando sea un plu nuevo.
+                document.getElementById('d0').setAttribute('selected', '');
+            }
+
+            if (<%-data.group.id%> != ''){ // ##### Group #####
+                document.getElementById('g<%-data.group.id%>').setAttribute('selected', '');
+            } else { // Esto es para cuando sea un plu nuevo.
+                document.getElementById('g0').setAttribute('selected', '');
+            }
+
+            if (<%-data.publi.id%> != ''){ // ##### publicidad asociada #####
+                document.getElementById('<%-data.publi.id%>').setAttribute('selected', '');
+            } else { // Esto es para cuando sea un plu nuevo.
+                document.getElementById('publi').setAttribute('title', '');
+            }
+
+            if (<%-data.iva.id%> != ''){ // ##### IVA #####
+                document.getElementById('<%-data.iva.id%>').setAttribute('selected', '');
+            } else { // Esto es para cuando sea un plu nuevo.
+                document.getElementById('@').setAttribute('selected', '');
+            }
+
+            document.getElementById('tara').value = parseFloat(<%-data.tara%>).toFixed(3);
+            let maxTara = (parseInt('<%=data.fs%>') * 0.05).toFixed(3);
+            console.log('maxTara: '+maxTara);
+            document.getElementById('tara').setAttribute('max', `${maxTara}`);
+
+            document.getElementById('perTare').value = parseFloat(<%-data.waterperc%>).toFixed(3);
+
+            // #################################  fín onLoad campos ##########################################
 
             function deleteStorage() { // Esto va siempre al ultimo
                 localStorage.removeItem('dataPLU');

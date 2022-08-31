@@ -52,11 +52,13 @@ body {
     position: relative;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.199);
+    background-color: rgba(0, 0, 0, 0.4);
     width: 80vw;
+    height: -webkit-fill-available;
     border-radius: 0.4em;
-    box-shadow: 1px 1px 10px 1px rgba(212, 209, 209, 0.199);
+    /*box-shadow: 1px 1px 10px 1px rgba(212, 209, 209, 0.199);*/
     margin: 0%;
+    padding-bottom: 5vh;
 }
 
 .form-part{
@@ -71,18 +73,75 @@ body {
 
 .entries {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     position: relative;
-    width: 100%;
+    width: 90%;
+    margin: 2% 2%;
 }
 
 .entries>label {
+    width: 35%;
+    max-width: 220px;
     color: azure;
-    padding-right: 5px;
+    padding-right: 5%;
+}
+
+.entries>a {
+    color: azure;
 }
 
 .entries>input{
+    width: 61%;
+    max-width: 250px;
+    background-color: rgba(0, 255, 255, 0) !important;
+    color: aliceblue !important;
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+    font-size: 1rem;
     justify-self: right;
+    text-align: start;
+    outline: none;
+}
+
+.frame {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    width: 100%;
+}
+
+.frame>iframe{
+    display: flex;
+    width: 90%;
+    height: 35vh;
+    border: none;    
+}
+
+#divicon{
+    justify-content: center !important;
+}
+
+select{
+    width: 62%;
+    max-width: 255px;
+    background-color: rgba(0, 255, 255, 0) !important;
+    color: aliceblue !important;
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+    font-size: 1rem;
+    justify-self: right;
+    text-align: start;
+    outline: none;
+}
+
+.optionUser {
+    background-color: #222222af;
+    color: aliceblue;
+}
+
+.optionUser:hover, :focus {
+    background-color: black;
 }
 
 /*
