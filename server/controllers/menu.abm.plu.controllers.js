@@ -212,14 +212,15 @@ export const updatePricelist = async (req, res) => {
 }
 
 export const showTableDiscount = async (req, res) => {
-
+    console.log('Mostrando tabla de descuentos...');
     let result;
     try {
-        result = await pool.query("SELECT pv.pricelist_version_id AS pricelist, pv.name AS nombre, pp.pricelist AS precio FROM public.pricelist_version pv JOIN public.productprice pp ON pv.pricelist_version_id = pp.pricelist_version_id WHERE product_id = '"+productID+"' ORDER BY precio DESC");
-        //console.log(JSON.stringify(result.rows));
+        result = await pool.query("SELECT discount_schema_line_id AS id, limit_fixed AS hasta, rate AS precio FROM public.discount_schema_line WHERE discount_schema_id = '"+productID+"' ORDER BY hasta ASC");
+        console.log(JSON.stringify(result.rows));
         res
         .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-        .status(200).render('ABM/Plu/plu_table_discount.ejs', {data: result.rows});        
+        .status(200).render('ABM/Plu/plu_table_discount.ejs', {data: result.rows});
+        console.log('Descuento prueba: '+JSON.stringify(result.rows));        
     } catch (e){
         console.log('');
         res.send('<h1>Pifiada del servidor!!</h1>');        
@@ -232,10 +233,14 @@ export const showTableDiscount = async (req, res) => {
 export const updateDiscount = async (req, res) => {
 
     let data = req.body;
+    console.log(JSON.stringify(data));
+
+    let hasta = parseFloat(data.hasta);
+    let precio = parseFloat(data.precio);
     
     try {
         console.log('Actualizando descuentos de producto...');
-        await pool.query("UPDATE productprice SET pricelist = '"+data.price+"', updated = NOW() WHERE product_id = '"+productID+"' AND pricelist_version_id = '"+data.idlist+"'");                
+        await pool.query("UPDATE discount_schema_line SET limit_fixed = '"+hasta+"', rate = '"+precio+"', updated = NOW() WHERE discount_schema_line_id = '"+data.discountid+"'");                
     } catch (e){
         console.log('');
         res.send('<h1>Pifiada del servidor!!</h1>');        
@@ -252,7 +257,7 @@ export const createDiscount = async (req, res) => {
     let data = req.body;
     
     try {
-        console.log('Actualizando descuentos de producto...');
+        console.log('Creando nuevo descuento de producto...');
         //await pool.query("CREATE productprice SET pricelist = '"+data.price+"', updated = NOW() WHERE product_id = '"+productID+"' AND pricelist_version_id = '"+data.idlist+"'");                
     } catch (e){
         console.log('');
@@ -337,11 +342,10 @@ const reloadFormProduct = async (req, res) => {     //  Método gral para leer l
                 res.status(404).send({message: 'No hay registros!'});
                 console.log('');
             }      
-        } catch (e){
-            console.log('');
-            res.status(500).send('<h1>Pifiada del servidor!!</h1>');        
-            console.log(e);
+        } catch (e){            
             console.log('Falló ejecución de query');
+            console.log('');        
+            console.log('ERROR!: '+e);
         }
     
     } else {
@@ -401,7 +405,7 @@ const getIva = async (req, res) => {
 const getFS = async (req, res) => {
     try{
             let result = await pool.query("SELECT MAX(fs) AS FS FROM systel.calibration");
-            console.log('result: '+JSON.stringify(result.rows[0]));
+            //console.log('result: '+JSON.stringify(result.rows[0]));
             FS = parseInt(Object.values(result.rows[0]));
             console.log('FS: '+FS);                             
         } catch (e){
