@@ -48,10 +48,15 @@ export const getAbmPlu = async (req, res)=>{
 
 };
 
+let logedUser = '';
+
 export const showTable = async (req, res) => {
     console.log('Entro en formEdit!');
     const dato = req.body;
     console.log('datos: '+JSON.stringify(dato));
+
+    logedUser = dato.logedUser;
+
     console.log(dato.valor);
     let result = [];    
     try{
@@ -216,11 +221,11 @@ export const showTableDiscount = async (req, res) => {
     let result;
     try {
         result = await pool.query("SELECT discount_schema_line_id AS id, limit_fixed AS hasta, rate AS precio FROM public.discount_schema_line WHERE discount_schema_id = '"+productID+"' ORDER BY hasta ASC");
-        console.log(JSON.stringify(result.rows));
+        //console.log(JSON.stringify(result.rows));
         res
         .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
         .status(200).render('ABM/Plu/plu_table_discount.ejs', {data: result.rows});
-        console.log('Descuento prueba: '+JSON.stringify(result.rows));        
+        //console.log('Descuento prueba: '+JSON.stringify(result.rows));        
     } catch (e){
         console.log('');
         res.send('<h1>Pifiada del servidor!!</h1>');        
@@ -231,16 +236,16 @@ export const showTableDiscount = async (req, res) => {
 }
 
 export const updateDiscount = async (req, res) => {
-
+    console.log('Entró en updateDiscount!');
     let data = req.body;
-    console.log(JSON.stringify(data));
+    console.log('updateDiscount DATA: '+JSON.stringify(data));
 
     let hasta = parseFloat(data.hasta);
     let precio = parseFloat(data.precio);
     
     try {
         console.log('Actualizando descuentos de producto...');
-        await pool.query("UPDATE discount_schema_line SET limit_fixed = '"+hasta+"', rate = '"+precio+"', updated = NOW() WHERE discount_schema_line_id = '"+data.discountid+"'");                
+        await pool.query("UPDATE discount_schema_line SET limit_fixed = '"+hasta+"', rate = '"+precio+"', updated = NOW(), updatedby = '"+logedUser+"' WHERE discount_schema_line_id = '"+data.discountid+"'");                
     } catch (e){
         console.log('');
         res.send('<h1>Pifiada del servidor!!</h1>');        
@@ -253,9 +258,10 @@ export const updateDiscount = async (req, res) => {
 }
 
 export const createDiscount = async (req, res) => {
-
+    console.log('Entró en createDiscount!');
     let data = req.body;
-    
+    console.log('createDiscount DATA: '+JSON.stringify(data));
+    /*
     try {
         console.log('Creando nuevo descuento de producto...');
         //await pool.query("CREATE productprice SET pricelist = '"+data.price+"', updated = NOW() WHERE product_id = '"+productID+"' AND pricelist_version_id = '"+data.idlist+"'");                
@@ -266,7 +272,26 @@ export const createDiscount = async (req, res) => {
         console.log('Falló ejecución de query');
         console.log(e);
     }
-    
+    */
+    showTableDiscount(req, res);
+}
+
+export const deleteDiscount = async (req, res) => {
+    console.log('Entró en deleteDiscount!');
+    let data = req.body;
+    console.log('deleteDiscount DATA: '+JSON.stringify(data));
+    /*
+    try {
+        console.log('Eliminando descuento de producto...');
+        //await pool.query("DELETE productprice SET pricelist = '"+data.price+"', updated = NOW() WHERE product_id = '"+productID+"' AND pricelist_version_id = '"+data.idlist+"'");                
+    } catch (e){
+        console.log('');
+        res.send('<h1>Pifiada del servidor!!</h1>');        
+        console.log('');
+        console.log('Falló ejecución de query');
+        console.log(e);
+    }
+    */
     showTableDiscount(req, res);
 }
 
@@ -407,7 +432,7 @@ const getFS = async (req, res) => {
             let result = await pool.query("SELECT MAX(fs) AS FS FROM systel.calibration");
             //console.log('result: '+JSON.stringify(result.rows[0]));
             FS = parseInt(Object.values(result.rows[0]));
-            console.log('FS: '+FS);                             
+            //console.log('FS: '+FS);                             
         } catch (e){
             console.log('');
             console.log('Falló ejecución de query');

@@ -15,43 +15,50 @@
                             <th>
                                 <input class="header-table" type="text" value="PRECIO" readonly>
                             </th>
+                            <th class="th-icon">
+                                <input class="header-icon" type="text" value="" readonly>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <% if (data !=='' && data !==null && data !==undefined) { %>
                             <% for (var i=0; i < data.length; i++ ) { %>
                                 <tr>
-                                    <form method="POST" action="/api/menu/abm/plu/formEditGral/updateDiscount">
-                                        <input style="display: none" type="text" name="discountid"
-                                            value="<%= data[i].id %>">
+                                    <form method="POST" id="formUpdateDelete" action="/api/menu/abm/plu/formEditGral/updateDiscount">
+                                        <input style="display: none" type="text" name="discountid" value="<%= data[i].id %>"/>
                                         <td>
                                             <input class="inputPrice" type="number" name="hasta"
                                                 value="<%= data[i].hasta %>" 
-                                                onclick="this.value=''" onchange="this.form.submit()" required>
+                                                onclick="this.value=''" onchange="this.form.submit()" required/>
                                         </td>
                                         <td>
                                             <input class="inputPrice" type="number" name="precio"
                                                 value="<%- parseInt(data[i].precio).toFixed(2) %>"
                                                 onclick="this.value=''" onchange="this.form.submit()" required/>
                                         </td>
+                                        <td class="td-icon">
+                                            <input type='button' class="btn-td-icon-delete" onclick="formDelete(this.form)">
+                                        </td>                                        
                                     </form>
                                 </tr>
                             <% } %>
                         <% } else { %>
                             <tr>
-                                <td colspan="2">No hay registros!</td>
+                                <td colspan="3">No hay registros!</td>
                             </tr>
                         <% } %>
                         <tr>
                             <form method="POST" id="formInsert" action="/api/menu/abm/plu/formEditGral/createDiscount">
-                                <input style="display: none" type="text" name="discountid" value="cómo mierda genera el id">
+                                <input style="display: none" type="text" name="discountid" value="SELECT get_uuid()">
                                 <td>
-                                    <input class="inputPrice" type="number" name="hasta" value="" required>
+                                    <input class="inputNewPrice" type="number" name="hasta" value="" required />
                                 </td>
                                 <td>
-                                    <input class="inputPrice" type="number" name="price" value=""
-                                        onclick="this.value=''" onchange="submitForm('formInsert')" required />
+                                    <input class="inputNewPrice" type="number" name="price" value="" required />
                                 </td>
+                                <td class="td-icon">
+                                    <input type='button' class="btn-td-icon-create" onclick="this.form.submit()" />
+                                </td>                                
                             </form>
                         </tr>
                     </tbody>
@@ -60,9 +67,11 @@
         </div>
         <script>
             //console.log(<%#-JSON.stringify(data)%>);
-
-            function submitForm(formId) {
-                var oForm = document.getElementById(formId);
+            
+            function formDelete(formId) {
+                let oForm = formId;
+                //let oForm = document.getElementById(formId);
+                oForm.setAttribute("action", '/api/menu/abm/plu/formEditGral/deleteDiscount');
                 if (oForm) {
                     oForm.submit();
                 }

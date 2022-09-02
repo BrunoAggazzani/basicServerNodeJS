@@ -184,6 +184,57 @@ table td, table th {
     font-size: 0.85rem;
 }
 
+.th-icon {    
+    width: 8%;    
+}
+
+.header-icon{
+    display: inline-flex;
+    position: relative;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    background: linear-gradient(to bottom, rgb(11, 76, 92) 25%, rgba(45, 123, 169, 0.42) 86%, #67b7df 100%);
+    opacity: 0.9;
+    padding: 5px 0px;
+    border: none;
+    width: -webkit-fill-available;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 0.85rem;
+    width: 100%;    
+}
+
+.td-icon {
+    background-color: #1c6ea400;
+}
+
+.btn-td-icon-delete {
+    position: relative;
+    background-image: url('../../../images/icons/delete.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+    /*padding: 4px 4px;*/
+    cursor: pointer;
+    border: none;
+    background-color: rgba(0, 255, 21, 0);
+}
+
+.btn-td-icon-create {
+    position: relative;
+    background-image: url('../../../images/icons/add.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+    /*padding: 4px 4px;*/
+    cursor: pointer;
+    border: none;
+    background-color: rgba(0, 255, 21, 0);
+}
 
 /*
 .header-table:hover {
@@ -220,73 +271,25 @@ table td, table th {
     border: none;
 }
 
+.inputNewPrice {
+    display: inline-flex;
+    position: relative;
+    width: 40%;
+    text-align: center;
+    color: black;
+    background-color: rgba(77, 79, 87, 0.4);
+    border: none;
+    outline: none;
+}
+
+.inputNewPrice:hover {
+    cursor: pointer;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.425);
+    border: none;
+}
+
 ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: rgb(0, 0, 0);
-}
-
-.form-pagination {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    min-width: 80%;
-    max-width: 92%;
-    height: 8vh;
-}
-
-.page-controll {
-    display: inline-flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #ffffff;
-    font-family: sans-serif;
-}
-
-.page-controll>h4 {
-    display: inline-block;
-    position: relative;
-    flex-wrap: nowrap;
-}
-
-#inputPage {
-    display: inline-block;
-    position: relative;
-    width: 3.5em;
-    text-align: center;
-    padding: 2px 1px;
-    margin: 1px 0px;
-    outline: none;
-    border: none;
-    background-color: rgba(0, 0, 0, 0.151);
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 1rem;
-}
-
-#inputPage:hover {
-    background-color: rgba(255, 228, 196, 0.336);
-    cursor: text;
-}
-
-#inputPage::placeholder {
-    color: #ffffff;
-    font-weight: bold;
-}
-
-.btn-pagination {
-    background-color: #1c6f71;
-    color: #ffffff;
-    border: none;
-    outline: none;
-    border-radius: 0.2em;
-    margin-right: 1px;
-}
-
-.btn-pagination:hover {
-    background-color: rgba(10, 60, 73, 0.753);
-    cursor: pointer;
-}
-
-.btn-pagination:focus {
-    outline: none;
 }

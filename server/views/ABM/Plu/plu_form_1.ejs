@@ -16,6 +16,7 @@
                     <div class='container-item-form'>
                         <p>Filtro de búsqueda</p>
                         <div class='container-inputs'>
+                            <input style="display: none" type="text" id="logedUser" name="logedUser" value=""/>
                             <div class="input-radio">
                                 <input type="radio" id='id' name='tipo' value='id' checked onclick="setypeinput(this.id)"/>
                                 <label for='code'>Código</label><br>
@@ -44,6 +45,9 @@
                 </div>
             </div>            
             <script>
+                let user = localStorage.getItem('User');
+                document.getElementById('logedUser').value = user;
+
                 const product = document.getElementById('product');                
 
                 function setypeinput(id){   ///////////////////////////   setypeinput   /////////////////

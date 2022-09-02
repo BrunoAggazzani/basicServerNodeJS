@@ -23,7 +23,7 @@
             -->
             <div class='container-input'>
                 <label for='usuario'>Usuario</label>
-                <select class='form-control' name='user' required>
+                <select class='form-control' id="selectUsers" name='user' required>
                     <% if (data) { %>
                         <% data.usuarios.map(e => { %>
                             <% if (e.username === 'Supervisor') { %>
@@ -46,13 +46,22 @@
             </div>
             <br />
             <div class='container-btn-form'>
-                <button type='submit' class='btn-form'>ACEPTAR</button>
+                <button type='submit' class='btn-form' onclick="saveUser()">ACEPTAR</button>
             </div>
         </form>
         <div class='container-version'>
             <h6>versión 6.3.98.736</h6>
         </div>
     </div>
+    <script>
+        localStorage.clear();
+        
+        function saveUser() {
+            let user = document.getElementById('selectUsers').value;
+            console.log(typeof(user));
+            localStorage.setItem("User", user);
+        }
+    </script>
 </body>
 
 </html>

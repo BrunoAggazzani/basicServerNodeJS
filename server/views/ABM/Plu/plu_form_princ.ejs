@@ -308,7 +308,7 @@
                 document.getElementById('<%-data.publi.id%>').setAttribute('selected', '');                
             }
 
-            //console.log('publi name: '+'<%-data.publi.name%>'); // NOTA: Si ejs falla al traer valor hay que implementar JSON.stringify() o poner la variable entre comillas.
+            //console.log('publi name: '+'<%#-data.publi.name%>'); // NOTA: Si ejs falla al traer valor hay que implementar JSON.stringify() o poner la variable entre comillas.
 
             if ('<%-data.iva.id%>' != '' && '<%-data.iva.id%>' != null && '<%-data.iva.id%>' != undefined){ // ##### IVA #####
                 document.getElementById('<%-data.iva.id%>').setAttribute('selected', '');
