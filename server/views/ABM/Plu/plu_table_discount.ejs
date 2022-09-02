@@ -51,13 +51,13 @@
                             <form method="POST" id="formInsert" action="/api/menu/abm/plu/formEditGral/createDiscount">
                                 <input style="display: none" type="text" name="discountid" value="SELECT get_uuid()">
                                 <td>
-                                    <input class="inputNewPrice" type="number" name="hasta" value="" required />
+                                    <input class="inputNewPrice" type="number" name="hasta" required />
                                 </td>
                                 <td>
-                                    <input class="inputNewPrice" type="number" name="price" value="" required />
+                                    <input class="inputNewPrice" type="number" name="price" required />
                                 </td>
                                 <td class="td-icon">
-                                    <input type='button' class="btn-td-icon-create" onclick="this.form.submit()" />
+                                    <input type='submit' value='' class="btn-td-icon-create" />
                                 </td>                                
                             </form>
                         </tr>
@@ -70,7 +70,6 @@
             
             function formDelete(formId) {
                 let oForm = formId;
-                //let oForm = document.getElementById(formId);
                 oForm.setAttribute("action", '/api/menu/abm/plu/formEditGral/deleteDiscount');
                 if (oForm) {
                     oForm.submit();
