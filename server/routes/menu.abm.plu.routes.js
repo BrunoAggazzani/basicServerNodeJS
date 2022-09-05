@@ -11,7 +11,7 @@ router.get('/formEditGral/showTablePricelist', menuAbmPluControll.showTablePrice
 router.post('/formEditGral/updatePricelist', menuAbmPluControll.updatePricelist);
 router.get('/formEditGral/showTableDiscount', menuAbmPluControll.showTableDiscount);
 router.post('/formEditGral/updateDiscount', menuAbmPluControll.updateDiscount);
-router.post('/formEditGral/createDiscount', menuAbmPluControll.createDiscount);
+router.post('/formEditGral/createDiscount', menuAbmPluControll.createDiscountSchemaLine);
 router.post('/formEditGral/deleteDiscount', menuAbmPluControll.deleteDiscount);
 
 export default router;

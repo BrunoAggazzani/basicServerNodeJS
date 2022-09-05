@@ -24,15 +24,15 @@
                         <% if (data !=='' && data !==null && data !==undefined) { %>
                             <% for (var i=0; i < data.length; i++ ) { %>
                                 <tr>
-                                    <form method="POST" id="formUpdateDelete" action="/api/menu/abm/plu/formEditGral/updateDiscount">
+                                    <form method="POST" action="/api/menu/abm/plu/formEditGral/updateDiscount">
                                         <input style="display: none" type="text" name="discountid" value="<%= data[i].id %>"/>
                                         <td>
-                                            <input class="inputPrice" type="number" name="hasta"
+                                            <input class="inputPrice" type="number" name="hasta" id="hasta'<%=i%>'" min="0" pattern="^[0-9]+"
                                                 value="<%= data[i].hasta %>" 
-                                                onclick="this.value=''" onchange="this.form.submit()" required/>
+                                                onclick="this.value=''" onchange="checkHasta(this.id, this.value, this.form)" required/>
                                         </td>
                                         <td>
-                                            <input class="inputPrice" type="number" name="precio"
+                                            <input class="inputPrice" type="number" name="precio" min="0" pattern="^[0-9]+"
                                                 value="<%- parseInt(data[i].precio).toFixed(2) %>"
                                                 onclick="this.value=''" onchange="this.form.submit()" required/>
                                         </td>
@@ -49,12 +49,11 @@
                         <% } %>
                         <tr>
                             <form method="POST" id="formInsert" action="/api/menu/abm/plu/formEditGral/createDiscount">
-                                <input style="display: none" type="text" name="discountid" value="SELECT get_uuid()">
                                 <td>
-                                    <input class="inputNewPrice" type="number" name="hasta" required />
+                                    <input class="inputNewPrice" type="number" name="hasta" id="hastaNew" min="0" pattern="^[0-9]+" value="" onchange="checkHasta(this.id, this.value, this.form)" required />
                                 </td>
                                 <td>
-                                    <input class="inputNewPrice" type="number" name="price" required />
+                                    <input class="inputNewPrice" type="number" name="price" min="0" pattern="^[0-9]+" required />
                                 </td>
                                 <td class="td-icon">
                                     <input type='submit' value='' class="btn-td-icon-create" />
@@ -66,8 +65,28 @@
             </div>
         </div>
         <script>
-            //console.log(<%#-JSON.stringify(data)%>);
-            
+            //console.log(<%#-JSON.stringify(data)%>);            
+
+            function checkHasta(id, value, form) {
+                let repeat = false;                
+                <% for (var i=0; i < data.length; i++ ) { %>
+                        if(<%=data[i].hasta%> == value){
+                            repeat = true;
+                            alert('El valor ingresado ya existe!');
+                            document.getElementById(id).value = '';
+                        } 
+                <% } %> 
+                if (repeat == false && value != 0) {
+                    let oForm = form;
+                    if (oForm) {
+                        oForm.submit();
+                    }
+                } else {
+                    document.getElementById(id).setAttribute('invalid', true);
+                }    
+            }
+
+
             function formDelete(formId) {
                 let oForm = formId;
                 oForm.setAttribute("action", '/api/menu/abm/plu/formEditGral/deleteDiscount');

@@ -242,10 +242,11 @@ export const updateDiscount = async (req, res) => {
 
     let hasta = parseFloat(data.hasta);
     let precio = parseFloat(data.precio);
+    let schema_line_id = IdGenerator(req, res);
     
     try {
         console.log('Actualizando descuentos de producto...');
-        await pool.query("UPDATE discount_schema_line SET limit_fixed = '"+hasta+"', rate = '"+precio+"', updated = NOW(), updatedby = '"+logedUser+"' WHERE discount_schema_line_id = '"+data.discountid+"'");                
+        await pool.query("UPDATE discount_schema_line SET limit_fixed = '"+hasta+"', rate = '"+precio+"', updated = NOW(), updatedby = '"+logedUser+"' WHERE discount_schema_line_id = '"+schema_line_id+"'");                
     } catch (e){
         console.log('');
         res.send('<h1>Pifiada del servidor!!</h1>');        
@@ -257,23 +258,119 @@ export const updateDiscount = async (req, res) => {
     showTableDiscount(req, res);
 }
 
-export const createDiscount = async (req, res) => {
-    console.log('Entró en createDiscount!');
-    let data = req.body;
-    console.log('createDiscount DATA: '+JSON.stringify(data));
-    /*
-    try {
-        console.log('Creando nuevo descuento de producto...');
-        //await pool.query("CREATE productprice SET pricelist = '"+data.price+"', updated = NOW() WHERE product_id = '"+productID+"' AND pricelist_version_id = '"+data.idlist+"'");                
+////////////////////////////////////////////////////////////////////////////
+////    Esto solo se va a ejecutar sino hay un esquema creado.    ////// *******
+///////////////////////////////////////////////////////////////////////////
+const createDiscountSchema = async (req, res) => {
+    console.log('Entró en createDiscount_schema!');               // 1
+
+    getIdNameProduct(req, res)
+    .then(async (idName) => {
+        try {
+            console.log('Creando Discount_schema...'); 
+            await pool.query("INSERT INTO discount_schema(discount_id, isactive, created, createdby, updated, updatedby, name, description, type, mode, start_date, start_time, end_date, end_time, dow_sunday, dow_monday, dow_tuesday, dow_wednesday, dow_thursday, dow_friday, dow_saturday) VALUES ('"+productID+"', 'Y', NOW(), '"+logedUser+"', NOW(), '"+logedUser+"', '"+idName+"', '', 0, 0,'1970-01-01', '00:00:00', '2050-12-31', '23:59:59', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y')");                
+        } catch (e){
+            console.log('');        
+            console.log('Falló ejecución de query');
+            console.log('');
+            console.log(e);
+        }
+    })
+    .then(() => {
+        //actualizar discount_schema_id de la tabla product.
+        updateDiscountInProduct(req, res);
+    })   
+}
+
+const getIdNameProduct = new Promise (async (req, res) => {
+    console.log('Generando ID-Name de product...');              //  2
+    let resultado = '';
+    try{
+        let name = await pool.query("SELECT name FROM public.product WHERE product_id = "+productID);
+        resultado = productID+"-"+Object.values(name.rows[0]);
+        console.log('getIdNameProduct: '+resultado); // 4 (mal. Deberia ser 3)                             
     } catch (e){
-        console.log('');
-        res.send('<h1>Pifiada del servidor!!</h1>');        
         console.log('');
         console.log('Falló ejecución de query');
         console.log(e);
     }
-    */
-    showTableDiscount(req, res);
+    return resultado;
+});
+
+const updateDiscountInProduct = async (req, res) => {
+    console.log('Actualizando discount_schema_id en tabla product...');
+    try{
+        await pool.query("UPDATE public.product SET discount_schema_id = "+productID+" WHERE product_id = '"+productID);                             
+    } catch (e){
+        console.log('');
+        console.log('Falló ejecución de query');
+        console.log(e);
+    }
+}
+////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// ********
+///////////////////////////////////////////////////////////////////////
+
+
+export const createDiscountSchemaLine = async (req, res) => {
+    console.log('Entró en createDiscount_schema_line!');
+    let data = req.body;
+    console.log('DATA: '+JSON.stringify(data));
+    
+    if (discountSchemaExist(req, res) < 1) { // Si no existe el esquema...
+        createDiscountSchema(req, res);
+    }    
+
+    IdGenerator(req, res)
+    .then(async (id) => {
+        try {
+            console.log('Creando nuevo descuento de producto...');
+            //console.log("Query: "+"INSERT INTO discount_schema_line (discount_schema_line_id, isactive, created, createdby, updated, updatedby, discount_schema_id, source, limit_minamt, limit_maxamt, limit_fixed, limit_margin, rate) VALUES ('"+id+"', 'Y', NOW(), '"+logedUser+"', NOW(), '"+logedUser+"', '"+productID+"', 0, 0, 0, "+data.hasta+", 0, "+data.price+");");
+            await pool.query("INSERT INTO discount_schema_line (discount_schema_line_id, isactive, created, createdby, updated, updatedby, discount_schema_id, source, limit_minamt, limit_maxamt, limit_fixed, limit_margin, rate) VALUES ('"+id+"', 'Y', NOW(), '"+logedUser+"', NOW(), '"+logedUser+"', '"+productID+"', 0, 0, 0, "+data.hasta+", 0, "+data.price+");");                
+        } catch (e){
+            console.log('');        
+            console.log('Falló ejecución de query');
+            console.log('');
+            console.log(e);
+        }
+    })    
+    
+       
+    
+    //updateDiscount(req, res);
+}
+
+const discountSchemaExist = async (req, res) => {
+    console.log('Comprobando exixtencia del esquema..');
+    try{
+        let consul = await pool.query("SELECT COUNT(*) FROM public.discount_schema WHERE discount_id = '"+productID+"'");
+        let resultado = consul.rows[0].count;
+        if (resultado > 0) {
+            console.log('Existe! Count: '+resultado);
+        } else {
+            console.log('NO Existe. Count: '+resultado); 
+        }
+        return resultado;                            
+    } catch (e){
+        console.log('');
+        console.log('Falló ejecución de query');
+        console.log(e);
+    }
+}
+
+const IdGenerator = async (req, res) => {
+    console.log('Generando ID...');
+    let resultado = '';
+    try{
+        let id = await pool.query("SELECT get_uuid()");
+        resultado = Object.values(id.rows[0]);
+        console.log('IdGenerator: '+resultado);                             
+    } catch (e){
+        console.log('');
+        console.log('Falló ejecución de query');
+        console.log(e);
+    }
+    return resultado;
 }
 
 export const deleteDiscount = async (req, res) => {
@@ -427,7 +524,7 @@ const getIva = async (req, res) => {
         }
 }
 
-const getFS = async (req, res) => {
+const getFS = async (req, res) => { //trae el fondo de escala
     try{
             let result = await pool.query("SELECT MAX(fs) AS FS FROM systel.calibration");
             //console.log('result: '+JSON.stringify(result.rows[0]));
@@ -439,3 +536,8 @@ const getFS = async (req, res) => {
             console.log(e);
         }
 }
+
+
+
+
+
