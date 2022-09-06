@@ -28,12 +28,12 @@
                                         <input style="display: none" type="text" name="discountid" value="<%= data[i].id %>"/>
                                         <td>
                                             <input class="inputPrice" type="number" name="hasta" id="hasta'<%=i%>'" min="0" pattern="^[0-9]+"
-                                                value="<%= data[i].hasta %>" 
-                                                onclick="this.value=''" onchange="checkHasta(this.id, this.value, this.form)" required/>
+                                                value="<%= data[i].hasta %>" title="Presione para editar" 
+                                                onclick="this.value=''" onchange="checkHastaEdit(this.id, this.value, this.form)" required/>
                                         </td>
                                         <td>
                                             <input class="inputPrice" type="number" name="precio" min="0" pattern="^[0-9]+"
-                                                value="<%- parseInt(data[i].precio).toFixed(2) %>"
+                                                value="<%- parseInt(data[i].precio).toFixed(2) %>" title="Presione para editar"
                                                 onclick="this.value=''" onchange="this.form.submit()" required/>
                                         </td>
                                         <td class="td-icon">
@@ -50,13 +50,13 @@
                         <tr>
                             <form method="POST" id="formInsert" action="/api/menu/abm/plu/formEditGral/createDiscount">
                                 <td>
-                                    <input class="inputNewPrice" type="number" name="hasta" id="hastaNew" min="0" pattern="^[0-9]+" value="" onchange="checkHasta(this.id, this.value, this.form)" required />
+                                    <input class="inputNewPrice" type="number" name="hasta" id="hastaNew" min="0" pattern="^[0-9]+" value="" onblur="checkHasta(this.id, this.value, this.form)" required />
                                 </td>
                                 <td>
-                                    <input class="inputNewPrice" type="number" name="price" min="0" pattern="^[0-9]+" required />
+                                    <input class="inputNewPrice" type="number" name="price" id="priceNew" min="0" pattern="^[0-9]+" required />
                                 </td>
                                 <td class="td-icon">
-                                    <input type='submit' value='' class="btn-td-icon-create" />
+                                    <input type='button' value='' id="btnSubmit" class="btn-td-icon-create" title="Agregar" onclick="formCreate(this.form);"/>
                                 </td>                                
                             </form>
                         </tr>
@@ -73,25 +73,65 @@
                         if(<%=data[i].hasta%> == value){
                             repeat = true;
                             alert('El valor ingresado ya existe!');
-                            document.getElementById(id).value = '';
+                            //document.getElementById(id).value = '';
+                            location.reload();
+                            document.getElementById(id).focus({focusVisible: true});
                         } 
-                <% } %> 
-                if (repeat == false && value != 0) {
-                    let oForm = form;
-                    if (oForm) {
-                        oForm.submit();
-                    }
-                } else {
-                    document.getElementById(id).setAttribute('invalid', true);
-                }    
+                <% } %>                                     
             }
 
+            function checkHastaEdit(id, value, form) {
+                let repeat = false;                
+                <% for (var i=0; i < data.length; i++ ) { %>
+                        if(<%=data[i].hasta%> == value){
+                            repeat = true;
+                            alert('El valor ingresado ya existe!');
+                            //document.getElementById(id).value = '';
+                            window.location.reload();
+                            document.getElementById(id).focus({focusVisible: true});
+                        } 
+                <% } %>                
+                if (repeat == false){
+                    let oForm = form;
+                    oForm.submit();
+                }                                     
+            }
 
             function formDelete(formId) {
                 let oForm = formId;
                 oForm.setAttribute("action", '/api/menu/abm/plu/formEditGral/deleteDiscount');
                 if (oForm) {
                     oForm.submit();
+                }
+            }
+
+            function formCreate(form){
+                let hasta = document.getElementById('hastaNew').value;
+                let price = document.getElementById('priceNew').value;
+                let hastaEnv = false;
+                let priceEnv = false;
+                if (hasta > 0 && hasta != '' && hasta != null && hasta != undefined){
+                    hastaEnv = true;
+                } else {
+                    alert('Hay campos vacios!');
+                    document.getElementById('hastaNew').focus({focusVisible: true});
+                    //document.getElementById('btnSubmit').setAttribute('disabled', true);
+                }
+
+                if (price > 0 && price != '' && price != null && price != undefined){
+                    priceEnv = true;
+                } else {
+                    alert('Hay campos vacios!');
+                    document.getElementById('priceNew').focus({focusVisible: true});
+                    //document.getElementById('btnSubmit').setAttribute('disabled', true);
+                }
+                let oForm = form;
+                if (hastaEnv === true && priceEnv === true){
+                    console.log('Enviando formulario...');
+                    //document.getElementById('btnSubmit').setAttribute('disabled', false);                    
+                    oForm.submit();
+                } else {
+                    console.log('No se envió formulario!');
                 }
             }
 

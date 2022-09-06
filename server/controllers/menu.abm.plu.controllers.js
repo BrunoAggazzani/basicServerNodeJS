@@ -235,6 +235,11 @@ export const showTableDiscount = async (req, res) => {
     }    
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////
+///////////  Actualiza los datos de un discount_schema_line existente. // *******
+///////////////////////////////////////////////////////////////////////////
 export const updateDiscount = async (req, res) => {
     console.log('Entró en updateDiscount!');
     let data = req.body;
@@ -242,7 +247,7 @@ export const updateDiscount = async (req, res) => {
 
     let hasta = parseFloat(data.hasta);
     let precio = parseFloat(data.precio);
-    let schema_line_id = IdGenerator(req, res);
+    let schema_line_id = data.discountid;
     
     try {
         console.log('Actualizando descuentos de producto...');
@@ -257,15 +262,20 @@ export const updateDiscount = async (req, res) => {
     
     showTableDiscount(req, res);
 }
+////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// ********
+///////////////////////////////////////////////////////////////////////
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////
-////    Esto solo se va a ejecutar sino hay un esquema creado.    ////// *******
+//  Crea nuevo discount_schema y carga el discount_schema_id en la tabla product si NO hay un esquema creado. // *******
 ///////////////////////////////////////////////////////////////////////////
 const createDiscountSchema = async (req, res) => {
-    console.log('Entró en createDiscount_schema!');               // 1
-
-    getIdNameProduct(req, res)
-    .then(async (idName) => {
+    console.log('Entró en createDiscount_schema!');
+    let ok = false;
+    getIdNameProduct(req, res).then(async (idName) => {
         try {
             console.log('Creando Discount_schema...'); 
             await pool.query("INSERT INTO discount_schema(discount_id, isactive, created, createdby, updated, updatedby, name, description, type, mode, start_date, start_time, end_date, end_time, dow_sunday, dow_monday, dow_tuesday, dow_wednesday, dow_thursday, dow_friday, dow_saturday) VALUES ('"+productID+"', 'Y', NOW(), '"+logedUser+"', NOW(), '"+logedUser+"', '"+idName+"', '', 0, 0,'1970-01-01', '00:00:00', '2050-12-31', '23:59:59', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y')");                
@@ -275,32 +285,33 @@ const createDiscountSchema = async (req, res) => {
             console.log('');
             console.log(e);
         }
-    })
-    .then(() => {
-        //actualizar discount_schema_id de la tabla product.
-        updateDiscountInProduct(req, res);
+        //actualiza discount_schema_id de la tabla product y retorna ok = true al finalizar.
+        updateDiscountInProduct(req, res).then(()=>{
+            ok = true;
+            return ok;
+        });
     })   
 }
 
-const getIdNameProduct = new Promise (async (req, res) => {
-    console.log('Generando ID-Name de product...');              //  2
+const getIdNameProduct = async (req, res) => {
+    console.log('Generando ID-Name para discount_schema');              
     let resultado = '';
     try{
         let name = await pool.query("SELECT name FROM public.product WHERE product_id = "+productID);
         resultado = productID+"-"+Object.values(name.rows[0]);
-        console.log('getIdNameProduct: '+resultado); // 4 (mal. Deberia ser 3)                             
+        console.log('getIdNameProduct: '+resultado);                              
     } catch (e){
         console.log('');
         console.log('Falló ejecución de query');
         console.log(e);
     }
     return resultado;
-});
+};
 
 const updateDiscountInProduct = async (req, res) => {
     console.log('Actualizando discount_schema_id en tabla product...');
     try{
-        await pool.query("UPDATE public.product SET discount_schema_id = "+productID+" WHERE product_id = '"+productID);                             
+        await pool.query("UPDATE public.product SET discount_schema_id = '"+productID+"' WHERE product_id = "+productID);                             
     } catch (e){
         console.log('');
         console.log('Falló ejecución de query');
@@ -312,35 +323,74 @@ const updateDiscountInProduct = async (req, res) => {
 ///////////////////////////////////////////////////////////////////////
 
 
+
+
+////////////////////////////////////////////////////////////////////////////
+//  Crea nuevo discount_schema_line luego de comprobar la existencia de un discount_schema para el PLU seleccionado. // *******
+///////////////////////////////////////////////////////////////////////////
 export const createDiscountSchemaLine = async (req, res) => {
     console.log('Entró en createDiscount_schema_line!');
     let data = req.body;
     console.log('DATA: '+JSON.stringify(data));
-    
-    if (discountSchemaExist(req, res) < 1) { // Si no existe el esquema...
-        createDiscountSchema(req, res);
-    }    
 
-    IdGenerator(req, res)
-    .then(async (id) => {
-        try {
-            console.log('Creando nuevo descuento de producto...');
-            //console.log("Query: "+"INSERT INTO discount_schema_line (discount_schema_line_id, isactive, created, createdby, updated, updatedby, discount_schema_id, source, limit_minamt, limit_maxamt, limit_fixed, limit_margin, rate) VALUES ('"+id+"', 'Y', NOW(), '"+logedUser+"', NOW(), '"+logedUser+"', '"+productID+"', 0, 0, 0, "+data.hasta+", 0, "+data.price+");");
-            await pool.query("INSERT INTO discount_schema_line (discount_schema_line_id, isactive, created, createdby, updated, updatedby, discount_schema_id, source, limit_minamt, limit_maxamt, limit_fixed, limit_margin, rate) VALUES ('"+id+"', 'Y', NOW(), '"+logedUser+"', NOW(), '"+logedUser+"', '"+productID+"', 0, 0, 0, "+data.hasta+", 0, "+data.price+");");                
-        } catch (e){
-            console.log('');        
-            console.log('Falló ejecución de query');
-            console.log('');
-            console.log(e);
-        }
-    })    
-    
-       
-    
-    //updateDiscount(req, res);
+    if (data.hasta == '' || data.hasta == null || data.hasta == undefined || data.hasta == 0 || data.hasta == '0' || data.price == '' || data.price == null || data.price == undefined || data.price == 0 || data.price == '0') {
+        console.log('Hay campos vacios!');
+        showTableDiscount(req, res);
+        return;
+    }    
+     
+    discountSchemaExist(req, res)
+        .then((exist)=>{
+            if (exist < 1){ // Si NO hay un discount_schema creado...
+                createDiscountSchema(req, res).then((ok) => {
+                    if (ok == true) { // si ya terminó de crearse el discount_schema...
+                        IdGenerator(req, res).then(async (id) => {
+                            try {
+                                console.log('Creando nuevo descuento de producto...'); // crea discount_schema_line.                                
+                                await pool.query("INSERT INTO discount_schema_line (discount_schema_line_id, isactive, created, createdby, updated, updatedby, discount_schema_id, source, limit_minamt, limit_maxamt, limit_fixed, limit_margin, rate) VALUES ('"+id+"', 'Y', NOW(), '"+logedUser+"', NOW(), '"+logedUser+"', '"+productID+"', 0, 0, 0, "+data.hasta+", 0, "+data.price+")");
+                                updateDiscount(req, res)                
+                            } catch (e){
+                                console.log('');        
+                                console.log('Falló ejecución de query');
+                                console.log('');
+                                console.log(e);
+                            }
+                        });
+                    } else { // si aun no terminó de crearse el discount_schema...
+                        setTimeout(() => { 
+                            IdGenerator(req, res).then(async (id) => {
+                                try {
+                                    console.log('Creando nuevo descuento de producto...'); // crea discount_schema_line.
+                                    await pool.query("INSERT INTO discount_schema_line (discount_schema_line_id, isactive, created, createdby, updated, updatedby, discount_schema_id, source, limit_minamt, limit_maxamt, limit_fixed, limit_margin, rate) VALUES ('"+id+"', 'Y', NOW(), '"+logedUser+"', NOW(), '"+logedUser+"', '"+productID+"', 0, 0, 0, "+data.hasta+", 0, "+data.price+")");
+                                    updateDiscount(req, res)                
+                                } catch (e){
+                                    console.log('');        
+                                    console.log('Falló ejecución de query');
+                                    console.log('');
+                                    console.log(e);
+                                }
+                            });
+                        }, 500);
+                    }                     
+                });
+            } else {
+                IdGenerator(req, res).then(async (id) => {
+                    try {
+                        console.log('Creando nuevo descuento de producto...');// crea discount_schema_line.
+                        await pool.query("INSERT INTO discount_schema_line (discount_schema_line_id, isactive, created, createdby, updated, updatedby, discount_schema_id, source, limit_minamt, limit_maxamt, limit_fixed, limit_margin, rate) VALUES ('"+id+"', 'Y', NOW(), '"+logedUser+"', NOW(), '"+logedUser+"', '"+productID+"', 0, 0, 0, "+data.hasta+", 0, "+data.price+")");
+                        updateDiscount(req, res)                
+                    } catch (e){
+                        console.log('');        
+                        console.log('Falló ejecución de query');
+                        console.log('');
+                        console.log(e);
+                    }
+                })
+            }            
+        })                  
 }
 
-const discountSchemaExist = async (req, res) => {
+const discountSchemaExist = async (req, res) => { // consulta si el PLU tiene un discount_schema creado.
     console.log('Comprobando exixtencia del esquema..');
     try{
         let consul = await pool.query("SELECT COUNT(*) FROM public.discount_schema WHERE discount_id = '"+productID+"'");
@@ -358,8 +408,8 @@ const discountSchemaExist = async (req, res) => {
     }
 }
 
-const IdGenerator = async (req, res) => {
-    console.log('Generando ID...');
+const IdGenerator = async (req, res) => { // genera el ID para el nuevo discount_schema_line.
+    console.log('Generando ID para schema_line...');
     let resultado = '';
     try{
         let id = await pool.query("SELECT get_uuid()");
@@ -372,25 +422,38 @@ const IdGenerator = async (req, res) => {
     }
     return resultado;
 }
+////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// ********
+///////////////////////////////////////////////////////////////////////
 
+
+
+
+/////////////////////////////////////////////////////////////////////////
+//////////    Elimina un discount_schema_line existente.   ////////// ********
+/////////////////////////////////////////////////////////////////////////
 export const deleteDiscount = async (req, res) => {
     console.log('Entró en deleteDiscount!');
     let data = req.body;
     console.log('deleteDiscount DATA: '+JSON.stringify(data));
-    /*
-    try {
-        console.log('Eliminando descuento de producto...');
-        //await pool.query("DELETE productprice SET pricelist = '"+data.price+"', updated = NOW() WHERE product_id = '"+productID+"' AND pricelist_version_id = '"+data.idlist+"'");                
+    
+    try{
+        await pool.query("DELETE from discount_schema_line WHERE discount_schema_line_id = '"+data.discountid+"'");                             
     } catch (e){
-        console.log('');
-        res.send('<h1>Pifiada del servidor!!</h1>');        
         console.log('');
         console.log('Falló ejecución de query');
         console.log(e);
     }
-    */
+    
     showTableDiscount(req, res);
 }
+////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// ********
+///////////////////////////////////////////////////////////////////////
+
+
+
+
 
 const reloadFormProduct = async (req, res) => {     //  Método gral para leer los datos del formulario y renderizarlos en la vista ###
 
@@ -427,10 +490,9 @@ const reloadFormProduct = async (req, res) => {     //  Método gral para leer l
         try{ 
             console.log('Trayendo datos para formulario de edicion de PLU con id: '+productID);
             let result = await pool.query("SELECT encode(im.binarydata, 'base64') AS binarydata, p.product_id AS id, p.erp_code AS erp, p.isactive AS isactive, p.name AS name, p.description AS descript, p.attribute AS type, p.department_id AS depto_id, d.name AS depto_name, p.group_id AS group_id, g.name AS group_name, p.advertising_id AS publi_id, a.name AS publi_name, p.tax_id AS iva_id, i.name AS iva_name, p.lot AS lote, p.tare AS tara, p.perc_tare AS waterperc FROM public.product p LEFT JOIN public.image im ON p.icon_id = im.image_id LEFT JOIN public.department d ON p.department_id = d.department_id LEFT JOIN public.main_group g ON p.group_id = g.group_id LEFT JOIN public.advertising a ON p.advertising_id = a.advertising_id LEFT JOIN public.tax i ON p.tax_id = i.tax_id WHERE product_id = '" +productID+"'");       
-            // TRAER LOS DATOS DE PLU QUE NO TIENEN IMÁGENES ASIGNADAS COMO ICONOS. (rta: con LEFT JOIN)
+            // CÓMO TRAER LOS DATOS DE PLU QUE NO TIENEN IMÁGENES ASIGNADAS COMO ICONOS? (rta: con LEFT JOIN)
             if (result.rows.length > 0) {            
                 //console.log('result: '+JSON.stringify(result.rows[0]));
-
                 plu = {
                     binarydata: result.rows[0].binarydata,
                     id: result.rows[0].id,
@@ -452,7 +514,6 @@ const reloadFormProduct = async (req, res) => {     //  Método gral para leer l
                     fs: FS,
                     waterperc: result.rows[0].waterperc,
                 };
-
                 //console.log('Resultado plu: '+JSON.stringify(plu));
 
                 res
