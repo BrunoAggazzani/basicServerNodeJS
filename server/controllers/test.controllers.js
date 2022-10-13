@@ -1,13 +1,15 @@
-import { connect, query } from 'mssql'
+import { connect, query, close } from 'mssql'
 
 export const sqlServerConnect = async (req, res) => {
     console.log('Conectando SQL Server...');
+    console.log('Datos para la conexion: '+JSON.stringify(req.body));
+    let data = req.body;
     
     const sqlConfig = {
-      user: req.body.user,
-      password: req.body.pass,
-      database: req.body.db_name,
-      server: req.body.ip,
+      user: data.user,
+      password: data.pass,
+      database: data.db_name,
+      server: data.ip,
       pool: {
         max: 10,
         min: 0,
@@ -18,16 +20,20 @@ export const sqlServerConnect = async (req, res) => {
         trustServerCertificate: false // change to true for local dev / self-signed certs
       }
     }
-    
+    let resultado = null;
     try {
-        // make sure that any items are correctly URL encoded in the connection string
         await connect(sqlConfig);
-        const result = await query`select * from dbo.productos`;
-        console.log('Result SQL Server: '+JSON.stringify(result.recordset[0]));
+        const result = await query`select * from dbo.productos`;        
+        resultado = JSON.stringify(result.recordset[0]);
+        console.log('Resultado: '+resultado);
         res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(result.recordset[0]));
+        res.send(resultado);
+        close();
     } catch (err) {
         console.log(err);
-        res.status(404).send('<h1>Test failed!</h1>');
-    }    
+        console.log('Resultado: '+JSON.stringify(resultado));
+        res.send(JSON.stringify(resultado));
+        close();
+    }
+    data = {};    
 }

@@ -1,5 +1,5 @@
 {
-  "name": "cuora-neo-web",
+  "name": "basic-server-cuora-neo-web",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -32,14 +32,5 @@
     "@babel/preset-env": "^7.18.6",
     "cross-env": "^7.0.3",
     "nodemon": "^2.0.18"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BrunoAggazzani/CuoraNeoWeb.git"
-  },
-  "bugs": {
-    "url": "https://github.com/BrunoAggazzani/CuoraNeoWeb/issues"
-  },
-  "homepage": "https://github.com/BrunoAggazzani/CuoraNeoWeb#readme",
-  "description": ""
+  }
 }

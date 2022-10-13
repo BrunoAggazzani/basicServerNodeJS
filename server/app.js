@@ -6,14 +6,6 @@ import i18n from './i18n';
 import helmet from "helmet";
 import compression from "compression";
 // import rutas
-import menuRoutes from './routes/menu.routes';
-import loginRoutes from './routes/login.routes';
-import menuPriceRoutes from './routes/menu.prices.routes';
-import menuAbmRoutes from './routes/menu.abm.routes';
-import menuAbmPluRoutes from './routes/menu.abm.plu.routes';
-import menuReportRoutes from './routes/menu.reports.routes';
-import menuSettingRoutes from './routes/menu.settings.routes';
-
 import testRoutes from './routes/test.routes';
 
 const app = express();
@@ -35,15 +27,6 @@ app.use(helmet());
 app.use(compression());
 
 // rutas principales
-app.use('', loginRoutes);
-app.use('/api/signin', loginRoutes);
-app.use('/api/menu', menuRoutes);
-app.use('/api/menu/prices', menuPriceRoutes);
-app.use('/api/menu/abm', menuAbmRoutes);
-app.use('/api/menu/abm/plu', menuAbmPluRoutes);
-app.use('/api/menu/reports', menuReportRoutes);
-app.use('/api/menu/settings', menuSettingRoutes);
-
 app.use('/testSqlServer', testRoutes);
 
 
