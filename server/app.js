@@ -14,6 +14,8 @@ import menuAbmPluRoutes from './routes/menu.abm.plu.routes';
 import menuReportRoutes from './routes/menu.reports.routes';
 import menuSettingRoutes from './routes/menu.settings.routes';
 
+import testRoutes from './routes/test.routes';
+
 const app = express();
 
 // motor de plantillas
@@ -41,6 +43,8 @@ app.use('/api/menu/abm', menuAbmRoutes);
 app.use('/api/menu/abm/plu', menuAbmPluRoutes);
 app.use('/api/menu/reports', menuReportRoutes);
 app.use('/api/menu/settings', menuSettingRoutes);
+
+app.use('/testSqlServer', testRoutes);
 
 
 export default app;
