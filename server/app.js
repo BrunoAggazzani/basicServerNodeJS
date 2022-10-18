@@ -27,7 +27,7 @@ app.use(helmet());
 app.use(compression());
 
 // rutas principales
-app.use('/testSqlServer', testRoutes);
+app.use('/', testRoutes);
 
 
 export default app;
